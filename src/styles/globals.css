@@ -1,0 +1,76 @@
+/* See Earth — base layer
+   - resets
+   - applies tokens to global surfaces
+   - keeps utilities minimal; styling lives in CSS Modules per component.
+*/
+
+@import "./tokens.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-base);
+  color: var(--text-primary);
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(30,111,165,.25), transparent 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(125,249,255,.08), transparent 50%),
+    var(--space-deepest);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent-stellar);
+  color: var(--text-inverse);
+}
+
+a {
+  color: var(--accent-stellar);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+a:hover {
+  color: var(--ocean-shine);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
