@@ -1,18 +1,20 @@
 {
   "name": "see-earth",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.1.0-rc.1",
   "type": "module",
-  "description": "看见地球 — A timeline-driven journey across Earth's history (M0 prototype)",
+  "description": "看见地球 — A timeline-driven journey across Earth's history (v1.1 real-data sprint)",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "start": "serve -s dist -l 8080",
     "typecheck": "tsc -b --noEmit"
   },
   "dependencies": {
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "serve": "^14.2.6"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
