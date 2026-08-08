@@ -1,0 +1,171 @@
+/* ============================================================
+   CityNow · v2.60.0
+   - 城市此刻：轻量信息卡，置于 hero 图下方
+   - 暖米白底 + 衬线斜体观察 + JetBrains Mono 时间
+   - 实时天气：open-meteo · 15 分钟缓存 · 失败显示兜底文案
+   - 数据源行（source）：weather · open-meteo · updated HH:MM
+   ============================================================ */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 18px 16px;
+  background: var(--color-canvas);
+  border-radius: var(--r-lg);
+  border: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  box-shadow: var(--shadow-1);
+  font-family: var(--font-sans);
+}
+
+.label {
+  font-family: var(--font-serif);
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--color-ink-300);
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+}
+
+.timeRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.localTime {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(22px, 1.8vw + 0.4rem, 30px);
+  font-weight: 500;
+  color: var(--color-ink-900);
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.tz {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-ink-500);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.dayPeriod {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 12px;
+  color: var(--color-ink-700);
+}
+
+.weatherRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-ink-700);
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--color-ink-700);
+  flex-shrink: 0;
+}
+
+.summary {
+  font-family: var(--font-sans);
+  color: var(--color-ink-700);
+}
+
+.temperature {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-500);
+  margin-left: auto;
+  font-size: 11px;
+}
+
+/* ── 失败兜底（v2.60 · 与 summary 同行，左对齐） ── */
+.unavailable {
+  font-family: var(--font-sans);
+  font-style: italic;
+  color: var(--color-ink-300);
+  font-size: 12px;
+}
+
+.observation {
+  margin: 2px 0 0;
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--color-ink-700);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── 数据源行（v2.60 · 与正文同区，弱化但可读） ── */
+.source {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid color-mix(in srgb, var(--color-ink-900) 6%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  color: var(--color-ink-300);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+
+.sourceLabel {
+  color: var(--color-ink-300);
+}
+
+.sourceSep {
+  color: color-mix(in srgb, var(--color-ink-900) 12%, transparent);
+}
+
+.sourceName {
+  color: var(--color-ink-500);
+  font-weight: 500;
+}
+
+.sourceUpdated {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--color-ink-500);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 紧凑模式（hover preview / 移动端单行） ── */
+.compact {
+  padding: 10px 14px 12px;
+  gap: 4px;
+}
+.compact .localTime { font-size: 20px; }
+.compact .dayPeriod,
+.compact .tz { font-size: 10px; }
+.compact .weatherRow { font-size: 11px; }
+.compact .source { display: none; } /* 紧凑态：隐藏数据源行 */
+
+/* ── 反色：覆盖在图片之上时使用 ── */
+.inverted {
+  background: color-mix(in srgb, var(--color-canvas) 92%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .root, .localTime, .weatherRow, .observation { transition: none; animation: none; }
+}

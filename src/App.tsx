@@ -1,64 +1,319 @@
-/* App · See Earth — M0 layout shell.
- *
- * Two stacked regions:
- *   1. Hero with the rotating Earth
- *   2. Horizontal timeline
- *
- * All styling tokens flow from styles/tokens.css; everything else lives in
- * the per-component CSS module.
- */
+/* ============================================================
+   看见地球 · v2.32.0 · App
+   - 集成 Router：city 路由直接渲染 CityPage
+   - 板块 2 三态合并（focused ?? hovered ?? active）→ 单一 displayCity
+   - 鼠标 hover 列表项 → 主图预热（带 80ms 防抖，由 CityIndex 控制）
+   - 键盘 ↑ / ↓ 列表项 → 焦点 + focusedCityId 同步，主图预热
+   - Esc 取消键盘焦点，恢复默认 active
+   - 键盘 ← / → 不止翻主图，同时清掉 focusedCityId 防止它压制 active
+   ============================================================ */
 
-import EarthGlobe from '@/components/EarthGlobe';
-import Timeline from '@/components/Timeline';
-import heroStyles from './App.module.css';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { cities, featuredCities } from '@/data/cities';
+import { liveEvents } from '@/data/liveMoments';
+import { Router, useRoute } from '@/router/Router';
+import SearchBox from '@/components/SearchBox';
+import CityFeatured from '@/components/CityFeatured';
+import CityIndex from '@/components/CityIndex';
+import MomentsTimeline from '@/components/MomentsTimeline';
+import EventDrawer from '@/components/EventDrawer';
+import CityPage from '@/components/CityPage';
+import CityIndexPage from '@/components/CityIndexPage';
+import styles from './App.module.css';
 
-export function App() {
+function HomeShell() {
+  // 板块 2/3 的所有本地 state + refs 都收敛在 HomeShell；
+  // CityPage 自己持有自己的 state（避免全屏重渲染）。
+  // v2.50.0 · 板块 2 只列 6 个精选城市（其余 6 个仅在 /cities 出现）
+  // ── 三态：focused（键盘）> hovered（鼠标）> active（默认 / ← → 浏览）
+  const [hoveredCityId, setHoveredCityId] = useState<string | null>(null);
+  const [focusedCityId, setFocusedCityId] = useState<string | null>(null);
+  const [activeCityId, setActiveCityId] = useState<string>(featuredCities[0].id);
+
+  const displayCity =
+    (focusedCityId ? cities.find((c) => c.id === focusedCityId) : undefined) ??
+    (hoveredCityId ? cities.find((c) => c.id === hoveredCityId) : undefined) ??
+    cities.find((c) => c.id === activeCityId) ??
+    cities[0];
+
+  const displayCityIndex = cities.findIndex((c) => c.id === displayCity.id);
+
+  const goPrev = useCallback(() => {
+    const i = featuredCities.findIndex((c) => c.id === activeCityId);
+    const j = i < 0 ? 0 : (i - 1 + featuredCities.length) % featuredCities.length;
+    setActiveCityId(featuredCities[j].id);
+  }, [activeCityId]);
+  const goNext = useCallback(() => {
+    const i = featuredCities.findIndex((c) => c.id === activeCityId);
+    const j = i < 0 ? 0 : (i + 1) % featuredCities.length;
+    setActiveCityId(featuredCities[j].id);
+  }, [activeCityId]);
+
+  // 键盘 ← / → 仅切主图（不跳转）；焦点必须在 #cities 内。
+  // 同时清掉 focusedCityId 防止键盘焦点压制 ← → 浏览意图。
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.target && (e.target as HTMLElement).matches('input, textarea, [contenteditable="true"]')) return;
+      const root = citiesRef.current;
+      if (!root) return;
+      const active = document.activeElement as HTMLElement | null;
+      const inside = !!active && root.contains(active);
+      if (!inside) return;
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setFocusedCityId(null);
+        goPrev();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        setFocusedCityId(null);
+        goNext();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [goPrev, goNext]);
+
+  // ── 板块 3：硬性 6 条事件（v2.21 数据层约束 · 超出数据源在详情页/Archive 用） ──
+  const events = useMemo(() => liveEvents.slice(0, 6), []);
+  const [activeEventId, setActiveEventId] = useState<string | null>(null);
+  const activeEvent = activeEventId
+    ? events.find((e: { id: string }) => e.id === activeEventId) ?? null
+    : null;
+
+  // ── Refs（用于导航） ──
+  const heroRef = useRef<HTMLElement>(null);
+  const citiesRef = useRef<HTMLElement>(null);
+  const momentsRef = useRef<HTMLElement>(null);
+  const whyRef = useRef<HTMLDetailsElement>(null);
+
+  const scrollTo = (ref: React.RefObject<HTMLElement>) => {
+    ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
+  const findCityIdx = (slug: string): string | null => {
+    const c = cities.find((x) => x.slug === slug);
+    return c ? c.id : null;
+  };
+
   return (
-    <main className={heroStyles.shell}>
-      <section className={heroStyles.hero} aria-labelledby="hero-heading">
-        <div className={heroStyles.heroCopy}>
-          <span className={heroStyles.eyebrow}>
-            <span className={heroStyles.eyebrowDot} aria-hidden="true" />
-            See Earth · M0 prototype
-          </span>
-          <h1 id="hero-heading" className={heroStyles.title}>
-            看见<span className={heroStyles.titleAccent}>地球</span>
-          </h1>
-          <p className={heroStyles.lede}>
-            一段跨越四十六亿年的旅程。我们已习惯抬头看见月亮,
-            却很少凝视脚下这颗蓝色星球的全部时间——
-            它从何而来,如何变成今天的样子,又将往哪里去。
-          </p>
-          <ul className={heroStyles.metaList}>
-            <li>
-              <strong>9</strong>
-              <span>关键节点</span>
-            </li>
-            <li>
-              <strong>4.6 Ga</strong>
-              <span>向后回望</span>
-            </li>
-            <li>
-              <strong>Now</strong>
-              <span>刚刚开始</span>
-            </li>
-          </ul>
-          <a className={heroStyles.scrollHint} href="#timeline-heading">
-            沿时间轴向下查看 ↓
+    <div className={styles.app}>
+      {/* ═══════ 首屏（v2.20 加价值主张 + 搜索建议 + 为什么看见地球） ═══════ */}
+      <section className={styles.hero} ref={heroRef} id="hero">
+        <header className={styles.header}>
+          <a
+            className={styles.logo}
+            onClick={(e) => {
+              e.preventDefault();
+              scrollTo(heroRef);
+            }}
+            href="#hero"
+          >
+            <span className={styles.logoDot} aria-hidden="true" />
+            <span className={styles.logoCn}>看见地球</span>
+            <span className={styles.logoEn}>See Earth</span>
           </a>
-        </div>
+          <nav className={styles.nav} aria-label="主导航">
+            <a
+              className={styles.navLink}
+              onClick={(e) => { e.preventDefault(); scrollTo(citiesRef); }}
+              href="#cities"
+            >
+              Cities
+            </a>
+            <a
+              className={styles.navLink}
+              onClick={(e) => { e.preventDefault(); scrollTo(momentsRef); }}
+              href="#moments"
+            >
+              Journal
+            </a>
+            <a
+              className={styles.navLink}
+              onClick={(e) => {
+                e.preventDefault();
+                whyRef.current?.setAttribute('open', '');
+                whyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }}
+              href="#about"
+            >
+              About
+            </a>
+          </nav>
+        </header>
 
-        <div className={heroStyles.heroGlobe} aria-hidden="false">
-          <EarthGlobe />
+        <div className={styles.heroContent}>
+          <h1 className={styles.title}>
+            世界 · 不止<em className={styles.titleEm}>方寸</em>
+          </h1>
+
+          {/* 价值主张（v2.20 新增） */}
+          <p className={styles.valueProp}>此刻，世界各地正在发生什么。</p>
+          <p className={styles.valuePropEn}>Right now, somewhere on Earth.</p>
+
+          <div className={styles.searchMount}>
+            <SearchBox />
+          </div>
+
+          {/* 搜索建议（v2.20 新增） */}
+          <div className={styles.suggestions} role="group" aria-label="搜索建议">
+            <button
+              type="button"
+              className={styles.suggestion}
+              onClick={() => {
+                scrollTo(momentsRef);
+                const tokyoEvent = events.find((e) => e.cityId === 'tokyo');
+                if (tokyoEvent) setActiveEventId(tokyoEvent.id);
+              }}
+            >
+              看东京此刻在发生什么
+            </button>
+            <button
+              type="button"
+              className={styles.suggestion}
+              onClick={() => {
+                scrollTo(citiesRef);
+                const nycId = findCityIdx('newyork');
+                if (nycId) {
+                  setActiveCityId(nycId);
+                  setFocusedCityId(null);
+                }
+              }}
+            >
+              纽约 / 上海 / 伦敦
+            </button>
+            <button
+              type="button"
+              className={styles.suggestion}
+              onClick={() => {
+                const input = document.querySelector<HTMLInputElement>('input[type="search"]');
+                input?.focus();
+                input?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }}
+            >
+              搜索一个城市
+            </button>
+          </div>
+
+          {/* 为什么看见地球（v2.20 新增 · 可展开） */}
+          <details className={styles.why} ref={whyRef} id="about">
+            <summary className={styles.whySummary}>
+              <span>为什么看见地球</span>
+              <span className={styles.whySummaryEn}>Why See Earth?</span>
+              <span className={styles.whyArrow} aria-hidden="true">↓</span>
+            </summary>
+            <div className={styles.whyContent}>
+              <p>
+                看见地球是观察世界的窗口。
+                <br />
+                看到不同城市此刻正在发生的事。
+                <br />
+                不依赖个人推荐算法。
+                <br />
+                内容由编辑筛选 + 真实数据混合。
+              </p>
+            </div>
+          </details>
+
+          <p className={styles.scrollHint}>
+            <span aria-hidden="true">↓</span> 上滑探索
+          </p>
         </div>
       </section>
 
-      <Timeline
-        eyebrow="A 4.6-billion-year arc"
-        title="沿着时间轴,慢慢看"
-        subtitle="点击任意节点,或用键盘 ← → 切换。每一格都是这颗星球的一次转身。"
-      />
-    </main>
+      {/* ═══════ 板块 2：6 城市（主+索引） ═══════ */}
+      <section
+        ref={citiesRef}
+        id="cities"
+        className={styles.citiesSection}
+        aria-label="城市精选"
+      >
+        <header className={styles.sectionHeader}>
+          <span className={styles.sectionNumber}>
+            {String(displayCityIndex + 1).padStart(2, '0')} / {String(featuredCities.length).padStart(2, '0')} ATLAS
+          </span>
+          <div className={styles.sectionTitleBlock}>
+            <h2 className={styles.sectionTitle}>
+              {featuredCities.length} 座精选城市 · 点击进入详情页
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              Selected cities — seen one at a time.
+            </p>
+          </div>
+        </header>
+
+        <div className={styles.citiesLayout}>
+          <div className={styles.featuredCol}>
+            <CityFeatured
+              key={displayCity.id}
+              city={displayCity}
+              index={displayCityIndex}
+              total={featuredCities.length}
+              onPrev={goPrev}
+              onNext={goNext}
+            />
+          </div>
+          <div className={styles.indexCol}>
+            <CityIndex
+              cities={featuredCities}
+              activeCityId={displayCity.id}
+              baseIndex={0}
+              totalCityCount={cities.length}
+              onHover={setHoveredCityId}
+              onFocus={setFocusedCityId}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════ 板块 3：v2-E 实时事件（编辑精选 · 单组件全宽） ═══════ */}
+      <section
+        ref={momentsRef}
+        id="moments"
+        className={styles.momentsSection}
+        aria-labelledby="moments-title"
+      >
+        <header className={styles.momentsHeader}>
+          <span className={styles.momentsNumber}>02 / EDITORIAL</span>
+          <h2 id="moments-title" className={styles.momentsTitle}>
+            同一时间，不同地方，不同命运
+          </h2>
+          <p className={styles.momentsSubtitle}>
+            Right now, somewhere on Earth — these 6 things are happening.
+          </p>
+        </header>
+
+        <div className={styles.momentsTimelineWrap}>
+          <MomentsTimeline
+            events={events}
+            activeEventId={activeEventId}
+            onSelectEvent={(ev) => setActiveEventId(ev.id)}
+          />
+        </div>
+      </section>
+
+      {/* 详情抽屉 */}
+      <EventDrawer event={activeEvent} onClose={() => setActiveEventId(null)} />
+    </div>
+  );
+}
+
+
+function AppRoutes() {
+  const route = useRoute();
+  if (route.name === 'cities-index') {
+    return <CityIndexPage />;
+  }
+  if (route.name === 'city') {
+    return <CityPage />;
+  }
+  return <HomeShell />;
+}
+
+export function App() {
+  return (
+    <Router>
+      <AppRoutes />
+    </Router>
   );
 }
 

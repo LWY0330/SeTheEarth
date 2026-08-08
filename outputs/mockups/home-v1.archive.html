@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>首页 · 看见地球</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  body { overflow: hidden; height: 100vh; }
+
+  /* ── Canvas ── */
+  .stage {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    background:
+      radial-gradient(ellipse at center,
+        #0a1a2f 0%,
+        #050b14 40%,
+        #000000 100%);
+    overflow: hidden;
+  }
+
+  /* Star field */
+  .stars {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20px 30px, white, transparent),
+      radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 50px 160px, white, transparent),
+      radial-gradient(1px 1px at 90px 40px, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 160px 120px, white, transparent),
+      radial-gradient(2px 2px at 200px 50px, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1px 1px at 250px 140px, white, transparent),
+      radial-gradient(1px 1px at 300px 90px, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 350px 200px, white, transparent),
+      radial-gradient(2px 2px at 400px 100px, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 450px 250px, white, transparent),
+      radial-gradient(1px 1px at 500px 180px, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 600px 220px, white, transparent),
+      radial-gradient(1px 1px at 700px 80px, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1px 1px at 800px 250px, white, transparent),
+      radial-gradient(2px 2px at 900px 120px, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1px 1px at 1000px 200px, white, transparent),
+      radial-gradient(1px 1px at 1100px 50px, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1px 1px at 1200px 180px, white, transparent);
+    background-size: 1200px 600px;
+    background-repeat: repeat;
+    opacity: 0.7;
+  }
+
+  /* Earth */
+  .earth {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 720px;
+    height: 720px;
+    border-radius: var(--radius-full);
+    background:
+      radial-gradient(circle at 30% 30%,
+        #5BA8FF 0%,
+        #3D8FE8 25%,
+        #2B6FBE 50%,
+        #1a3a6b 70%,
+        #0a1a2f 100%);
+    box-shadow:
+      inset 0 0 60px rgba(0, 0, 0, 0.6),
+      inset -40px -40px 100px rgba(0, 0, 0, 0.8),
+      0 0 80px rgba(91, 168, 255, 0.3),
+      0 0 200px rgba(91, 168, 255, 0.15);
+  }
+
+  /* Earth continents (simplified SVG overlay) */
+  .earth::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-full);
+    background:
+      /* Continent silhouettes via radial gradients */
+      radial-gradient(ellipse 180px 80px at 25% 35%, rgba(74, 222, 128, 0.25), transparent 70%),
+      radial-gradient(ellipse 120px 100px at 35% 50%, rgba(74, 222, 128, 0.2), transparent 70%),
+      radial-gradient(ellipse 140px 90px at 55% 40%, rgba(74, 222, 128, 0.22), transparent 70%),
+      radial-gradient(ellipse 100px 60px at 65% 55%, rgba(74, 222, 128, 0.18), transparent 70%),
+      radial-gradient(ellipse 80px 50px at 75% 45%, rgba(74, 222, 128, 0.2), transparent 70%),
+      radial-gradient(ellipse 60px 40px at 20% 65%, rgba(232, 238, 245, 0.15), transparent 70%);
+  }
+
+  /* Atmospheric glow */
+  .earth::after {
+    content: "";
+    position: absolute;
+    inset: -20px;
+    border-radius: var(--radius-full);
+    background: radial-gradient(circle, transparent 55%, rgba(91, 168, 255, 0.15) 65%, transparent 75%);
+  }
+
+  /* Day/night terminator */
+  .terminator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 720px;
+    height: 720px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(90deg,
+      transparent 40%,
+      rgba(0, 0, 0, 0.7) 60%,
+      rgba(0, 0, 0, 0.85) 75%,
+      transparent 95%);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  /* City lights (night side dots) */
+  .city-lights {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 720px;
+    height: 720px;
+    border-radius: var(--radius-full);
+    background:
+      radial-gradient(1px 1px at 65% 35%, #FFD700, transparent),
+      radial-gradient(2px 2px at 70% 45%, #FFC107, transparent),
+      radial-gradient(1px 1px at 75% 50%, #FFD700, transparent),
+      radial-gradient(1px 1px at 68% 55%, #FFC107, transparent),
+      radial-gradient(2px 2px at 72% 60%, #FFD700, transparent),
+      radial-gradient(1px 1px at 80% 40%, #FFC107, transparent);
+    pointer-events: none;
+    opacity: 0.8;
+  }
+
+  /* ── Top Bar ── */
+  .topbar__title {
+    font-size: var(--text-md);
+    font-weight: var(--weight-medium);
+    color: var(--color-neutral-100);
+  }
+
+  /* ── Time Bar ── */
+  .timebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    padding: var(--space-4) var(--space-8);
+    background: rgba(15, 20, 27, 0.55);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border-top: 1px solid rgba(232, 238, 245, 0.08);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .timebar__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .timebar__track {
+    flex: 1;
+    height: 32px;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .timebar__line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-neutral-600);
+    border-radius: var(--radius-full);
+  }
+
+  .timebar__progress {
+    position: absolute;
+    left: 0;
+    width: 75%;
+    height: 2px;
+    background: var(--color-primary-500);
+    border-radius: var(--radius-full);
+  }
+
+  .timebar__handle {
+    position: absolute;
+    left: 75%;
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary-500);
+    box-shadow: 0 0 16px rgba(91, 168, 255, 0.6);
+    transform: translateX(-50%);
+  }
+
+  .timebar__ticks {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 4px;
+  }
+  .timebar__tick {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-neutral-400);
+  }
+
+  .timebar__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .timebar__clock {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-neutral-200);
+  }
+
+  /* ── HUD overlay (right side controls) ── */
+  .hud-corner {
+    position: fixed;
+    bottom: 100px;
+    right: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    z-index: 40;
+  }
+
+  .hud-fab {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: rgba(15, 20, 27, 0.55);
+    backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(232, 238, 245, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-neutral-100);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-standard);
+  }
+  .hud-fab:hover { background: rgba(91, 168, 255, 0.15); border-color: var(--color-primary-500); }
+  .hud-fab.active { background: var(--color-primary-500); color: var(--color-neutral-1000); }
+
+  /* ── Bottom-left meta ── */
+  .scene-meta {
+    position: fixed;
+    bottom: 100px;
+    left: var(--space-6);
+    background: rgba(15, 20, 27, 0.55);
+    backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(232, 238, 245, 0.08);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4) var(--space-6);
+    z-index: 40;
+  }
+  .scene-meta__title {
+    font-size: var(--text-xs);
+    color: var(--color-neutral-400);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: var(--space-2);
+  }
+  .scene-meta__value {
+    font-size: var(--text-xl);
+    color: var(--color-neutral-100);
+    font-weight: var(--weight-medium);
+  }
+
+  /* ── Top-right HUD info ── */
+  .scene-stats {
+    position: fixed;
+    top: 80px;
+    right: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    z-index: 40;
+  }
+  .stat-card {
+    background: rgba(15, 20, 27, 0.55);
+    backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(232, 238, 245, 0.08);
+    border-radius: var(--radius-lg);
+    padding: var(--space-3) var(--space-4);
+    min-width: 180px;
+  }
+  .stat-card__label {
+    font-size: var(--text-xs);
+    color: var(--color-neutral-400);
+    margin-bottom: var(--space-1);
+  }
+  .stat-card__value {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    color: var(--color-neutral-100);
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Top Bar ── -->
+<div class="topbar">
+  <div style="display: flex; align-items: center; gap: var(--space-3);">
+    <svg class="icon topbar__brand-icon"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+    <span class="topbar__title">看见地球</span>
+  </div>
+  <div class="topbar__actions">
+    <button class="btn btn--secondary btn--sm">▾ 图层</button>
+    <button class="btn btn--ghost btn--sm" style="width: 32px; height: 32px; padding: 0;">?</button>
+    <div class="topbar__avatar">L</div>
+  </div>
+</div>
+
+<!-- ── Stage ── -->
+<div class="stage">
+  <div class="stars"></div>
+  <div class="earth"></div>
+  <div class="terminator"></div>
+  <div class="city-lights"></div>
+</div>
+
+<!-- ── Top-right stats ── -->
+<div class="scene-stats">
+  <div class="stat-card">
+    <div class="stat-card__label">当地时间</div>
+    <div class="stat-card__value">16:42 · UTC+8</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__label">太阳高度角</div>
+    <div class="stat-card__value">48.2°</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__label">图层 · 夜间灯光</div>
+    <div class="stat-card__value" style="color: var(--color-primary-400);">● ON</div>
+  </div>
+</div>
+
+<!-- ── Bottom-left scene meta ── -->
+<div class="scene-meta">
+  <div class="scene-meta__title">当前视角</div>
+  <div class="scene-meta__value">东亚 · 西太平洋</div>
+</div>
+
+<!-- ── Bottom-right HUD FABs ── -->
+<div class="hud-corner">
+  <div class="hud-fab" title="图层">
+    <svg class="icon"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+  </div>
+  <div class="hud-fab" title="缩放">
+    <svg class="icon"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg>
+  </div>
+  <div class="hud-fab active" title="播放">
+    <svg class="icon"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>
+  </div>
+  <div class="hud-fab" title="视角">
+    <svg class="icon"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6M1 12h6m10 0h6"/></svg>
+  </div>
+</div>
+
+<!-- ── Time Bar ── -->
+<div class="timebar">
+  <div class="timebar__controls">
+    <button class="btn btn--ghost btn--sm" style="width: 32px; height: 32px; padding: 0;">◀</button>
+    <button class="btn btn--primary btn--sm" style="min-width: 64px;">▶ 1×</button>
+    <button class="btn btn--ghost btn--sm" style="width: 32px; height: 32px; padding: 0;">▶</button>
+  </div>
+
+  <div class="timebar__track">
+    <div class="timebar__line"></div>
+    <div class="timebar__progress"></div>
+    <div class="timebar__handle"></div>
+    <div class="timebar__ticks">
+      <span class="timebar__tick">1900</span>
+      <span class="timebar__tick">1925</span>
+      <span class="timebar__tick">1950</span>
+      <span class="timebar__tick">1975</span>
+      <span class="timebar__tick">2000</span>
+      <span class="timebar__tick">2026</span>
+    </div>
+  </div>
+
+  <div class="timebar__meta">
+    <div class="timebar__clock">2026-08-05 16:42 UTC+8</div>
+    <button class="btn btn--ghost btn--sm">▾</button>
+  </div>
+</div>
+
+</body>
+</html>

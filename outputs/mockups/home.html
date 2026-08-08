@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>看见地球 · v2.2 首页 — 设计稿（极简版）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   看见地球 · v2.2 设计稿 · 极简版
+   愿景：「别把世界活的只有眼前这么小」
+
+   v2.2 极简化：只保留主标题 + 搜索框，视觉重心给 6 城市
+   - 去掉：奶白内容卡 / eyebrow / 副标题 / focusBar / hint
+   - 6 城市铺满整个屏幕（主视觉）
+   - 城市玻璃信息条只保留城市名 + 此刻叙事
+   ============================================================ */
+
+:root {
+  --canvas:        #F5F1EA;
+  --ink-900:       #1A1A1A;
+  --ink-700:       #3A3833;
+  --ink-500:       #6B6862;
+  --ink-300:       #A5A299;
+  --accent-500:    #D97757;
+
+  --glass-bg:        rgba(255,255,255,0.42);
+  --glass-bg-hover:  rgba(255,255,255,0.52);
+  --glass-bg-active: rgba(255,255,255,0.62);
+  --glass-border:    rgba(255,255,255,0.65);
+  --glass-border-2:  rgba(255,255,255,0.85);
+  --glass-hi-top:    rgba(255,255,255,0.85);
+  --glass-hi-bot:    rgba(255,255,255,0.20);
+  --glass-shadow-near: 0 2px 8px rgba(60,50,40,0.06);
+  --glass-shadow-far:  0 12px 40px rgba(60,50,40,0.10);
+  --glass-shadow:    var(--glass-shadow-near), var(--glass-shadow-far);
+
+  --font-serif: "Fraunces", "Cormorant Garamond", "Source Han Serif SC", "Songti SC", serif;
+  --font-sans:  "Inter", "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --sp-3: 12px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
+  --r-md: 12px; --r-lg: 20px; --r-xl: 32px; --r-2xl: 48px; --r-pill: 999px;
+
+  --ease-emphatic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font-sans);
+  color: var(--ink-900);
+  background: var(--canvas);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+::selection { background: var(--accent-500); color: var(--canvas); }
+
+/* ──────────────────── STAGE ──────────────────── */
+.stage {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ──────────────────── 背景：6 城市铺满整个屏幕（主视觉） ──────────────────── */
+.backdrop { position: absolute; inset: 0; z-index: 0; }
+.grid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 16px;
+  padding: 16px;
+}
+.city {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-xl);
+  box-shadow: 0 12px 32px rgba(60,50,40,0.10);
+  transition: transform 500ms var(--ease-emphatic);
+}
+.city:hover { transform: translateY(-4px); }
+.city img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  transition: transform 1200ms var(--ease-emphatic);
+  filter: saturate(1.05) contrast(1.02);
+}
+.city:hover img { transform: scale(1.08); }
+.city::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(217,119,87,0.05) 0%, rgba(60,50,40,0.10) 100%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+.city::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 60%;
+  background: linear-gradient(180deg, transparent 0%, rgba(26,26,26,0.18) 60%, rgba(26,26,26,0.35) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+.city:nth-child(1) { grid-column: span 1; grid-row: span 2; }
+.city:nth-child(2) { grid-column: span 2; }
+
+/* 中央 vignette：让前景主标题 + 搜索框清晰 */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 45% 35% at center 50%,
+    rgba(245, 241, 234, 0.78) 0%,
+    rgba(245, 241, 234, 0.45) 50%,
+    rgba(245, 241, 234, 0.10) 80%,
+    rgba(245, 241, 234, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ──────────────────── 城市玻璃信息条（极简版：城市名 + 此刻叙事） ──────────────────── */
+.city-glass {
+  position: absolute;
+  left: 20px; right: 20px; bottom: 20px;
+  padding: 16px 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-hi-top),
+    inset 0 -1px 0 0 var(--glass-hi-bot),
+    var(--glass-shadow);
+  position: relative;
+  overflow: hidden;
+  transition: transform 500ms var(--ease-emphatic), background 320ms, border-color 320ms;
+}
+.city-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 65%, rgba(255,255,255,0) 100%);
+  background-size: 250% 100%;
+  background-position: 150% 0;
+  pointer-events: none;
+  animation: shimmer 12s ease-in-out infinite;
+}
+@keyframes shimmer {
+  0%, 100% { background-position: 150% 0; }
+  50%      { background-position: -50% 0; }
+}
+.city:hover .city-glass {
+  transform: translateY(-2px);
+  background: var(--glass-bg-active);
+  border-color: var(--glass-border-2);
+}
+
+.city-name {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 6px;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--ink-900);
+}
+.city-name-cn { font-size: 28px; letter-spacing: -0.02em; }
+.city-name-en {
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ink-700);
+}
+.city-moment {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-700);
+  line-height: 1.4;
+}
+
+/* ──────────────────── 顶部 header（极简） ──────────────────── */
+.header {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  padding: 24px clamp(24px, 5vw, 64px);
+  pointer-events: none;
+}
+.header > * { pointer-events: auto; }
+.logo { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink-900); }
+.logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-500); box-shadow: 0 0 12px rgba(217,119,87,0.5); }
+.logo-cn { font-family: var(--font-serif); font-weight: 600; font-size: 20px; letter-spacing: -0.02em; }
+
+/* ──────────────────── 中央前景（极简） ──────────────────── */
+.hero {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  min-height: 100vh;
+  padding: 96px clamp(24px, 5vw, 64px);
+  text-align: center;
+  pointer-events: none;
+}
+.hero > * { pointer-events: auto; }
+
+.title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(40px, 5vw + 0.5rem, 72px);
+  font-weight: 700;
+  color: var(--ink-900);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  max-width: 16ch;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+  animation: heroIn 1200ms var(--ease-emphatic) both;
+}
+.title em {
+  font-style: italic;
+  color: var(--accent-500);
+  font-weight: 700;
+  background: linear-gradient(transparent 65%, rgba(217, 119, 87, 0.25) 65%, rgba(217, 119, 87, 0.25) 90%, transparent 90%);
+  padding: 0 0.1em;
+}
+@keyframes heroIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ───── 搜索框（液态玻璃 pill） ───── */
+.search-wrap {
+  width: 100%;
+  max-width: 640px;
+  animation: heroIn 1200ms var(--ease-emphatic) 150ms both;
+}
+.search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 18px 18px 28px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-pill);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-hi-top),
+    inset 0 -1px 0 0 var(--glass-hi-bot),
+    var(--glass-shadow);
+  transition: all 320ms var(--ease-emphatic);
+  overflow: hidden;
+  isolation: isolate;
+}
+.search::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 35%, rgba(255,255,255,0.55) 50%, rgba(255,255,255,0) 65%, rgba(255,255,255,0) 100%);
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  pointer-events: none;
+  opacity: 0.7;
+  animation: searchShimmer 9s ease-in-out infinite;
+  z-index: 0;
+}
+@keyframes searchShimmer {
+  0%   { background-position: 150% 0; }
+  50%  { background-position: -50% 0; }
+  100% { background-position: -50% 0; }
+}
+.search:hover { background: var(--glass-bg-hover); border-color: var(--glass-border-2); transform: translateY(-1px); }
+.search:focus-within {
+  background: var(--glass-bg-active);
+  border-color: var(--accent-500);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-hi-top),
+    inset 0 -1px 0 0 var(--glass-hi-bot),
+    0 0 0 4px rgba(217,119,87,0.18),
+    var(--glass-shadow);
+  transform: translateY(-2px);
+}
+.search-icon { flex-shrink: 0; color: var(--ink-500); transition: color 200ms; z-index: 1; }
+.search:focus-within .search-icon { color: var(--accent-500); }
+.search-input {
+  flex: 1; min-width: 0;
+  border: none; outline: none; background: transparent;
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink-900);
+  padding: 8px 0;
+  z-index: 1;
+}
+.search-input::placeholder {
+  color: var(--ink-300);
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+.search-btn {
+  width: 44px; height: 44px;
+  border-radius: var(--r-pill);
+  background: var(--ink-900);
+  color: var(--canvas);
+  font-family: monospace;
+  font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  border: none; cursor: pointer;
+  transition: all 200ms var(--ease-spring);
+  flex-shrink: 0;
+  z-index: 1;
+}
+.search-btn:hover { background: var(--accent-500); transform: scale(1.05); }
+.search-btn:active { transform: scale(0.95); }
+
+/* ──────────────────── 底部 footer（极简） ──────────────────── */
+.footer {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-size: 11px;
+  color: var(--ink-500);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+}
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- ────── 背景：6 城市铺满整个屏幕（主视觉） ────── -->
+  <div class="backdrop" aria-hidden="true">
+    <div class="grid">
+
+      <div class="city">
+        <img src="https://images.unsplash.com/photo-1493997181344-712f2f19d87a?auto=format&fit=crop&w=1200&q=80" alt="京都">
+        <div class="city-glass">
+          <h3 class="city-name">
+            <span class="city-name-cn">京都</span>
+            <span class="city-name-en">Kyoto</span>
+          </h3>
+          <p class="city-moment">有人正在伏见稻荷的鸟居下，系一个祈愿。</p>
+        </div>
+      </div>
+
+      <div class="city">
+        <img src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=1600&q=80" alt="里斯本">
+        <div class="city-glass">
+          <h3 class="city-name">
+            <span class="city-name-cn">里斯本</span>
+            <span class="city-name-en">Lisbon</span>
+          </h3>
+          <p class="city-moment">28 路电车正爬上 Alfama 的老坡，铃铛响了两声。</p>
+        </div>
+      </div>
+
+      <div class="city">
+        <img src="https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?auto=format&fit=crop&w=1200&q=80" alt="上海">
+        <div class="city-glass">
+          <h3 class="city-name">
+            <span class="city-name-cn">上海</span>
+            <span class="city-name-en">Shanghai</span>
+          </h3>
+          <p class="city-moment">外滩的灯一盏一盏亮起来，黄浦江的风带着凉。</p>
+        </div>
+      </div>
+
+      <div class="city">
+        <img src="https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?auto=format&fit=crop&w=1200&q=80" alt="墨西哥城">
+        <div class="city-glass">
+          <h3 class="city-name">
+            <span class="city-name-cn">墨西哥城</span>
+            <span class="city-name-en">Mexico City</span>
+          </h3>
+          <p class="city-moment">Coyoacán 的彩色街上，有人正在卖刚出炉的玉米饼。</p>
+        </div>
+      </div>
+
+      <div class="city">
+        <img src="https://images.unsplash.com/photo-1539635278303-d4002c07eae3?auto=format&fit=crop&w=1200&q=80" alt="雷克雅未克">
+        <div class="city-glass">
+          <h3 class="city-name">
+            <span class="city-name-cn">雷克雅未克</span>
+            <span class="city-name-en">Reykjavík</span>
+          </h3>
+          <p class="city-moment">Hallgrímskirkja 的尖顶在等一场风，也在等一场极光。</p>
+        </div>
+      </div>
+
+      <div class="city">
+        <img src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1200&q=80" alt="开普敦">
+        <div class="city-glass">
+          <h3 class="city-name">
+            <span class="city-name-cn">开普敦</span>
+            <span class="city-name-en">Cape Town</span>
+          </h3>
+          <p class="city-moment">桌山的"桌布"被风扯开一角，露出整片晴空。</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="vignette"></div>
+  </div>
+
+  <!-- ────── 顶部（极简） ────── -->
+  <header class="header">
+    <a href="#" class="logo">
+      <span class="logo-dot"></span>
+      <span class="logo-cn">看见地球</span>
+    </a>
+  </header>
+
+  <!-- ────── 中央前景：主标题 + 搜索框（极简） ────── -->
+  <section class="hero">
+    <h1 class="title">世界 · 不止<em>方寸</em></h1>
+
+    <div class="search-wrap">
+      <form class="search" role="search" onsubmit="event.preventDefault();">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.6"/>
+            <path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <input
+          class="search-input"
+          type="search"
+          placeholder="搜索一座城市 · Search a city"
+          aria-label="搜索城市"
+          autocomplete="off"
+        />
+        <button class="search-btn" type="submit" aria-label="搜索">↵</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ────── 底部 ────── -->
+  <footer class="footer">6 座城市 · 此刻快照</footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>看见地球 · v1 Mockups</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  body {
+    background: var(--color-neutral-1000);
+    min-height: 100vh;
+    padding: 0;
+  }
+  .hero {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-24) var(--space-8) var(--space-12);
+  }
+  .hero__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-primary-400);
+    margin-bottom: var(--space-4);
+  }
+  .hero__title {
+    font-size: var(--text-display);
+    line-height: 1.1;
+    margin: 0 0 var(--space-4);
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--color-neutral-100), var(--color-primary-400));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero__sub {
+    font-size: var(--text-lg);
+    color: var(--color-neutral-200);
+    max-width: 720px;
+    line-height: 1.6;
+  }
+
+  .grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-8) var(--space-24);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-6);
+  }
+  .tile {
+    background: var(--color-neutral-800);
+    border: 1px solid var(--color-neutral-600);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--duration-base) var(--ease-standard);
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  .tile:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-primary-500);
+    box-shadow: var(--shadow-lg);
+  }
+  .tile__preview {
+    aspect-ratio: 16 / 10;
+    background: var(--color-neutral-900);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    border-bottom: 1px solid var(--color-neutral-600);
+  }
+  .tile__preview-tiny {
+    transform: scale(0.4);
+    transform-origin: center;
+    width: 250%;
+    height: 250%;
+    position: absolute;
+    pointer-events: none;
+  }
+  .tile__preview-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-full);
+    background: rgba(91, 168, 255, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary-500);
+    font-size: 32px;
+  }
+  .tile__body {
+    padding: var(--space-4) var(--space-6);
+  }
+  .tile__tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-primary-400);
+    background: rgba(91, 168, 255, 0.12);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-2);
+  }
+  .tile__title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-medium);
+    color: var(--color-neutral-100);
+    margin: 0 0 var(--space-2);
+  }
+  .tile__desc {
+    font-size: var(--text-sm);
+    color: var(--color-neutral-200);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .footer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-8);
+    border-top: 1px solid var(--color-neutral-600);
+    color: var(--color-neutral-400);
+    font-size: var(--text-sm);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero__eyebrow">看见地球 · v1.0.0 · 2026-08-05</div>
+  <h1 class="hero__title">Design Spec Mockups</h1>
+  <p class="hero__sub">5 个 HTML 文件，基于 <code style="font-family: var(--font-mono); color: var(--color-primary-400);">design-spec-v1.md</code> 的 §2–§5 设计令牌 100% 实现。可直接在浏览器打开查看。</p>
+</div>
+
+<div class="grid">
+
+  <a class="tile" href="design-system.html">
+    <div class="tile__preview">
+      <div class="tile__preview-icon" style="width:80px; height:80px;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        </svg>
+      </div>
+    </div>
+    <div class="tile__body">
+      <span class="tile__tag">Showcase</span>
+      <h3 class="tile__title">Design System</h3>
+      <p class="tile__desc">色彩 / 字体 / 间距 / 圆角 / 阴影 / 按钮 / Tag / 输入框 / 卡片 / 空状态 swatch book</p>
+    </div>
+  </a>
+
+  <a class="tile" href="home.html">
+    <div class="tile__preview">
+      <div style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: radial-gradient(ellipse at center, #0a1a2f, #000);">
+        <div style="width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #5BA8FF, #2B6FBE 60%, #0a1a2f); box-shadow: 0 0 40px rgba(91,168,255,0.4);"></div>
+      </div>
+    </div>
+    <div class="tile__body">
+      <span class="tile__tag">P0 · Hero</span>
+      <h3 class="tile__title">首页 · Home</h3>
+      <p class="tile__desc">3D 地球 + 昼夜分界 + 时间轴 + HUD 玻璃质感（mockup 用 CSS 渐变模拟）</p>
+    </div>
+  </a>
+
+  <a class="tile" href="city-detail.html">
+    <div class="tile__preview">
+      <div style="position: relative; width: 100%; height: 100%; background: linear-gradient(135deg, #0a1a2f, #2B6FBE); display: flex; align-items: center; justify-content: center;">
+        <div style="text-align: center;">
+          <div style="font-size: 32px; font-weight: 500; color: #E8EEF5;">东京</div>
+          <div style="font-size: 12px; color: #82C0FF; font-family: var(--font-mono);">35.6762°N</div>
+        </div>
+      </div>
+    </div>
+    <div class="tile__body">
+      <span class="tile__tag">P0 · Detail</span>
+      <h3 class="tile__title">城市详情 · City Detail</h3>
+      <p class="tile__desc">东京 · 16:42 UTC+9 · 日照图表 · 图层切换 · 寄明信片 CTA</p>
+    </div>
+  </a>
+
+  <a class="tile" href="send-postcard.html">
+    <div class="tile__preview">
+      <div style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 16px;">
+        <div style="width: 140px; aspect-ratio: 3/2; background: var(--color-neutral-50); border-radius: 12px; box-shadow: var(--shadow-lg); overflow: hidden; display: grid; grid-template-rows: 65% 35%;">
+          <div style="background: linear-gradient(135deg, #0a1a2f, #2B6FBE);"></div>
+          <div style="padding: 6px; font-size: 8px; color: #1a1f2a; background: #fafbfc;">东京 · 2026-08-05</div>
+        </div>
+      </div>
+    </div>
+    <div class="tile__body">
+      <span class="tile__tag">P0 · Core Action</span>
+      <h3 class="tile__title">寄明信片 · Send Postcard</h3>
+      <p class="tile__desc">步骤 2 · 边框 / 邮票 / 手写正文 + 实时预览（night 边框）</p>
+    </div>
+  </a>
+
+</div>
+
+<div class="footer">
+  <div>
+    <span style="color: var(--color-neutral-200);">Tokens</span> ·
+    <code style="font-family: var(--font-mono); color: var(--color-primary-400);">outputs/design-spec-v1.md 附录 B</code>
+  </div>
+  <div>
+    <span style="color: var(--color-neutral-200);">规范</span> ·
+    <code style="font-family: var(--font-mono); color: var(--color-primary-400);">outputs/design-spec-v1.md</code>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,230 @@
+/* ============================================================
+   CityIndex · v2.50.0 板块 2 右侧精选
+   - 列表项 76–96px 区间，给出呼吸感（Featured + 5 精选 = 6 城）
+   - 底部 SEE ALL 12 CITIES → 真链接
+   - 完全不再有 preview / popover / chevron / tooltip
+   ============================================================ */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: var(--color-canvas);
+  border: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+}
+
+.index {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* v2.50.0 · 列表项：最大 92px，最小 76px；
+   列表内 flex:1 让 5 项均分剩余高度，自然呼吸 */
+.item {
+  flex: 1 1 0;
+  min-height: 76px;
+  max-height: 92px;
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 0 22px;
+  border: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ink-900) 6%, transparent);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+  font-family: inherit;
+  text-decoration: none;
+  color: inherit;
+  transition: background var(--dur-base) var(--ease-out);
+}
+
+.item:last-child { border-bottom: none; }
+
+.item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-accent-500);
+  transform: scaleY(0);
+  transform-origin: center;
+  transition: transform var(--dur-base) var(--ease-emphatic);
+}
+
+.item:hover {
+  background: color-mix(in srgb, var(--color-ink-900) 3%, transparent);
+}
+.item:hover::before { transform: scaleY(0.7); }
+.item:hover .number { color: var(--color-ink-700); }
+.item:hover .nameCn { color: var(--color-ink-900); }
+
+.item.active {
+  background: color-mix(in srgb, var(--color-accent-500) 6%, transparent);
+}
+.item.active::before { transform: scaleY(1); }
+.item.active .number { color: var(--color-accent-500); }
+.item.active .nameCn { color: var(--color-ink-900); }
+.item.active .nameEn { opacity: 0.85; }
+.item.active .region { opacity: 0.7; }
+
+.item:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: -2px;
+}
+
+.number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-ink-500);
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+  transition: color var(--dur-base) var(--ease-out);
+}
+
+.info {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.nameCn {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-ink-700);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition: color var(--dur-base) var(--ease-out);
+}
+
+.nameEn {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--color-ink-500);
+  opacity: 0.7;
+  white-space: nowrap;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+.region {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-ink-500);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+  opacity: 0.6;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+
+/* ── SEE ALL 入口（指向 /cities 全集） ── */
+.seeAll {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 0 0 auto;
+  padding: 18px 22px;
+  background: color-mix(in srgb, var(--color-accent-500) 4%, transparent);
+  border: none;
+  border-top: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  text-decoration: none;
+  color: var(--color-ink-900);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--dur-base) var(--ease-out),
+              gap var(--dur-base) var(--ease-emphatic);
+}
+
+.seeAll:hover {
+  background: color-mix(in srgb, var(--color-accent-500) 10%, transparent);
+  gap: 4px;
+}
+.seeAll:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: -2px;
+}
+
+.seeAllLabel { color: var(--color-ink-900); }
+.seeAllArrow {
+  color: var(--color-accent-500);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  letter-spacing: 0;
+  transition: transform var(--dur-base) var(--ease-emphatic);
+}
+.seeAll:hover .seeAllArrow { transform: translateX(3px); }
+
+/* ── 平板：横向滚动 ── */
+@media (max-width: 900px) {
+  .wrap {
+    border-radius: 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+    border-left: none;
+    border-right: none;
+  }
+  .index {
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .item {
+    flex: 0 0 auto;
+    min-width: 220px;
+    max-width: none;
+    padding: 14px 18px;
+    border: none;
+    border-right: 1px solid color-mix(in srgb, var(--color-ink-900) 6%, transparent);
+  }
+  .item:last-child { border-right: none; }
+  .item::before { display: none; }
+  .item.active {
+    background: color-mix(in srgb, var(--color-accent-500) 8%, transparent);
+  }
+  .seeAll { padding: 16px 18px; }
+}
+
+/* ── 移动端：列表项放大、see-all 加大 ── */
+@media (max-width: 640px) {
+  .item {
+    padding: 16px 18px;
+    min-height: 72px;
+  }
+  .nameCn { font-size: 15px; }
+  .nameEn { font-size: 11px; }
+  .region { font-size: 9px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item,
+  .number,
+  .nameCn,
+  .nameEn,
+  .region,
+  .seeAll,
+  .seeAllArrow { transition: none; }
+  .item::before { transition: none; }
+}

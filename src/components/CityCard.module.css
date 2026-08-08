@@ -1,0 +1,132 @@
+/* ============================================================
+   CityCard · v2.8.0 统一轻量卡
+   - 3:2 固定图片比例（图占 ~65%）
+   - 文字：编号 + 国家 + 城市名（极简）
+   - 高度由 grid 控制（统一等高）
+   ============================================================ */
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-canvas);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-2);
+  cursor: pointer;
+  transition:
+    transform var(--dur-slow) var(--ease-emphatic),
+    box-shadow var(--dur-slow) var(--ease-emphatic);
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-3);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 4px;
+}
+
+/* ── 图片区（3:2 固定比例） ── */
+.imageWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--color-canvas-deep);
+  flex-shrink: 0;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.7) contrast(0.95) brightness(1.02);
+  transition:
+    filter var(--dur-slow) var(--ease-emphatic),
+    transform var(--dur-glacial) var(--ease-emphatic);
+}
+
+.card:hover .image {
+  filter: saturate(0.85) contrast(1) brightness(1.02);
+  transform: scale(1.03);
+}
+
+.warmFilter {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(60, 50, 40, 0) 60%, rgba(26, 26, 26, 0.2) 100%),
+    linear-gradient(135deg, rgba(217, 119, 87, 0.04) 0%, rgba(60, 50, 40, 0.08) 100%),
+    rgba(245, 241, 234, 0.05);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* ── 信息条（极简） ── */
+.info {
+  padding: 16px 20px 18px;
+  background: var(--color-canvas);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+}
+
+.number {
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-ink-500);
+  letter-spacing: 0.05em;
+}
+
+.region {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--color-ink-500);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.name {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: var(--fw-semibold);
+  color: var(--color-ink-900);
+  letter-spacing: -0.01em;
+}
+
+.nameCn {
+  font-size: 22px;
+  line-height: 1.1;
+}
+
+.nameEn {
+  font-size: 13px;
+  font-style: italic;
+  font-weight: var(--fw-regular);
+  color: var(--color-ink-500);
+}
+
+@media (max-width: 640px) {
+  .info { padding: 12px 14px 14px; }
+  .nameCn { font-size: 18px; }
+  .nameEn { font-size: 12px; }
+}

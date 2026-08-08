@@ -1,0 +1,737 @@
+/* ============================================================
+   MomentsTimeline · v2.22.0 统一 Full-screen Scene
+   - 左 50%：世界此刻（无大背景框）
+   - 中间 1px 细线
+   - 右 50%：事件列表（编辑式信息流，无圆角背景）
+   - 顶部状态：WORLD SNAPSHOT — DEVELOPING（developing 语气，无 LIVE 字样 / 无脉冲）
+   - 底部：换一组按钮 + 可选 What's coming 提示（v2.22 · 由 status 驱动）
+   ============================================================ */
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 0;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ════════════════════════════════════════════════
+   左侧 50% — 填满内容（无大背景框）
+   ════════════════════════════════════════════════ */
+
+.leftCol {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 8px 28px 8px 8px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* UTC 时间 */
+.utcBlock {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.utcNumber {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 48px;
+  font-weight: 400;
+  color: var(--color-ink-900);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.utcMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.utcLabel {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-ink-500);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.utcTimeOfDay {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--color-ink-700);
+  letter-spacing: -0.01em;
+}
+
+/* 状态行 */
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.date {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  color: var(--color-ink-500);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+/* v2.22 · status badge（取代旧的 .editorialBadge，由 data-status 驱动） */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--color-ink-500);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.statusLabel { white-space: nowrap; }
+
+.statusDot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--color-ink-300);
+  flex-shrink: 0;
+  position: relative;
+}
+
+/* live · 暖橘强调 + 缓慢脉冲 */
+.statusBadge[data-status="live"] {
+  color: var(--color-accent-500);
+}
+.statusBadge[data-status="live"] .statusDot {
+  background: var(--color-accent-500);
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-500) 35%, transparent);
+  animation: statusDotPulse 2.6s var(--ease-in-out) infinite;
+}
+
+/* developing · editorial · 静态灰点 + 灰色文字 */
+.statusBadge[data-status="developing"] .statusDot,
+.statusBadge[data-status="editorial"] .statusDot {
+  background: var(--color-ink-300);
+  animation: none;
+}
+
+@keyframes statusDotPulse {
+  0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-500) 40%, transparent); }
+  70%  { box-shadow: 0 0 0 7px color-mix(in srgb, var(--color-accent-500) 0%, transparent); }
+  100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent-500) 0%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statusBadge[data-status="live"] .statusDot { animation: none; }
+}
+
+/* 副文案（v2.22 · 顶部状态行下方 · 移动端只保留中文）
+   - 故意不写 "非实时" / "curated, not live"
+   - 用小一号、浅一档的字号表达"次要" */
+.statusSubtitle {
+  margin: 6px 0 0;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  color: var(--color-ink-500);
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.statusSubtitleCn {
+  font-style: normal;
+  color: var(--color-ink-500);
+}
+
+.statusSubtitleEn {
+  font-style: italic;
+  color: var(--color-ink-500);
+  font-size: 10px;
+}
+
+/* 平板 / 移动端：隐藏英文副文案，只保留中文 "世界正在构建中" */
+@media (max-width: 640px) {
+  .statusSubtitleEn { display: none; }
+  .statusSubtitle { gap: 0; }
+}
+
+/* 概念性文案 */
+.tagline {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--color-ink-700);
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+}
+
+.tagline em {
+  font-style: italic;
+  color: var(--color-ink-500);
+}
+
+
+/* 兼容保留：.momentsNotice 现归 App.module.css 全权负责，组件不再渲染 */
+
+/* 日夜色带 */
+.dayNightWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dayNightBar {
+  position: relative;
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(90deg,
+    #1a1f3a 0%,
+    #3d3060 12%,
+    #d97a55 25%,
+    #f4c08e 38%,
+    #fff5e8 50%,
+    #f4c08e 62%,
+    #d97a55 75%,
+    #3d3060 88%,
+    #1a1f3a 100%);
+  overflow: hidden;
+}
+
+.dayNightProgress {
+  position: absolute;
+  top: -3px;
+  bottom: -3px;
+  width: 2px;
+  background: var(--color-accent-500);
+  transform: translateX(-50%);
+  box-shadow: 0 0 0 2px var(--color-canvas), 0 0 8px var(--color-accent-500);
+  transition: left 320ms var(--ease-emphatic);
+}
+
+.dayNightLabels {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  color: var(--color-ink-500);
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+  padding: 0 2px;
+}
+
+/* 时区条容器 */
+.timezoneWrap {
+  flex-shrink: 0;
+}
+
+/* ── 子块：全球时段分布 / 当前选中概览 / 数据来源 ── */
+.subBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.subTitle {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 500;
+  color: var(--color-ink-500);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+/* 时段分布 */
+.periodList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.periodItem {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+}
+
+.periodName {
+  color: var(--color-ink-700);
+  letter-spacing: 0.02em;
+}
+
+.periodBar {
+  display: block;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: var(--r-pill);
+  overflow: hidden;
+}
+
+.periodBarFill {
+  display: block;
+  height: 100%;
+  background: var(--color-accent-500);
+  opacity: 0.4;
+  transition: width 320ms var(--ease-emphatic);
+}
+
+.periodCount {
+  color: var(--color-ink-500);
+  font-variant-numeric: tabular-nums;
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+/* 当前选中事件概览 */
+.overviewContent {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+  padding: 4px 0 0;
+}
+
+.overviewCity {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.overviewCityName {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-ink-900);
+  letter-spacing: -0.01em;
+}
+
+.overviewCityEn {
+  font-family: var(--font-serif);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--color-ink-500);
+}
+
+.overviewTime {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--color-ink-500);
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+}
+
+.overviewWeather {
+  flex-basis: 100%;
+  margin-top: 2px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.overviewWeather::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-ink-900) 15%, transparent);
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.overviewTitle {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-ink-900);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.overviewDesc {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--color-ink-500);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* v2.22 · What's coming 提示（取代 v2.19 的 .dataSource）
+   - 故意不写 "live" / 非实时 / "curated, not live"
+   - developing 时显示 "Live mode coming soon. 实时数据源接入中。"
+   - editorial 时显示 "Curated by editors. 编辑精选 · 持续更新中。"
+   - 不绘制边框、不引用强调色，避开警告/错误感 */
+.whatsComing {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-style: italic;
+  color: var(--color-ink-500);
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.whatsComingZh {
+  color: var(--color-ink-500);
+  font-style: normal;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+}
+
+/* v2.22 · 旧的 .dataSource 仅作为兼容保留，TSX 已不再渲染 */
+.dataSource,
+.dataSource strong,
+.dataSourceSub { display: none; }
+
+
+/* 换一组按钮 */
+.reshuffle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  padding: 5px 11px;
+  align-self: flex-start;
+  background: transparent;
+  color: var(--color-ink-700);
+  border: 1px solid color-mix(in srgb, var(--color-ink-900) 15%, transparent);
+  border-radius: var(--r-pill);
+  font-family: var(--font-sans);
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-out);
+}
+
+.reshuffle:hover {
+  border-color: var(--color-ink-900);
+  color: var(--color-ink-900);
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.reshuffle:active { transform: scale(0.97); }
+
+.reshuffleIcon {
+  display: inline-block;
+  font-size: 11px;
+  line-height: 1;
+  transition: transform 400ms var(--ease-emphatic);
+}
+
+.reshuffle:hover .reshuffleIcon { transform: rotate(180deg); }
+
+/* ════════════════════════════════════════════════
+   中间 1px 细线分隔
+   ════════════════════════════════════════════════ */
+
+.divider {
+  width: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  align-self: stretch;
+}
+
+/* ════════════════════════════════════════════════
+   右侧 50% — 编辑式信息流（无圆角背景）
+   ════════════════════════════════════════════════ */
+
+.rightCol {
+  list-style: none;
+  margin: 0;
+  padding: 8px 8px 8px 28px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* 事件行（无背景框 · 细线分隔 · hover 淡背景 · 选中 2px 暖橘竖线） */
+.event {
+  display: grid;
+  grid-template-columns: 20px 48px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 4px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: transparent;
+  border-radius: 0;
+  transition: background var(--dur-fast) var(--ease-out);
+  cursor: pointer;
+  flex: none;
+  min-height: 76px;
+  max-height: 88px;
+  position: relative;
+}
+
+.event:last-child { border-bottom: none; }
+
+.eventClickable:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* 选中态：左侧 2px 强调竖线 + 极淡暖色背景 */
+.eventActive {
+  background: color-mix(in srgb, var(--color-accent-500) 4%, transparent);
+}
+
+.eventActive::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--color-accent-500);
+}
+
+.eventActive .eventIndex { color: var(--color-accent-500); font-weight: 600; }
+
+/* 编号 */
+.eventIndex {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-ink-500);
+  font-variant-numeric: tabular-nums;
+  padding-top: 2px;
+}
+
+/* 48x48 现场小图 */
+.eventThumb {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-ink-900) 5%, transparent);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.eventThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: saturate(0.7) contrast(0.95) brightness(1.02);
+}
+
+.eventThumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(217, 119, 87, 0.06) 0%,
+    rgba(60, 50, 40, 0.08) 100%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* 事件内容 */
+.eventContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.eventHead {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.eventCityName {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  color: var(--color-ink-900);
+  letter-spacing: -0.01em;
+}
+
+.eventCityEn {
+  font-family: var(--font-serif);
+  font-size: 10px;
+  font-style: italic;
+  color: var(--color-ink-500);
+}
+
+.eventTime {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--color-ink-500);
+  font-variant-numeric: tabular-nums;
+  margin-left: auto;
+}
+
+.eventWeather {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0;
+}
+
+.eventWeather::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-ink-900) 15%, transparent);
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.eventTitle {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-weight: var(--font-semibold);
+  color: var(--color-ink-900);
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eventDesc {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 11px;
+  font-style: italic;
+  color: var(--color-ink-500);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eventMeta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.eventSource {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  color: var(--color-ink-500);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eventDot {
+  color: var(--color-ink-300);
+  font-size: 9px;
+}
+
+.eventUpdated {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  color: var(--color-ink-300);
+  font-style: italic;
+}
+
+.eventType {
+  font-family: var(--font-sans);
+  font-size: 8px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 2px 6px;
+  border: 1px solid;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--event-accent, var(--color-ink-500)) 8%, transparent);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* ── 移动端 ── */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+    gap: 0;
+  }
+  .divider {
+    width: 100%;
+    height: 1px;
+  }
+  .leftCol {
+    padding: 8px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+  .rightCol {
+    padding: 8px 16px;
+  }
+  .utcNumber { font-size: 36px; }
+  .tagline { font-size: 14px; }
+  .event { padding: 10px 4px; }
+  .reshuffle { display: none; }
+}
+
+@media (max-width: 640px) {
+  .utcNumber { font-size: 28px; }
+/* 移动端：状态行不超 2 行；
+   日期 + 状态 badge 同行；副文案另起一行（已在 .statusSubtitle 中由 flex 处理） */
+@media (max-width: 640px) {
+  .statusRow { flex-wrap: nowrap; }
+  .date { font-size: 9px; letter-spacing: 0.15em; }
+  .statusBadge { font-size: 9px; letter-spacing: 0.15em; gap: 5px; }
+  .statusLabel { white-space: nowrap; }
+}
+
+  .tagline { font-size: 13px; }
+  .eventThumb { width: 48px; height: 48px; }
+  .eventCityName { font-size: 13px; }
+  .eventTitle { font-size: 12px; }
+  .eventDesc { font-size: 10px; }
+}

@@ -1,0 +1,47 @@
+/* ============================================================
+   EventWeatherChip · v2.60.0
+   - 极小 chip：图标 + 短文案 + 温度（紧凑单行）
+   - 不抢戏：字号 10px，颜色 --color-ink-500
+   - 暗色背景（活动卡片 / 详情页）：反白
+   ============================================================ */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-ink-500);
+  letter-spacing: 0.02em;
+  line-height: 1;
+  /* 与同行的内容（time · timezone · contentType）共享一行 baseline */
+  white-space: nowrap;
+}
+
+.chip > span:first-of-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-ink-500);
+}
+
+.summary {
+  color: var(--color-ink-500);
+}
+
+.temp {
+  font-family: 'JetBrains Mono', monospace;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-700);
+  margin-left: 1px;
+  letter-spacing: 0;
+}
+
+.inverted {
+  color: var(--color-canvas);
+}
+.inverted .summary { color: var(--color-canvas); opacity: 0.92; }
+.inverted .temp { color: var(--color-canvas); }
+.inverted > span:first-of-type { color: var(--color-canvas); }

@@ -1,0 +1,82 @@
+/* ============================================================
+   看见地球 · v2.50.0 · CityIndexPage · /cities 城市地图集
+   - 板块 2 的"全集"索引，展示全部 12 城
+   - 编辑式信息流网格（不是大图卡）：编号 + 中英 + 国家 + 48×48 缩略图
+   - 每张点击 → /cities/<slug>
+   - 12 城以 4 列 × 3 行布局，移动端 2 列
+   ============================================================ */
+
+import { Link } from '@/router/Router';
+import { cities } from '@/data/cities';
+import styles from './CityIndexPage.module.css';
+
+export function CityIndexPage() {
+  return (
+    <div className={styles.page}>
+      {/* 顶部导航 */}
+      <header className={styles.nav}>
+        <Link href="/" className={styles.navBack}>
+          <span aria-hidden="true">←</span> 返回 See Earth
+        </Link>
+      </header>
+
+      {/* 章节 */}
+      <section className={styles.header}>
+        <span className={styles.kicker}>ATLAS</span>
+        <h1 className={styles.title}>
+          {cities.length} CITIES · 编辑精选
+        </h1>
+        <p className={styles.subtitle}>
+          Curated atlas — selected cities, seen one at a time.
+        </p>
+      </section>
+
+      {/* 12 城网格 */}
+      <section className={styles.gridSection}>
+        <ol className={styles.grid}>
+          {cities.map((city, i) => (
+            <li key={city.slug} className={styles.cell}>
+              <Link
+                href={city.href}
+                className={styles.item}
+                aria-label={`打开 ${city.nameCn} ${city.nameEn} 详情页`}
+              >
+                <span className={styles.num}>
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span className={styles.thumb}>
+                  {city.images[0] && (
+                    <img
+                      src={`${city.images[0].url.split('?')[0]}?w=120&h=120&fit=crop&q=60`}
+                      alt=""
+                      loading="lazy"
+                      width={48}
+                      height={48}
+                    />
+                  )}
+                </span>
+                <div className={styles.info}>
+                  <span className={styles.nameCn}>{city.nameCn}</span>
+                  <span className={styles.nameEn}>{city.nameEn}</span>
+                </div>
+                <span className={styles.country}>
+                  {city.countryEn.toUpperCase()}
+                </span>
+                <span className={styles.arrow} aria-hidden="true">→</span>
+              </Link>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {/* 返回首页 */}
+      <footer className={styles.footer}>
+        <Link href="/" className={styles.footerLink}>
+          <span aria-hidden="true">↑</span> 回到 See Earth 主页
+        </Link>
+      </footer>
+    </div>
+  );
+}
+
+export default CityIndexPage;

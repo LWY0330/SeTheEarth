@@ -1,152 +1,491 @@
-/* App · top-level layout */
+/* ============================================================
+   App · v2.11.0
+   - 板块 2：左主视觉 62% + 右 10 城市索引 38%
+   - 板块 3：横向 24h 时间轴 + 6 事件行（与板块 2 不同结构）
+   ============================================================ */
 
-.shell {
-  position: relative;
-  min-height: 100vh;
-  overflow: hidden;
+.app {
+  background: var(--color-canvas);
+  color: var(--color-ink-900);
 }
+
+/* ════════════════════════════════════════════════════════════
+   首屏 · 100svh 极简
+   ════════════════════════════════════════════════════════════ */
 
 .hero {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-  align-items: center;
-  gap: var(--sp-7);
-  max-width: var(--layout-max);
-  margin: 0 auto;
-  padding: clamp(48px, 9vw, 120px) var(--layout-gutter) var(--sp-7);
-}
-
-.heroCopy {
+  min-height: 100svh;
+  height: 100svh;
+  background: var(--color-canvas);
   display: flex;
   flex-direction: column;
-  gap: var(--sp-5);
-  max-width: 560px;
+  align-items: center;
+  padding: 24px var(--layout-gutter) 32px;
 }
 
-.eyebrow {
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: var(--layout-max);
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+.logo {
   display: inline-flex;
   align-items: center;
-  gap: var(--sp-2);
-  padding: var(--sp-1) var(--sp-3);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--r-pill);
-  background: rgba(125, 249, 255, 0.06);
-  font-size: var(--fs-micro);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  width: fit-content;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--color-ink-900);
+  transition: opacity var(--dur-fast) var(--ease-out);
 }
 
-.eyebrowDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent-stellar);
-  box-shadow: 0 0 12px var(--accent-stellar);
+.logo:hover { opacity: 0.6; }
+
+.logoDot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--r-pill);
+  background: var(--color-accent-500);
+  box-shadow: 0 0 6px rgba(217, 119, 87, 0.4);
+}
+
+.logoCn {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: var(--fw-semibold);
+}
+
+.logoEn {
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--color-ink-500);
+}
+
+.nav {
+  display: flex;
+  gap: 28px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: var(--fw-medium);
+}
+
+.nav a {
+  color: var(--color-ink-500);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+  cursor: pointer;
+}
+
+.navLink {
+  color: var(--color-ink-500);
+  text-decoration: none;
+  transition: color var(--dur-fast) var(--ease-out);
+  cursor: pointer;
+}
+
+.navLink:hover { color: var(--color-ink-900); }
+
+@media (max-width: 640px) { .nav { display: none; } }
+
+.heroContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .title {
-  font-family: var(--font-serif);
-  font-size: var(--fs-display);
-  line-height: var(--lh-tight);
-  letter-spacing: -0.01em;
   margin: 0;
-  color: var(--text-primary);
-}
-
-.titleAccent {
-  background: linear-gradient(140deg, var(--accent-stellar) 0%, var(--ocean-shine) 60%, var(--ocean-mid) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.lede {
-  font-size: var(--fs-h3);
-  color: var(--text-secondary);
-  line-height: var(--lh-loose);
-  margin: 0;
-}
-
-.metaList {
-  list-style: none;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--sp-4);
-  padding: 0;
-  margin: var(--sp-3) 0 0;
-}
-
-.metaList li {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-1);
-  padding: var(--sp-3) var(--sp-4);
-  background: linear-gradient(160deg, rgba(17,36,56,.6), rgba(10,25,41,.6));
-  border: 1px solid var(--border-soft);
-  border-radius: var(--r-md);
-}
-
-.metaList strong {
   font-family: var(--font-serif);
-  font-size: var(--fs-h2);
+  font-size: clamp(2.25rem, 4.5vw + 0.5rem, 3.75rem);
   font-weight: var(--fw-bold);
-  color: var(--accent-stellar);
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  max-width: 14ch;
 }
 
-.metaList span {
-  font-size: var(--fs-micro);
-  color: var(--text-tertiary);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+.titleEm {
+  font-style: italic;
+  color: var(--color-accent-500);
+  font-weight: var(--fw-bold);
+  display: inline-block;
+  background: linear-gradient(
+    transparent 65%,
+    rgba(217, 119, 87, 0.25) 65%,
+    rgba(217, 119, 87, 0.25) 90%,
+    transparent 90%
+  );
+  padding: 0 0.1em;
+}
+
+.subtitle {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-style: italic;
+  font-weight: var(--fw-regular);
+  color: var(--color-ink-500);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+}
+
+.subtitleEn {
+  font-style: italic;
+  color: var(--color-ink-300);
+  font-size: 13px;
+}
+
+.searchMount {
+  width: 100%;
+  max-width: 480px;
+  margin-top: 6px;
 }
 
 .scrollHint {
-  margin-top: var(--sp-3);
-  align-self: flex-start;
-  font-family: var(--font-mono);
-  font-size: var(--fs-micro);
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--color-ink-300);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  animation: scrollHint 2.5s var(--ease-in-out) infinite;
+}
+
+@keyframes scrollHint {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(3px); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   板块 2：10 城市（主+索引 · 城市档案）
+   ════════════════════════════════════════════════════════════ */
+
+.citiesSection {
+  /* v2.30.0 · 容纳 hero 图 + CITY NOW 卡 + 标题区 + 12 城市列表于 100svh */
+  background: var(--color-canvas);
+  padding: 20px var(--layout-gutter) 20px;
+  max-width: 1280px;
+  margin: 0 auto;
+  min-height: 100svh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ink-900) 10%, transparent);
+  flex-shrink: 0;
+}
+
+.sectionNumber {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-ink-500);
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
-  padding: var(--sp-2) var(--sp-3);
-  border: 1px dashed var(--border-soft);
-  border-radius: var(--r-pill);
-  transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+  white-space: nowrap;
 }
 
-.scrollHint:hover {
-  color: var(--accent-stellar);
-  border-color: var(--border-strong);
-}
-
-.heroGlobe {
-  position: relative;
+.sectionTitleBlock {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: baseline;
+  gap: 14px;
+  flex: 1;
+  margin-left: 8px;
 }
 
-@media (max-width: 960px) {
-  .hero {
+.sectionTitle {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.sectionSubtitle {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--color-ink-500);
+}
+
+.citiesLayout {
+  display: grid;
+  grid-template-columns: 62% 38%;
+  gap: 18px;
+  flex: 1 1 0;
+  min-height: 0;
+  align-items: stretch;
+}
+
+.featuredCol {
+  position: relative;
+  min-height: 0;
+}
+
+.indexCol {
+  position: relative;
+  min-height: 0;
+}
+
+/* ════════════════════════════════════════════════════════════
+   板块 3：全球实时时间轴（与板块 2 完全不同的结构）
+   ════════════════════════════════════════════════════════════ */
+
+.moments {
+  background: var(--color-canvas);
+  padding: 28px var(--layout-gutter);
+  border-top: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.momentsHeader {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  flex-shrink: 0;
+}
+
+.momentsNumber {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-ink-500);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.momentsTitle {
+  margin: 0 0 4px;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.momentsSubtitle {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 12px;
+  font-style: italic;
+  font-weight: var(--fw-regular);
+  color: var(--color-ink-500);
+}
+
+.momentsNotice {
+  text-align: center;
+  margin: 0 0 12px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-style: italic;
+  color: var(--color-ink-500);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.timelineWrap {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ════════════════════════════════════════════════════════════
+   响应式
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+  .citiesLayout {
     grid-template-columns: 1fr;
-    text-align: left;
+    grid-template-rows: minmax(280px, 45%) 1fr;
+    gap: 14px;
   }
-  .heroGlobe {
-    order: -1;
-  }
-  .metaList {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+  .citiesSection { height: auto; min-height: 100svh; padding: 16px var(--layout-gutter) 20px; }
+  .sectionTitleBlock { flex-direction: column; align-items: flex-start; gap: 4px; margin: 0 8px; }
+  .sectionTitle { font-size: 18px; }
+  .sectionSubtitle { font-size: 11px; }
+  .momentsTitle { font-size: 18px; }
+  .momentsSubtitle { font-size: 11px; }
 }
 
-@media (max-width: 560px) {
-  .metaList {
-    grid-template-columns: 1fr 1fr;
+@media (max-width: 640px) {
+  .citiesLayout {
+    grid-template-rows: minmax(280px, 45%) auto;
+    gap: 12px;
   }
-  .metaList li:nth-child(3) {
-    grid-column: 1 / -1;
-  }
+  .hero { padding: 16px var(--layout-gutter) 24px; }
+  .citiesSection { padding: 20px var(--layout-gutter); }
+  .moments { padding: 20px var(--layout-gutter); }
+  .title { font-size: clamp(1.75rem, 8vw, 2.5rem); }
+  .subtitle { font-size: 14px; }
+  .sectionHeader { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .sectionTitleBlock { margin: 0; }
+}
+
+
+/* ── v2.20 Prompt D 价值主张 + 搜索建议 + 为什么看见地球 ── */
+
+.valueProp {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--color-ink-700);
+  line-height: 1.4;
+  letter-spacing: -0.005em;
+  text-align: center;
+  max-width: 480px;
+}
+
+.valuePropEn {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--color-ink-300);
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+/* 搜索建议 */
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 4px;
+  max-width: 600px;
+}
+
+.suggestion {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 14px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid color-mix(in srgb, var(--color-ink-900) 12%, transparent);
+  border-radius: 100px;
+  font-family: var(--font-serif);
+  font-size: 12px;
+  color: var(--color-ink-500);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease-out);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+
+.suggestion:hover {
+  color: var(--color-ink-900);
+  border-color: var(--color-ink-900);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* 为什么看见地球 */
+.why {
+  margin-top: 4px;
+  max-width: 540px;
+  width: 100%;
+  text-align: center;
+}
+
+.whySummary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-family: var(--font-serif);
+  font-size: 12px;
+  color: var(--color-ink-500);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  outline: none;
+  border-radius: 100px;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.whySummary::-webkit-details-marker { display: none; }
+
+.whySummaryEn {
+  font-style: italic;
+  color: var(--color-ink-300);
+  font-size: 11px;
+}
+
+.whyArrow {
+  font-size: 10px;
+  color: var(--color-ink-300);
+  transition: transform 200ms var(--ease-out);
+}
+
+.why[open] .whyArrow {
+  transform: rotate(180deg);
+}
+
+.whySummary:hover {
+  color: var(--color-ink-900);
+}
+
+.whyContent {
+  margin-top: 10px;
+  padding: 12px 16px;
+  background: color-mix(in srgb, var(--color-canvas) 60%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  border-radius: 12px;
+  font-family: var(--font-serif);
+  font-size: 12px;
+  font-style: italic;
+  color: var(--color-ink-500);
+  line-height: 1.6;
+  text-align: center;
+}
+
+/* v2.20 板块 3 单组件全宽 */
+.momentsSection {
+  background: var(--color-canvas);
+  padding: 32px var(--layout-gutter);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+.momentsTimelineWrap {
+  flex: 1;
+  min-height: 0;
+}
+
+/* v2.20 移动端 */
+@media (max-width: 640px) {
+  .valueProp { font-size: 16px; }
+  .valuePropEn { font-size: 12px; }
+  .suggestions { gap: 6px; }
+  .suggestion { font-size: 11px; padding: 4px 10px; }
+  .why { margin-top: 0; }
 }

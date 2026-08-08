@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>城市详情 · 看见地球</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  body { padding: 0; min-height: 100vh; background: var(--color-neutral-1000); }
+  .page {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 80px var(--space-8) var(--space-12);
+  }
+
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-6);
+    background: rgba(15, 20, 27, 0.55);
+    backdrop-filter: blur(20px) saturate(140%);
+    border-bottom: 1px solid rgba(232, 238, 245, 0.08);
+    z-index: 50;
+  }
+  .topbar__left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .topbar__right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  /* Hero */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+    margin-bottom: var(--space-12);
+  }
+
+  .hero__media {
+    aspect-ratio: 16 / 9;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(91, 168, 255, 0.2), transparent 60%),
+      linear-gradient(135deg, #0a1a2f 0%, #1a2942 50%, #2B6FBE 100%);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(91, 168, 255, 0.15);
+  }
+  .hero__media::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 200px 100px at 40% 60%, rgba(232, 238, 245, 0.08), transparent),
+      radial-gradient(ellipse 100px 80px at 65% 50%, rgba(232, 238, 245, 0.06), transparent);
+  }
+  .hero__media-overlay {
+    position: absolute;
+    bottom: var(--space-4);
+    left: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-neutral-200);
+    background: rgba(0,0,0,0.5);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+
+  .hero__meta {
+    background: rgba(15, 20, 27, 0.55);
+    backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(232, 238, 245, 0.08);
+    border-radius: var(--radius-lg);
+    padding: var(--space-8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-4);
+  }
+
+  .hero__title {
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-semibold);
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  .hero__subtitle {
+    font-size: var(--text-md);
+    color: var(--color-neutral-200);
+    margin: 0;
+  }
+  .hero__row {
+    display: flex;
+    gap: var(--space-6);
+    padding-top: var(--space-3);
+  }
+  .hero__row-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .hero__row-label {
+    font-size: var(--text-xs);
+    color: var(--color-neutral-400);
+  }
+  .hero__row-value {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-medium);
+    color: var(--color-neutral-100);
+  }
+
+  /* Coords */
+  .coords {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-6);
+    background: var(--color-neutral-900);
+    border: 1px solid var(--color-neutral-600);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--space-8);
+  }
+  .coords__label {
+    font-size: var(--text-sm);
+    color: var(--color-neutral-400);
+  }
+  .coords__value {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    color: var(--color-primary-400);
+    flex: 1;
+  }
+  .coords__action {
+    font-size: var(--text-sm);
+    color: var(--color-neutral-200);
+    cursor: pointer;
+  }
+
+  /* Layers section */
+  .section-title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-medium);
+    margin: 0 0 var(--space-4);
+    color: var(--color-neutral-100);
+  }
+
+  .layers {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-3);
+    margin-bottom: var(--space-12);
+  }
+
+  .layer-chip {
+    height: 56px;
+    background: var(--color-neutral-800);
+    border: 1px solid var(--color-neutral-600);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-neutral-200);
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-standard);
+  }
+  .layer-chip:hover { border-color: var(--color-primary-500); }
+  .layer-chip.active {
+    background: rgba(91, 168, 255, 0.12);
+    border-color: var(--color-primary-500);
+    color: var(--color-primary-400);
+  }
+
+  /* CTA */
+  .cta {
+    width: 100%;
+    height: 56px;
+    background: var(--color-primary-500);
+    color: var(--color-neutral-1000);
+    border-radius: var(--radius-lg);
+    border: none;
+    font-size: var(--text-md);
+    font-weight: var(--weight-medium);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3);
+    box-shadow: var(--shadow-glow-primary);
+    transition: all var(--duration-fast) var(--ease-standard);
+  }
+  .cta:hover { background: var(--color-primary-400); }
+
+  /* Sun position chart */
+  .sun-chart {
+    margin-top: var(--space-8);
+    padding: var(--space-6);
+    background: var(--color-neutral-900);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-neutral-600);
+  }
+  .sun-chart__title {
+    font-size: var(--text-base);
+    color: var(--color-neutral-100);
+    margin-bottom: var(--space-4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sun-chart__bars {
+    display: flex;
+    gap: 2px;
+    height: 80px;
+    align-items: flex-end;
+  }
+  .sun-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--color-accent-500), var(--color-primary-700));
+    border-radius: 2px 2px 0 0;
+    opacity: 0.85;
+  }
+  .sun-bar.now {
+    background: linear-gradient(180deg, var(--color-accent-400), var(--color-primary-500));
+    box-shadow: 0 0 12px rgba(244, 184, 96, 0.6);
+  }
+  .sun-bar.night { background: var(--color-neutral-800); }
+  .sun-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-neutral-400);
+  }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="topbar__left">
+    <button class="btn btn--ghost btn--sm" style="width: 32px; height: 32px; padding: 0;">
+      <svg class="icon"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <span style="font-size: var(--text-md); font-weight: var(--weight-medium);">城市详情</span>
+  </div>
+  <div class="topbar__right">
+    <button class="btn btn--ghost btn--sm" style="width: 32px; height: 32px; padding: 0; color: var(--color-error);">
+      <svg class="icon"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </button>
+    <button class="btn btn--ghost btn--sm" style="width: 32px; height: 32px; padding: 0;">
+      <svg class="icon"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero__media">
+      <div class="hero__media-overlay">当前视角 · 35.6762°N 139.6503°E · 高度 12,500 km</div>
+    </div>
+    <div class="hero__meta">
+      <h1 class="hero__title">东京</h1>
+      <p class="hero__subtitle">Tokyo, JP · UTC+9</p>
+      <div class="hero__row">
+        <div class="hero__row-item">
+          <span class="hero__row-label">现在</span>
+          <span class="hero__row-value">16:42</span>
+        </div>
+        <div class="hero__row-item">
+          <span class="hero__row-label">日落</span>
+          <span class="hero__row-value">18:24</span>
+        </div>
+        <div class="hero__row-item">
+          <span class="hero__row-label">天气</span>
+          <span class="hero__row-value">晴 · 19°</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Coordinates -->
+  <div class="coords">
+    <span class="coords__label">[坐标]</span>
+    <span class="coords__value">35.6762° N, 139.6503° E</span>
+    <span class="coords__action">[复制]</span>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider divider--subtle"></div>
+
+  <!-- Layers -->
+  <h3 class="section-title">此刻此地 · 数据图层</h3>
+  <div class="layers">
+    <div class="layer-chip active">
+      <svg class="icon" style="width: 16px; height: 16px;"><circle cx="12" cy="12" r="5"/><path d="M12 1v6m0 10v6"/></svg>
+      昼夜
+    </div>
+    <div class="layer-chip">
+      <svg class="icon" style="width: 16px; height: 16px;"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+      云层
+    </div>
+    <div class="layer-chip">
+      <svg class="icon" style="width: 16px; height: 16px;"><path d="M2 12h20M2 12l3-3m-3 3l3 3M22 12l-3-3m3 3l-3 3"/></svg>
+      海冰
+    </div>
+    <div class="layer-chip">
+      <svg class="icon" style="width: 16px; height: 16px;"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>
+      夜间灯光
+    </div>
+  </div>
+
+  <!-- Sun chart -->
+  <div class="sun-chart">
+    <div class="sun-chart__title">
+      <span>今日日照 · 12 小时 38 分钟</span>
+      <span style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-accent-500);">↑ 05:04 · ↓ 18:24</span>
+    </div>
+    <div class="sun-chart__bars">
+      <div class="sun-bar night" style="height: 0%;"></div>
+      <div class="sun-bar night" style="height: 0%;"></div>
+      <div class="sun-bar night" style="height: 0%;"></div>
+      <div class="sun-bar night" style="height: 0%;"></div>
+      <div class="sun-bar" style="height: 12%;"></div>
+      <div class="sun-bar" style="height: 28%;"></div>
+      <div class="sun-bar" style="height: 48%;"></div>
+      <div class="sun-bar" style="height: 68%;"></div>
+      <div class="sun-bar" style="height: 85%;"></div>
+      <div class="sun-bar" style="height: 96%;"></div>
+      <div class="sun-bar" style="height: 100%;"></div>
+      <div class="sun-bar" style="height: 96%;"></div>
+      <div class="sun-bar" style="height: 85%;"></div>
+      <div class="sun-bar" style="height: 68%;"></div>
+      <div class="sun-bar now" style="height: 48%;"></div>
+      <div class="sun-bar" style="height: 28%;"></div>
+      <div class="sun-bar" style="height: 12%;"></div>
+      <div class="sun-bar night" style="height: 0%;"></div>
+      <div class="sun-bar night" style="height: 0%;"></div>
+      <div class="sun-bar night" style="height: 0%;"></div>
+      <div class="sun-bar night" style="height: 0%;"></div>
+      <div class="sun-bar night" style="height: 0%;"></div>
+      <div class="sun-bar night" style="height: 0%;"></div>
+      <div class="sun-bar night" style="height: 0%;"></div>
+    </div>
+    <div class="sun-axis">
+      <span>00</span><span>04</span><span>08</span><span>12</span><span>16</span><span>20</span><span>24</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <button class="cta" style="margin-top: var(--space-8);">
+    <svg class="icon"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+    寄一张明信片
+  </button>
+
+</div>
+
+</body>
+</html>

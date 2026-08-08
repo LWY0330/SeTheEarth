@@ -1,10 +1,10 @@
-/* See Earth — base layer
-   - resets
-   - applies tokens to global surfaces
-   - keeps utilities minimal; styling lives in CSS Modules per component.
-*/
+/* ============================================================
+   看见地球 · See Earth — Globals (v2)
+   奶白底 + 墨黑字 + 暖橘强调
+   ============================================================ */
 
 @import "./tokens.css";
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap");
 
 *,
 *::before,
@@ -28,35 +28,41 @@ body {
   font-family: var(--font-sans);
   font-size: var(--fs-body);
   line-height: var(--lh-base);
-  color: var(--text-primary);
-  background:
-    radial-gradient(ellipse at 20% 0%, rgba(30,111,165,.25), transparent 55%),
-    radial-gradient(ellipse at 90% 100%, rgba(125,249,255,.08), transparent 50%),
-    var(--space-deepest);
-  background-attachment: fixed;
+  color: var(--color-ink-900);
+  background: var(--color-canvas);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  /* 全局纸面纹理（极淡，温暖手感） */
+  background-image:
+    radial-gradient(ellipse 60% 40% at 80% 0%,
+      rgba(217, 119, 87, 0.04), transparent 60%),
+    radial-gradient(ellipse 50% 35% at 20% 100%,
+      rgba(60, 50, 40, 0.03), transparent 60%);
+  background-attachment: fixed;
 }
 
 ::selection {
-  background: var(--accent-stellar);
-  color: var(--text-inverse);
+  background: var(--color-accent-500);
+  color: var(--color-canvas);
 }
 
 a {
-  color: var(--accent-stellar);
+  color: var(--color-accent-500);
   text-decoration: none;
   transition: color var(--dur-fast) var(--ease-out);
 }
 a:hover {
-  color: var(--ocean-shine);
+  color: var(--color-accent-600);
 }
 
 button {
   font-family: inherit;
   cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
 }
 
 img,
@@ -65,6 +71,23 @@ svg {
   max-width: 100%;
 }
 
+input,
+textarea {
+  font-family: inherit;
+  color: inherit;
+}
+
+/* ---- 焦点环（统一暖橘色，旅行手册感） ---- */
+:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 3px;
+  border-radius: var(--r-sm);
+}
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ---- prefers-reduced-motion ---- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

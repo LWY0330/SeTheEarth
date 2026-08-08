@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>寄明信片 · 看见地球</title>
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  body { padding: 0; min-height: 100vh; background: var(--color-neutral-1000); }
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-6);
+    background: rgba(15, 20, 27, 0.55);
+    backdrop-filter: blur(20px) saturate(140%);
+    border-bottom: 1px solid rgba(232, 238, 245, 0.08);
+    z-index: 50;
+  }
+
+  .page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px var(--space-8) var(--space-12);
+  }
+
+  /* ── Stepper ── */
+  .stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-12);
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-neutral-400);
+    font-size: var(--text-sm);
+  }
+  .step.done { color: var(--color-success); }
+  .step.active { color: var(--color-primary-500); font-weight: var(--weight-medium); }
+  .step__circle {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--color-neutral-600);
+    color: var(--color-neutral-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    border: 2px solid transparent;
+  }
+  .step.done .step__circle {
+    background: var(--color-success);
+    color: var(--color-neutral-1000);
+  }
+  .step.active .step__circle {
+    background: var(--color-primary-500);
+    color: var(--color-neutral-1000);
+    box-shadow: 0 0 0 4px rgba(91, 168, 255, 0.2);
+  }
+  .step__line {
+    width: 80px;
+    height: 1px;
+    background: var(--color-neutral-600);
+  }
+  .step.done + .step__line,
+  .step__line.done { background: var(--color-success); }
+
+  /* ── Layout ── */
+  .composer {
+    display: grid;
+    grid-template-columns: 1fr 480px;
+    gap: var(--space-12);
+    align-items: start;
+  }
+
+  /* ── Left column (form) ── */
+  .form-section {
+    margin-bottom: var(--space-8);
+  }
+  .form-section__title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-medium);
+    color: var(--color-neutral-100);
+    margin-bottom: var(--space-4);
+  }
+  .form-section__desc {
+    font-size: var(--text-sm);
+    color: var(--color-neutral-200);
+    margin-bottom: var(--space-6);
+  }
+
+  /* ── Stamp / Border picker ── */
+  .picker-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+  }
+  .picker {
+    aspect-ratio: 4 / 5;
+    background: var(--color-neutral-800);
+    border: 2px solid var(--color-neutral-600);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--duration-fast) var(--ease-standard);
+    gap: var(--space-2);
+  }
+  .picker:hover { border-color: var(--color-primary-500); }
+  .picker.active {
+    border-color: var(--color-primary-500);
+    background: rgba(91, 168, 255, 0.08);
+  }
+  .picker__thumb {
+    width: 60%;
+    aspect-ratio: 1;
+    background: var(--color-neutral-700);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--text-2xl);
+  }
+  .picker__label {
+    font-size: var(--text-sm);
+    color: var(--color-neutral-200);
+  }
+  .picker.active .picker__label { color: var(--color-primary-400); }
+
+  /* ── Textarea ── */
+  .textarea {
+    width: 100%;
+    min-height: 180px;
+    padding: var(--space-4);
+    background: var(--color-neutral-900);
+    border: 1px solid var(--color-neutral-600);
+    border-radius: var(--radius-lg);
+    color: var(--color-neutral-100);
+    font-family: var(--font-handwrite);
+    font-size: 22px;
+    line-height: 1.6;
+    resize: vertical;
+  }
+  .textarea:focus {
+    outline: none;
+    border-color: var(--color-primary-500);
+    box-shadow: 0 0 0 2px rgba(91, 168, 255, 0.2);
+  }
+  .textarea::placeholder { color: var(--color-neutral-400); }
+
+  .char-count {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-neutral-400);
+    text-align: right;
+    margin-top: var(--space-2);
+  }
+
+  /* ── Postcard preview (right column) ── */
+  .preview-wrap {
+    position: sticky;
+    top: 100px;
+  }
+  .preview-label {
+    font-size: var(--text-sm);
+    color: var(--color-neutral-400);
+    margin-bottom: var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .postcard {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    background: var(--color-neutral-50);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl), 0 0 60px rgba(91, 168, 255, 0.15);
+    display: grid;
+    grid-template-rows: 65% 35%;
+    position: relative;
+  }
+
+  .postcard__media {
+    background:
+      radial-gradient(circle at 50% 30%, rgba(91, 168, 255, 0.3), transparent 60%),
+      linear-gradient(135deg, #0a1a2f 0%, #1a2942 50%, #2B6FBE 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .postcard__media::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80px 40px at 35% 55%, rgba(232, 238, 245, 0.1), transparent),
+      radial-gradient(ellipse 60px 35px at 60% 45%, rgba(232, 238, 245, 0.08), transparent);
+  }
+
+  .postcard__stamp {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    width: 56px;
+    height: 72px;
+    border: 1px dashed var(--color-neutral-300);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-neutral-400);
+    background: rgba(255, 255, 255, 0.5);
+  }
+
+  .postcard__footer {
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-2);
+    background: #fafbfc;
+    color: #1a1f2a;
+  }
+  .postcard__coords {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-neutral-600);
+  }
+  .postcard__title {
+    font-size: var(--text-lg);
+    font-weight: var(--weight-medium);
+    color: #1a1f2a;
+  }
+  .postcard__date {
+    font-size: var(--text-sm);
+    color: var(--color-neutral-600);
+  }
+
+  /* ── Bottom sticky actions ── */
+  .actions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-8);
+    background: rgba(15, 20, 27, 0.85);
+    backdrop-filter: blur(20px) saturate(140%);
+    border-top: 1px solid rgba(232, 238, 245, 0.08);
+    z-index: 50;
+  }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div style="display: flex; align-items: center; gap: var(--space-3);">
+    <button class="btn btn--ghost btn--sm" style="width: 32px; height: 32px; padding: 0;">
+      <svg class="icon"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <span style="font-size: var(--text-md); font-weight: var(--weight-medium);">寄明信片</span>
+  </div>
+  <div style="font-size: var(--text-sm); color: var(--color-neutral-400);">步骤 2 / 3</div>
+</div>
+
+<div class="page">
+
+  <!-- Stepper -->
+  <div class="stepper">
+    <div class="step done">
+      <div class="step__circle">✓</div>
+      <span>选择地点</span>
+    </div>
+    <div class="step__line done"></div>
+    <div class="step active">
+      <div class="step__circle">2</div>
+      <span>写内容</span>
+    </div>
+    <div class="step__line"></div>
+    <div class="step">
+      <div class="step__circle">3</div>
+      <span>寄出</span>
+    </div>
+  </div>
+
+  <div class="composer">
+
+    <!-- LEFT: Form -->
+    <div>
+      <!-- Border picker -->
+      <section class="form-section">
+        <h3 class="form-section__title">边框样式</h3>
+        <p class="form-section__desc">选一个适合这张明信片的边框</p>
+        <div class="picker-grid">
+          <div class="picker">
+            <div class="picker__thumb" style="background: var(--color-neutral-50); border: 1px solid var(--color-neutral-300);"></div>
+            <div class="picker__label">classic</div>
+          </div>
+          <div class="picker">
+            <div class="picker__thumb" style="background: #F4ECD8; border: 2px double var(--color-neutral-400);"></div>
+            <div class="picker__label">vintage</div>
+          </div>
+          <div class="picker active">
+            <div class="picker__thumb" style="background: var(--color-neutral-900); border: 1px solid var(--color-accent-500);"></div>
+            <div class="picker__label">night</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stamp picker -->
+      <section class="form-section">
+        <h3 class="form-section__title">邮票样式</h3>
+        <div class="picker-grid">
+          <div class="picker active">
+            <div class="picker__thumb" style="background: linear-gradient(135deg, var(--color-neutral-200), var(--color-neutral-300)); color: var(--color-neutral-700); font-family: var(--font-mono); font-size: var(--text-xs);">STAMP</div>
+            <div class="picker__label">经典</div>
+          </div>
+          <div class="picker">
+            <div class="picker__thumb" style="background: linear-gradient(135deg, var(--color-accent-400), var(--color-accent-600)); color: white; font-family: var(--font-mono); font-size: var(--text-xs);">★ 1969</div>
+            <div class="picker__label">复古</div>
+          </div>
+          <div class="picker">
+            <div class="picker__thumb" style="background: linear-gradient(135deg, var(--color-primary-500), var(--color-primary-700)); color: white; font-family: var(--font-mono); font-size: var(--text-xs);">NASA</div>
+            <div class="picker__label">致敬</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Message -->
+      <section class="form-section">
+        <h3 class="form-section__title">写几句话</h3>
+        <p class="form-section__desc">最多 200 字 · 用手写体传达温度</p>
+        <textarea class="textarea" placeholder="在这里写下你想说的话…">刚从东京塔下来，
+晚霞把整座城市染成
+你说的那种蓝。
+替你看一眼。</textarea>
+        <div class="char-count">38 / 200</div>
+      </section>
+    </div>
+
+    <!-- RIGHT: Preview -->
+    <div class="preview-wrap">
+      <div class="preview-label">实时预览</div>
+      <div class="postcard">
+        <div class="postcard__media">
+          <div class="postcard__stamp">STAMP</div>
+        </div>
+        <div class="postcard__footer">
+          <div class="postcard__coords">35.6762°N · 139.6503°E</div>
+          <div class="postcard__title">东京 · 2026-08-05</div>
+        </div>
+      </div>
+      <div style="margin-top: var(--space-4); padding: var(--space-3); background: var(--color-neutral-900); border-radius: var(--radius-md); border: 1px solid var(--color-neutral-600);">
+        <div style="font-size: var(--text-xs); color: var(--color-neutral-400); display: flex; gap: var(--space-2); align-items: center;">
+          <svg class="icon" style="width: 14px; height: 14px; color: var(--color-primary-400);"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          选 `night` 边框会在暗色画布上自动适配，与首页调性统一
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Bottom actions -->
+<div class="actions">
+  <button class="btn btn--ghost btn--md">← 上一步</button>
+  <button class="btn btn--primary btn--md glow">下一步：填收件人 →</button>
+</div>
+
+</body>
+</html>

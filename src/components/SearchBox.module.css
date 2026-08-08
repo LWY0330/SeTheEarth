@@ -1,0 +1,236 @@
+/* ============================================================
+   SearchBox · 液态玻璃 (Liquid Glass)
+   不是 2020 毛玻璃，是会"呼吸的水"
+   ============================================================ */
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  max-width: var(--search-max-w);
+  margin: 0 auto;
+}
+
+/* ── 玻璃面板 ── */
+.glass {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-6);
+  background: var(--glass-bg);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-pill);
+  box-shadow:
+    /* 顶部高光（液态玻璃关键） */
+    inset 0 1px 0 0 var(--glass-highlight-top),
+    inset 0 -1px 0 0 var(--glass-highlight-bot),
+    /* 落地阴影 */
+    var(--glass-shadow);
+  transition:
+    background var(--dur-base) var(--ease-emphatic),
+    border-color var(--dur-base) var(--ease-emphatic),
+    transform var(--dur-base) var(--ease-spring),
+    box-shadow var(--dur-base) var(--ease-emphatic);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.glass:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border-strong);
+  transform: translateY(-1px);
+}
+
+.glass:focus-within {
+  background: var(--glass-bg-active);
+  border-color: var(--color-accent-500);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-highlight-top),
+    inset 0 -1px 0 0 var(--glass-highlight-bot),
+    0 0 0 4px rgba(217, 119, 87, 0.18),
+    var(--glass-shadow);
+  transform: translateY(-2px);
+}
+
+/* ── 折射光带（液态玻璃的灵魂） ── */
+.shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0) 65%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 250% 100%;
+  background-position: 100% 0;
+  pointer-events: none;
+  opacity: 0.7;
+  transition: opacity var(--dur-base) var(--ease-out);
+  z-index: 0;
+  animation: shimmerDrift 9s var(--ease-in-out) infinite;
+}
+
+@keyframes shimmerDrift {
+  0%   { background-position: 150% 0; }
+  50%  { background-position: -50% 0; }
+  100% { background-position: -50% 0; }
+}
+
+.glass:focus-within .shimmer {
+  opacity: 1;
+}
+
+/* ── 图标 ── */
+.icon {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--color-ink-500);
+  transition: color var(--dur-fast) var(--ease-out);
+  z-index: 1;
+}
+
+.glass:focus-within .icon {
+  color: var(--color-accent-500);
+}
+
+/* ── 输入框 ── */
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-serif);
+  font-size: var(--fs-h3);
+  font-weight: 500;
+  letter-spacing: var(--letter-normal);
+  color: var(--color-ink-900);
+  padding: var(--sp-2) 0;
+  z-index: 1;
+}
+
+.input::placeholder {
+  color: var(--color-ink-300);
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+.input::-webkit-search-decoration,
+.input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+/* ── 提交按钮 ── */
+.submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-pill);
+  background: var(--color-ink-900);
+  color: var(--color-canvas);
+  font-family: var(--font-mono);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-medium);
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-spring);
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.submit:hover {
+  background: var(--color-accent-500);
+  transform: scale(1.05);
+}
+
+.submit:active {
+  transform: scale(0.95);
+}
+
+/* ── 下拉建议 ── */
+.suggest {
+  position: absolute;
+  top: calc(100% + var(--sp-3));
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: var(--sp-2);
+  list-style: none;
+  background: var(--glass-bg-active);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid var(--glass-border-strong);
+  border-radius: var(--r-lg);
+  box-shadow:
+    inset 0 1px 0 0 var(--glass-highlight-top),
+    var(--glass-shadow);
+  z-index: var(--z-tooltip);
+  animation: suggestIn var(--dur-base) var(--ease-emphatic) both;
+  overflow: hidden;
+}
+
+@keyframes suggestIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.suggestItem {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease-out);
+}
+
+.suggestItemActive,
+.suggestItem:hover {
+  background: rgba(255, 255, 255, 0.45);
+}
+
+.suggestName {
+  font-family: var(--font-serif);
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-semibold);
+  color: var(--color-ink-900);
+}
+
+.suggestEn {
+  font-family: var(--font-serif);
+  font-size: var(--fs-body);
+  font-style: italic;
+  color: var(--color-ink-700);
+}
+
+.suggestCountry {
+  font-family: var(--font-sans);
+  font-size: var(--fs-micro);
+  color: var(--color-ink-500);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-wide);
+}
+
+/* ── 响应式 ── */
+@media (max-width: 640px) {
+  .glass {
+    padding: var(--sp-3) var(--sp-3) var(--sp-3) var(--sp-5);
+  }
+  .input {
+    font-size: var(--fs-body);
+  }
+}
