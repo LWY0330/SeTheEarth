@@ -1,14 +1,25 @@
 /* ============================================================
-   看见地球 · v2.60.0 · CityNow
+   看见地球 · v1.1 · CityNow
    - 城市此刻：localTime + dayPeriod + weather + oneObservation
-   - v2.60 起：weather 改为实时数据（open-meteo，15 分钟缓存）
-   - 失败 → "Weather temporarily unavailable"，绝不展示静态占位
+   - weather: open-meteo 实时数据（15min 内存缓存），失败 → "Weather temporarily unavailable"
+   - dayPeriod: 优先 sunrise-sunset.org 真实日照（v1.1 新增），失败 → 小时桶降级
    - 24 时区秒级刷新（每 30s 更新一次本地时间）
    ============================================================ */
 
 import { useEffect, useState } from 'react';
-import { getCityNow, getTimezoneAbbrev, type City } from '@/data/cities';
-import { getWeatherSafe, getWeatherIcon, readFreshCache, type Weather } from '@/lib/weather';
+import {
+  getCityNow,
+  getTimezoneAbbrev,
+  type City,
+  type DayPeriod,
+} from '@/data/cities';
+import {
+  getWeatherSafe,
+  getWeatherIcon,
+  readFreshCache,
+  type Weather,
+} from '@/lib/weather';
+import { getSunPeriodSafe } from '@/lib/sun';
 import { WeatherIcon } from './WeatherIcon';
 import styles from './CityNow.module.css';
 
@@ -38,6 +49,8 @@ export function CityNow({ city, compact, inverted }: CityNowProps) {
   // 实时天气：从 open-meteo 拉（safe 版 → 失败返回 null）
   // 初次渲染同步从缓存取值，避免出现"短暂 unavailable"闪烁
   const [weather, setWeather] = useState<Weather | null>(() => readFreshCache(city.slug));
+  // v1.1 · 真实日照时段（sunrise-sunset.org），失败回退到小时桶
+  const [dayPeriod, setDayPeriod] = useState<DayPeriod | null>(null);
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 30000);
@@ -57,8 +70,22 @@ export function CityNow({ city, compact, inverted }: CityNowProps) {
     };
   }, [city.slug]);
 
+  // v1.1 · 真实日照数据驱动 dayPeriod；失败回退到小时桶（在 snap 里取）
+  useEffect(() => {
+    let cancelled = false;
+    getSunPeriodSafe(city, new Date()).then((period) => {
+      if (!cancelled) setDayPeriod(period);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [city.slug]);
+
   const snap = getCityNow(city, now);
   const tzAbbrev = getTimezoneAbbrev(city, now);
+
+  // 优先用真实日照；拿不到数据时（dayPeriod === null）显示 hour-bucket 的 snap.dayPeriod
+  const effectiveDayPeriod = dayPeriod ?? snap.dayPeriod;
 
   const className = [
     styles.root,
@@ -75,7 +102,7 @@ export function CityNow({ city, compact, inverted }: CityNowProps) {
       <div className={styles.timeRow}>
         <span className={styles.localTime}>{snap.localTime}</span>
         <span className={styles.tz}>{tzAbbrev || snap.timezone}</span>
-        <span className={styles.dayPeriod}>· {snap.dayPeriod}</span>
+        <span className={styles.dayPeriod}>· {effectiveDayPeriod}</span>
       </div>
 
       <div className={styles.weatherRow}>
@@ -101,7 +128,7 @@ export function CityNow({ city, compact, inverted }: CityNowProps) {
       <div className={styles.source}>
         <span className={styles.sourceLabel}>weather</span>
         <span className={styles.sourceSep}>·</span>
-        <span className={styles.sourceName}>open-meteo</span>
+        <span className={styles.sourceName}>open-meteo + sunrise-sunset</span>
         <span className={styles.sourceSep}>·</span>
         <span className={styles.sourceUpdated}>
           updated {weather ? formatUpdatedAt(weather.updatedAt) : '—'}
