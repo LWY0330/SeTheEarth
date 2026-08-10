@@ -105,6 +105,8 @@
   border: none;
   outline: none;
   background: transparent;
+  appearance: none;             /* v2.91.0 · 去掉 Chrome/Safari 默认 search 焦点方框 */
+  -webkit-appearance: none;
   font-family: var(--font-serif);
   font-size: var(--fs-h3);
   font-weight: 500;
@@ -190,8 +192,9 @@
 .suggestItem {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  align-items: baseline;
-  gap: var(--sp-3);
+  align-items: center;          /* v2.91.0 · 改：baseline → center 解决三列纵向对齐 */
+  gap: var(--sp-4);             /* v2.91.0 · 改：sp-3 → sp-4 */
+  min-height: 56px;             /* v2.91.0 · 行高稳定 */
   padding: var(--sp-3) var(--sp-4);
   border-radius: var(--r-md);
   cursor: pointer;
@@ -223,6 +226,8 @@
   color: var(--color-ink-500);
   text-transform: uppercase;
   letter-spacing: var(--letter-wide);
+  white-space: nowrap;          /* v2.91.0 · 防止换行造成错位 */
+  text-align: right;            /* v2.91.0 · 右对齐 */
 }
 
 /* ── 响应式 ── */

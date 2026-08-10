@@ -106,7 +106,7 @@ export function SearchBox({ onSearch, autoFocus = false }: SearchBoxProps) {
 
         <input
           ref={inputRef}
-          type="search"
+          type="text"
           className={styles.input}
           placeholder="搜索一座城市 · Search a city"
           value={value}

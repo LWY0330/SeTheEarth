@@ -9,6 +9,7 @@
 import { useEffect, useRef } from 'react';
 import type { City } from '@/data/cities';
 import { Link } from '@/router/Router';
+import { cityImageUrl, cityImageSrcSet } from '@/lib/imageUrl';
 import styles from './CityIndex.module.css';
 
 export type CityIndexProps = {
@@ -123,6 +124,21 @@ export function CityIndex({
               onKeyDown={(e) => handleKeyDown(e, i)}
             >
               <span className={styles.number}>{displayNumber}</span>
+              {/* v2.91.0 · 加缩略图：6 列表按 6 重新排版（β） */}
+              {city.images[0] && (
+                <span className={styles.thumb} aria-hidden="true">
+                  <img
+                    src={cityImageUrl(city.images[0].url, 80, 'webp', 65)}
+                    srcSet={cityImageSrcSet(city.images[0].url, [80, 160], 'webp', 65)}
+                    sizes="40px"
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    width={40}
+                    height={40}
+                  />
+                </span>
+              )}
               <div className={styles.info}>
                 <span className={styles.nameZh}>{city.nameZh}</span>
                 <span className={styles.nameEn}>{city.nameEn}</span>

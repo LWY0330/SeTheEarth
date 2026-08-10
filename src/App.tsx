@@ -241,10 +241,10 @@ function HomeShell() {
           </span>
           <div className={styles.sectionTitleBlock}>
             <h2 className={styles.sectionTitle}>
-              {featuredCities.length} 座精选城市 · 点击进入详情页
+              此刻 · {featuredCities.length} 座城市
             </h2>
             <p className={styles.sectionSubtitle}>
-              Selected cities — seen one at a time.
+              Six cities, right now.
             </p>
           </div>
         </header>
