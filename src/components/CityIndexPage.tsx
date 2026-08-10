@@ -80,11 +80,16 @@ export function CityIndexPage() {
         </ol>
       </section>
 
-      {/* 返回首页 */}
+      {/* 底部链接：返回首页 + 关于 */}
       <footer className={styles.footer}>
-        <Link href="/" className={styles.footerLink}>
-          <span aria-hidden="true">↑</span> 回到 See Earth 主页
-        </Link>
+        <div className={styles.footerLinks}>
+          <Link href="/" className={styles.footerLink}>
+            <span aria-hidden="true">↑</span> 回到 See Earth 主页
+          </Link>
+          <Link href="/about" className={styles.footerLink}>
+            关于本项目 / About
+          </Link>
+        </div>
       </footer>
     </div>
   );

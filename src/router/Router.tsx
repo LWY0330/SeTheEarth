@@ -28,6 +28,7 @@ import {
 export type Route =
   | { name: 'home'; path: '/' }
   | { name: 'cities-index'; path: '/cities' }
+  | { name: 'about'; path: '/about' }
   | { name: 'city'; slug: string; path: string };
 
 export type RouteMatch = {
@@ -45,6 +46,10 @@ export function matchRoutes(path: string): RouteMatch {
   // /cities 单独 → 全集索引页
   if (clean === '/cities' || clean === '/cities/') {
     return { name: 'cities-index', params: {}, path: '/cities' };
+  }
+  // /about → 关于本项目
+  if (clean === '/about' || clean === '/about/') {
+    return { name: 'about', params: {}, path: '/about' };
   }
   // /cities/<slug> → 城市详情
   const cityMatch = clean.match(/^\/cities\/([a-z0-9-]+)\/?$/i);

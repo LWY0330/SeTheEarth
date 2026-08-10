@@ -19,6 +19,7 @@ import MomentsTimeline from '@/components/MomentsTimeline';
 import EventDrawer from '@/components/EventDrawer';
 import CityPage from '@/components/CityPage';
 import CityIndexPage from '@/components/CityIndexPage';
+import AboutPage from '@/components/AboutPage';
 import Meta from '@/components/Meta';
 import styles from './App.module.css';
 
@@ -309,6 +310,9 @@ function AppRoutes() {
   const route = useRoute();
   if (route.name === 'cities-index') {
     return <CityIndexPage />;
+  }
+  if (route.name === 'about') {
+    return <AboutPage />;
   }
   if (route.name === 'city') {
     return <CityPage />;

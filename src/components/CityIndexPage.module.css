@@ -259,3 +259,18 @@
 @media (prefers-reduced-motion: reduce) {
   .item, .nameCn, .arrow, .thumb img { transition: none; }
 }
+
+
+/* v2.90.0 · 底部两链接（回到主页 + About） */
+.footerLinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+@media (min-width: 768px) {
+  .footerLinks {
+    flex-direction: row;
+    gap: 32px;
+  }
+}
