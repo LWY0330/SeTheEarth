@@ -47,8 +47,9 @@ export type City = {
   isFeatured?: boolean;
 };
 
+// v2.80.0 · 主图尺寸从 1600x1067 降到 1200x800，配合 PR #9 的 WebP + srcset
 function img(period: DayPeriod, url: string, focus: string): CityImage {
-  return { period, url, focus, width: 1600, height: 1067 };
+  return { period, url, focus, width: 1200, height: 800 };
 }
 
 export const cities: readonly City[] = [

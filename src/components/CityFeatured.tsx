@@ -9,6 +9,7 @@
 import { useEffect, useState } from 'react';
 import type { City } from '@/data/cities';
 import { getCurrentPeriod, pickImage } from '@/data/cities';
+import { cityImageUrl, cityImageSrcSet, HERO_WIDTHS } from '@/lib/imageUrl';
 import { Link } from '@/router/Router';
 import CityNow from './CityNow';
 import styles from './CityFeatured.module.css';
@@ -44,16 +45,28 @@ export function CityFeatured({ city, index, total, onPrev, onNext }: CityFeature
       aria-label={`${city.nameZh} 主视觉区 · 当前时段 ${period}`}
     >
       <div className={styles.imageWrap} data-period={period}>
-        <img
-          key={picked.url /* 时段/城市切换 → 重启 fade-in */}
-          className={styles.image}
-          src={picked.url}
-          alt={`${city.nameZh} ${city.nameEn}`}
-          loading={index === 0 ? 'eager' : 'lazy'}
-          style={{ objectPosition: picked.focus || '50% 50%' }}
-          width={picked.width}
-          height={picked.height}
-        />
+        <picture>
+          <source
+            type="image/webp"
+            srcSet={cityImageSrcSet(picked.url, HERO_WIDTHS, 'webp')}
+            sizes="(max-width: 768px) 100vw, 1200px"
+          />
+          <img
+            key={picked.url /* 时段/城市切换 → 重启 fade-in */}
+            className={styles.image}
+            src={cityImageUrl(picked.url, 1200, 'jpg')}
+            srcSet={cityImageSrcSet(picked.url, HERO_WIDTHS, 'jpg')}
+            sizes="(max-width: 768px) 100vw, 1200px"
+            alt={`${city.nameZh} ${city.nameEn}`}
+            loading={index === 0 ? 'eager' : 'lazy'}
+            // v2.80.0 · LCP 候选加 high priority；非首图不加
+            {...(index === 0 ? { fetchPriority: 'high' as const } : {})}
+            decoding="async"
+            style={{ objectPosition: picked.focus || '50% 50%' }}
+            width={picked.width}
+            height={picked.height}
+          />
+        </picture>
         <div className={styles.warmFilter} aria-hidden="true" />
         {/* 时段染色蒙版（夜/晨/午各有微差） */}
         <div

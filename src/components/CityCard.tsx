@@ -7,6 +7,7 @@
 
 import type { City } from '@/data/cities';
 import { pickImage, getCurrentPeriod } from '@/data/cities';
+import { cityImageUrl, cityImageSrcSet, CARD_WIDTHS } from '@/lib/imageUrl';
 import styles from './CityCard.module.css';
 
 export type CityCardProps = {
@@ -33,9 +34,14 @@ export function CityCard({ city, index, onClick }: CityCardProps) {
       <div className={styles.imageWrap}>
         <img
           className={styles.image}
-          src={pickImage(city, getCurrentPeriod(city.timezone)).url}
+          src={cityImageUrl(pickImage(city, getCurrentPeriod(city.timezone)).url, 600, 'webp')}
+          srcSet={cityImageSrcSet(pickImage(city, getCurrentPeriod(city.timezone)).url, CARD_WIDTHS, 'webp')}
+          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
           alt={`${city.nameZh} ${city.nameEn}`}
           loading={index < 3 ? 'eager' : 'lazy'}
+          decoding="async"
+          width={600}
+          height={400}
         />
         <div className={styles.warmFilter} aria-hidden="true" />
       </div>

@@ -19,6 +19,7 @@ import {
 } from '@/data/cities';
 import CityNow from './CityNow';
 import Meta from '@/components/Meta';
+import { cityImageUrl, cityImageSrcSet, HERO_WIDTHS } from '@/lib/imageUrl';
 import styles from './CityPage.module.css';
 
 function pickRelated(current: City): City[] {
@@ -74,6 +75,9 @@ export function CityPage() {
   const tz = getTimezoneAbbrev(city, now);
   const related = pickRelated(city);
 
+  // v2.80.0 · hero 图在 return 前算一次（PR #9 去掉 IIFE）
+  const pickedHero = pickImage(city, getCurrentPeriod(city.timezone));
+
   return (
     <div className={styles.page}>
       <Meta
@@ -97,19 +101,25 @@ export function CityPage() {
       {/* 城市主图 */}
       <section className={styles.hero}>
         <div className={styles.heroImage}>
-          {(() => {
-            const pickedHero = pickImage(city, getCurrentPeriod(city.timezone));
-            return (
-              <img
-                src={pickedHero.url}
-                alt={`${city.nameZh} ${city.nameEn}`}
-                style={{ objectPosition: pickedHero.focus || '50% 50%' }}
-                loading="eager"
-                width={pickedHero.width}
-                height={pickedHero.height}
-              />
-            );
-          })()}
+          <picture>
+            <source
+              type="image/webp"
+              srcSet={cityImageSrcSet(pickedHero.url, HERO_WIDTHS, 'webp')}
+              sizes="(max-width: 768px) 100vw, 1200px"
+            />
+            <img
+              src={cityImageUrl(pickedHero.url, 1200, 'jpg')}
+              srcSet={cityImageSrcSet(pickedHero.url, HERO_WIDTHS, 'jpg')}
+              sizes="(max-width: 768px) 100vw, 1200px"
+              alt={`${city.nameZh} ${city.nameEn}`}
+              style={{ objectPosition: pickedHero.focus || '50% 50%' }}
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              width={pickedHero.width}
+              height={pickedHero.height}
+            />
+          </picture>
           <div className={styles.heroFilter} aria-hidden="true" />
           <div className={styles.heroText}>
             <span className={styles.heroKicker}>{city.countryEn.toUpperCase()}</span>
@@ -183,7 +193,16 @@ export function CityPage() {
           {related.map((c) => (
             <Link key={c.slug} href={c.href} className={styles.relatedCard}>
               <div className={styles.relatedThumb}>
-                <img src={pickImage(c, getCurrentPeriod(c.timezone)).url} alt="" loading="lazy" />
+                <img
+                  src={cityImageUrl(pickImage(c, getCurrentPeriod(c.timezone)).url, 200, 'webp')}
+                  srcSet={cityImageSrcSet(pickImage(c, getCurrentPeriod(c.timezone)).url, [200, 400], 'webp')}
+                  sizes="(max-width: 768px) 33vw, 200px"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  width={200}
+                  height={200}
+                />
                 <div className={styles.relatedFilter} aria-hidden="true" />
               </div>
               <div className={styles.relatedInfo}>

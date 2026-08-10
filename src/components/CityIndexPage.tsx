@@ -9,6 +9,7 @@
 import { Link } from '@/router/Router';
 import { cities } from '@/data/cities';
 import Meta from '@/components/Meta';
+import { cityImageUrl, cityImageSrcSet } from '@/lib/imageUrl';
 import styles from './CityIndexPage.module.css';
 
 export function CityIndexPage() {
@@ -54,9 +55,12 @@ export function CityIndexPage() {
                 <span className={styles.thumb}>
                   {city.images[0] && (
                     <img
-                      src={`${city.images[0].url.split('?')[0]}?w=120&h=120&fit=crop&q=60`}
+                      src={cityImageUrl(city.images[0].url, 120, 'webp', 65)}
+                      srcSet={cityImageSrcSet(city.images[0].url, [120, 200], 'webp', 65)}
+                      sizes="48px"
                       alt=""
                       loading="lazy"
+                      decoding="async"
                       width={48}
                       height={48}
                     />
