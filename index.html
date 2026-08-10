@@ -7,6 +7,20 @@
     <meta name="theme-color" content="#050b18" />
     <meta name="description" content="看见地球 — 沿时间轴穿越地球历史与生态" />
     <title>看见地球 · See Earth</title>
+
+    <!-- v2.70.0 · 默认 OG / Twitter / canonical 占位
+         客户端 <Meta> 组件 mount 后会被运行时覆盖；保留这些首屏默认值
+         是为了让 SSR / 爬虫在 SPA 渲染前就能读到基础 SEO 信息。 -->
+    <meta property="og:site_name" content="看见地球 · See Earth" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="看见地球 · See Earth" />
+    <meta property="og:description" content="看见地球 — 沿时间轴穿越地球历史与生态" />
+    <meta property="og:url" content="https://see-earth.vercel.app/" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="看见地球 · See Earth" />
+    <meta name="twitter:description" content="看见地球 — 沿时间轴穿越地球历史与生态" />
+    <link rel="canonical" href="https://see-earth.vercel.app/" />
   </head>
   <body>
     <div id="root"></div>

@@ -19,6 +19,7 @@ import MomentsTimeline from '@/components/MomentsTimeline';
 import EventDrawer from '@/components/EventDrawer';
 import CityPage from '@/components/CityPage';
 import CityIndexPage from '@/components/CityIndexPage';
+import Meta from '@/components/Meta';
 import styles from './App.module.css';
 
 function HomeShell() {
@@ -97,6 +98,12 @@ function HomeShell() {
 
   return (
     <div className={styles.app}>
+      <Meta
+        title="看见地球 · See Earth"
+        description="看见地球 — 沿时间轴穿越地球历史与生态"
+        ogType="website"
+        canonicalPath="/"
+      />
       {/* ═══════ 首屏（v2.20 加价值主张 + 搜索建议 + 为什么看见地球） ═══════ */}
       <section className={styles.hero} ref={heroRef} id="hero">
         <header className={styles.header}>
