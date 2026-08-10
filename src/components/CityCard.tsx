@@ -34,7 +34,7 @@ export function CityCard({ city, index, onClick }: CityCardProps) {
         <img
           className={styles.image}
           src={pickImage(city, getCurrentPeriod(city.timezone)).url}
-          alt={`${city.nameCn} ${city.nameEn}`}
+          alt={`${city.nameZh} ${city.nameEn}`}
           loading={index < 3 ? 'eager' : 'lazy'}
         />
         <div className={styles.warmFilter} aria-hidden="true" />
@@ -49,7 +49,7 @@ export function CityCard({ city, index, onClick }: CityCardProps) {
         </div>
 
         <h3 className={styles.name}>
-          <span className={styles.nameCn}>{city.nameCn}</span>
+          <span className={styles.nameZh}>{city.nameZh}</span>
           <span className={styles.nameEn}>{city.nameEn}</span>
         </h3>
       </div>

@@ -30,7 +30,7 @@ export function EventWeatherChip({ city, inverted }: EventWeatherChipProps) {
     <span
       className={[styles.chip, inverted ? styles.inverted : ''].filter(Boolean).join(' ')}
       data-city={city.slug}
-      aria-label={`${city.nameCn} 当前天气 ${weather.weatherSummary} ${Math.round(weather.temperature)} 度`}
+      aria-label={`${city.nameZh} 当前天气 ${weather.weatherSummary} ${Math.round(weather.temperature)} 度`}
     >
       <WeatherIcon
         name={getWeatherIcon(weather.weatherCode)}

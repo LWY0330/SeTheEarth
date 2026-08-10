@@ -41,14 +41,14 @@ export function CityFeatured({ city, index, total, onPrev, onNext }: CityFeature
       className={styles.featured}
       data-slug={city.slug}
       data-period={period}
-      aria-label={`${city.nameCn} 主视觉区 · 当前时段 ${period}`}
+      aria-label={`${city.nameZh} 主视觉区 · 当前时段 ${period}`}
     >
       <div className={styles.imageWrap} data-period={period}>
         <img
           key={picked.url /* 时段/城市切换 → 重启 fade-in */}
           className={styles.image}
           src={picked.url}
-          alt={`${city.nameCn} ${city.nameEn}`}
+          alt={`${city.nameZh} ${city.nameEn}`}
           loading={index === 0 ? 'eager' : 'lazy'}
           style={{ objectPosition: picked.focus || '50% 50%' }}
           width={picked.width}
@@ -93,7 +93,7 @@ export function CityFeatured({ city, index, total, onPrev, onNext }: CityFeature
         </div>
 
         <h2 className={styles.name}>
-          <span className={styles.nameCn}>{city.nameCn}</span>
+          <span className={styles.nameZh}>{city.nameZh}</span>
           <span className={styles.nameEn}>{city.nameEn}</span>
         </h2>
 
@@ -102,7 +102,7 @@ export function CityFeatured({ city, index, total, onPrev, onNext }: CityFeature
         <Link
           href={city.href}
           className={styles.viewCity}
-          aria-label={`查看 ${city.nameCn} 详情页`}
+          aria-label={`查看 ${city.nameZh} 详情页`}
         >
           VIEW CITY <span aria-hidden="true">→</span>
         </Link>

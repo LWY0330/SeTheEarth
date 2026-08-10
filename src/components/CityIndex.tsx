@@ -115,7 +115,7 @@ export function CityIndex({
               className={className}
               aria-current={active ? 'true' : undefined}
               aria-selected={active}
-              aria-label={`打开 ${city.nameCn} ${city.nameEn} 详情页`}
+              aria-label={`打开 ${city.nameZh} ${city.nameEn} 详情页`}
               onMouseEnter={() => handleEnter(city.id)}
               onMouseLeave={handleLeave}
               onFocus={() => handleFocusCity(city.id)}
@@ -124,7 +124,7 @@ export function CityIndex({
             >
               <span className={styles.number}>{displayNumber}</span>
               <div className={styles.info}>
-                <span className={styles.nameCn}>{city.nameCn}</span>
+                <span className={styles.nameZh}>{city.nameZh}</span>
                 <span className={styles.nameEn}>{city.nameEn}</span>
               </div>
               <span className={styles.region}>{city.countryEn.toUpperCase()}</span>

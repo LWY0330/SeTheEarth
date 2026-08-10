@@ -8,11 +8,18 @@
 
 import { Link } from '@/router/Router';
 import { cities } from '@/data/cities';
+import Meta from '@/components/Meta';
 import styles from './CityIndexPage.module.css';
 
 export function CityIndexPage() {
   return (
     <div className={styles.page}>
+      <Meta
+        title="12 CITIES · 城市地图集 · 看见地球"
+        description="Curated atlas — selected cities, seen one at a time. 编辑精选 12 座城市，看地球的 12 个切片。"
+        ogType="website"
+        canonicalPath="/cities"
+      />
       {/* 顶部导航 */}
       <header className={styles.nav}>
         <Link href="/" className={styles.navBack}>
@@ -39,7 +46,7 @@ export function CityIndexPage() {
               <Link
                 href={city.href}
                 className={styles.item}
-                aria-label={`打开 ${city.nameCn} ${city.nameEn} 详情页`}
+                aria-label={`打开 ${city.nameZh} ${city.nameEn} 详情页`}
               >
                 <span className={styles.num}>
                   {String(i + 1).padStart(2, '0')}
@@ -56,7 +63,7 @@ export function CityIndexPage() {
                   )}
                 </span>
                 <div className={styles.info}>
-                  <span className={styles.nameCn}>{city.nameCn}</span>
+                  <span className={styles.nameZh}>{city.nameZh}</span>
                   <span className={styles.nameEn}>{city.nameEn}</span>
                 </div>
                 <span className={styles.country}>

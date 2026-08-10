@@ -31,9 +31,9 @@ export function SearchBox({ onSearch, autoFocus = false }: SearchBoxProps) {
     return cities
       .map((c, i) => {
         const haystack = [
-          c.nameCn,
+          c.nameZh,
           c.nameEn,
-          c.countryCn,
+          c.countryZh,
           c.countryEn,
           c.slug,
         ]
@@ -148,13 +148,13 @@ export function SearchBox({ onSearch, autoFocus = false }: SearchBoxProps) {
               onMouseEnter={() => setActiveIdx(i)}
               onMouseDown={(e) => {
                 e.preventDefault();
-                commit(c.slug, c.nameCn);
+                commit(c.slug, c.nameZh);
               }}
             >
-              <span className={styles.suggestName}>{c.nameCn}</span>
+              <span className={styles.suggestName}>{c.nameZh}</span>
               <span className={styles.suggestEn}>{c.nameEn}</span>
               <span className={styles.suggestCountry}>
-                {c.countryCn} · {c.countryEn}
+                {c.countryZh} · {c.countryEn}
               </span>
             </li>
           ))}

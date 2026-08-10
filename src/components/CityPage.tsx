@@ -18,6 +18,7 @@ import {
   type City,
 } from '@/data/cities';
 import CityNow from './CityNow';
+import Meta from '@/components/Meta';
 import styles from './CityPage.module.css';
 
 function pickRelated(current: City): City[] {
@@ -56,6 +57,11 @@ export function CityPage() {
   if (!city) {
     return (
       <div className={styles.notFound}>
+        <Meta
+          title="城市未找到 · 看见地球"
+          description="请求的城市不存在。"
+          canonicalPath="/cities"
+        />
         <p className={styles.notFoundText}>城市 "{slug}" 不存在。</p>
         <Link href="/" className={styles.notFoundLink}>
           ← 返回首页
@@ -70,6 +76,13 @@ export function CityPage() {
 
   return (
     <div className={styles.page}>
+      <Meta
+        title={`${city.nameZh} ${city.nameEn} · 看见地球`}
+        description={city.oneObservation}
+        ogType="article"
+        ogImage={city.images[0]?.url}
+        canonicalPath={`/cities/${city.slug}`}
+      />
       {/* 顶部导航 */}
       <header className={styles.nav}>
         <Link href="/" className={styles.navBack}>
@@ -89,7 +102,7 @@ export function CityPage() {
             return (
               <img
                 src={pickedHero.url}
-                alt={`${city.nameCn} ${city.nameEn}`}
+                alt={`${city.nameZh} ${city.nameEn}`}
                 style={{ objectPosition: pickedHero.focus || '50% 50%' }}
                 loading="eager"
                 width={pickedHero.width}
@@ -101,7 +114,7 @@ export function CityPage() {
           <div className={styles.heroText}>
             <span className={styles.heroKicker}>{city.countryEn.toUpperCase()}</span>
             <h1 className={styles.heroTitle}>
-              <span className={styles.heroNameCn}>{city.nameCn}</span>
+              <span className={styles.heroNameCn}>{city.nameZh}</span>
               <span className={styles.heroNameEn}>{city.nameEn}</span>
             </h1>
           </div>
@@ -174,7 +187,7 @@ export function CityPage() {
                 <div className={styles.relatedFilter} aria-hidden="true" />
               </div>
               <div className={styles.relatedInfo}>
-                <span className={styles.relatedCn}>{c.nameCn}</span>
+                <span className={styles.relatedCn}>{c.nameZh}</span>
                 <span className={styles.relatedEn}>{c.nameEn}</span>
                 <span className={styles.relatedCountry}>
                   {c.countryEn.toUpperCase()}
