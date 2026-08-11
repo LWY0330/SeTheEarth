@@ -287,7 +287,7 @@ export function MomentsTimeline({
                       borderColor: `color-mix(in srgb, ${accent} 40%, transparent)`,
                     }}
                   >
-                    {ev.contentTypeCn}
+                    {ev.contentTypeZh}
                   </span>
                 </div>
               </div>

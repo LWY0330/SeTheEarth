@@ -89,7 +89,7 @@ export function EventDrawer({ event, onClose }: EventDrawerProps) {
                 borderColor: `color-mix(in srgb, ${accent} 40%, transparent)`,
               }}
             >
-              {event.contentTypeCn}
+              {event.contentTypeZh}
             </span>
           </div>
 
@@ -126,7 +126,7 @@ export function EventDrawer({ event, onClose }: EventDrawerProps) {
               <dd>{getTimeAgo(event.updatedAt)}</dd>
 
               <dt>内容尺度</dt>
-              <dd>{scaleLabels[event.scale]} · {event.contentTypeCn}</dd>
+              <dd>{scaleLabels[event.scale]} · {event.contentTypeZh}</dd>
 
               <dt>真实度</dt>
               <dd>
