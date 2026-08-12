@@ -15,7 +15,18 @@ export type WeatherSnapshot = {
 export type DayPeriod =
   | 'dawn' | 'morning' | 'afternoon' | 'evening' | 'night' | 'deepNight';
 
+/**
+ * v1.3 PR #11a · 视觉场景分类
+ * - landmark: 阳光下的建筑/地标（afternoon）
+ * - nature:   自然光线下的山水/园林/海滩（morning）
+ * - street:   人流/灯火通明的街景（evening）
+ * - culture:  夜间文化/夜生活/灯光氛围（night）
+ */
+export type CityScene = 'landmark' | 'nature' | 'street' | 'culture';
+
 export type CityImage = {
+  /** 视觉场景分类（用于主图工厂按 4 场景选片） */
+  scene: CityScene;
   period: DayPeriod;
   url: string;
   focus?: string;
@@ -48,8 +59,8 @@ export type City = {
 };
 
 // v2.80.0 · 主图尺寸从 1600x1067 降到 1200x800，配合 PR #9 的 WebP + srcset
-function img(period: DayPeriod, url: string, focus: string): CityImage {
-  return { period, url, focus, width: 1200, height: 800 };
+function img(scene: CityScene, period: DayPeriod, url: string, focus: string): CityImage {
+  return { scene, period, url, focus, width: 1200, height: 800 };
 }
 
 export const cities: readonly City[] = [
@@ -61,10 +72,10 @@ export const cities: readonly City[] = [
     momentZh: '有人正在伏见稻荷的鸟居下，系一个祈愿。',
     lon: 135.7681, lat: 35.0116,
     images: [
-      img('morning', 'https://images.unsplash.com/photo-1493997181344-712f2f19d87a?auto=format&fit=crop&w=1600&q=80', '50% 45%'),
-      img('afternoon', 'https://images.unsplash.com/photo-1493997181344-712f2f19d87a?auto=format&fit=crop&w=1600&q=80', '50% 35%'),
-      img('evening', 'https://images.unsplash.com/photo-1493997181344-712f2f19d87a?auto=format&fit=crop&w=1600&q=80', '50% 55%'),
-      img('night', 'https://images.unsplash.com/photo-1493997181344-712f2f19d87a?auto=format&fit=crop&w=1600&q=80', '50% 60%'),
+      img('landmark', 'afternoon', 'https://images.unsplash.com/photo-1705923401054-b06daf310fc3?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('nature', 'morning', 'https://plus.unsplash.com/premium_photo-1673285285994-6bfff235db97?q=80&w=1036&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('street', 'evening', 'https://images.unsplash.com/photo-1561503972-839d0c56de17?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('culture', 'night', 'https://images.unsplash.com/photo-1570356532073-cb48f5f5fb31?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
     ],
     imageCredit: 'Sorasak · Unsplash',
     href: '/cities/kyoto',
@@ -83,10 +94,10 @@ export const cities: readonly City[] = [
     momentZh: '28 路电车正爬上 Alfama 的老坡，铃铛响了两声。',
     lon: -9.1393, lat: 38.7223,
     images: [
-      img('morning', 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=1600&q=80', '50% 50%'),
-      img('afternoon', 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=1600&q=80', '50% 40%'),
-      img('evening', 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=1600&q=80', '50% 60%'),
-      img('night', 'https://images.unsplash.com/photo-1555881400-74d7acaacd8b?auto=format&fit=crop&w=1600&q=80', '50% 70%'),
+      img('landmark', 'afternoon', 'https://images.pexels.com/photos/36686636/pexels-photo-36686636.jpeg', '50% 50%'),
+      img('nature', 'morning', 'https://images.pexels.com/photos/33659284/pexels-photo-33659284.jpeg', '50% 50%'),
+      img('street', 'evening', 'https://images.pexels.com/photos/35583235/pexels-photo-35583235.jpeg', '50% 50%'),
+      img('culture', 'night', 'https://images.pexels.com/photos/27679827/pexels-photo-27679827.jpeg', '50% 50%'),
     ],
     imageCredit: 'Photos by Lanty · Unsplash',
     href: '/cities/lisbon',
@@ -105,10 +116,10 @@ export const cities: readonly City[] = [
     momentZh: '外滩的灯一盏一盏亮起来，黄浦江的风带着凉。',
     lon: 121.4737, lat: 31.2304,
     images: [
-      img('morning', 'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?auto=format&fit=crop&w=1600&q=80', '50% 40%'),
-      img('afternoon', 'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?auto=format&fit=crop&w=1600&q=80', '50% 30%'),
-      img('evening', 'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?auto=format&fit=crop&w=1600&q=80', '50% 50%'),
-      img('night', 'https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?auto=format&fit=crop&w=1600&q=80', '50% 60%'),
+      img('landmark', 'afternoon', 'https://images.unsplash.com/photo-1616680687799-ea36d6fb2173?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8c2hhbmdoYWklMjBsYW5kbWFya3xlbnwwfHwwfHx8MA%3D%3D', '50% 50%'),
+      img('nature', 'morning', 'https://images.unsplash.com/photo-1591607875744-0c8cd4e4a6e1?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHNoYW5naGFpJTIwbmF0dXJlfGVufDB8fDB8fHww', '50% 50%'),
+      img('street', 'evening', 'https://images.unsplash.com/photo-1573064927936-37b06675e67e?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHNoYW5naGFpJTIwc3RyZWV0fGVufDB8fDB8fHww', '50% 50%'),
+      img('culture', 'night', 'https://images.pexels.com/photos/31772150/pexels-photo-31772150.jpeg', '50% 50%'),
     ],
     imageCredit: 'Dele Ojerinde · Unsplash',
     href: '/cities/shanghai',
@@ -127,10 +138,10 @@ export const cities: readonly City[] = [
     momentZh: 'Coyoacán 的彩色街上，有人正在卖刚出炉的玉米饼。',
     lon: -99.1332, lat: 19.4326,
     images: [
-      img('morning', 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?auto=format&fit=crop&w=1600&q=80', '50% 60%'),
-      img('afternoon', 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?auto=format&fit=crop&w=1600&q=80', '50% 50%'),
-      img('evening', 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?auto=format&fit=crop&w=1600&q=80', '50% 70%'),
-      img('night', 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?auto=format&fit=crop&w=1600&q=80', '50% 40%'),
+      img('landmark', 'afternoon', 'https://images.pexels.com/photos/2239844/pexels-photo-2239844.jpeg', '50% 50%'),
+      img('nature', 'morning', 'https://plus.unsplash.com/premium_photo-1697730092562-293297cab827?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('street', 'evening', 'https://images.unsplash.com/photo-1739224739508-858899e29a35?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('culture', 'night', 'https://images.pexels.com/photos/19911890/pexels-photo-19911890.jpeg', '50% 50%'),
     ],
     imageCredit: 'César Viveros · Unsplash',
     href: '/cities/mexico-city',
@@ -149,10 +160,10 @@ export const cities: readonly City[] = [
     momentZh: '涩谷十字路口的红灯刚转绿，3000 人同时起步。',
     lon: 139.6917, lat: 35.6895,
     images: [
-      img('morning', 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1600&q=80', '50% 50%'),
-      img('afternoon', 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1600&q=80', '50% 40%'),
-      img('evening', 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1600&q=80', '50% 60%'),
-      img('night', 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1600&q=80', '50% 70%'),
+      img('landmark', 'afternoon', 'https://images.unsplash.com/photo-1551322120-c697cf88fbdc?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('nature', 'morning', 'https://images.unsplash.com/photo-1683998083736-afba1f5c7008?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('street', 'evening', 'https://plus.unsplash.com/premium_photo-1690957591806-95a2b81b1075?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('culture', 'night', 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
     ],
     imageCredit: 'Liam Burnett-Blue · Unsplash',
     href: '/cities/tokyo',
@@ -170,10 +181,10 @@ export const cities: readonly City[] = [
     momentZh: '科帕卡巴纳海滩上有人在踢足球，影子被阳光拉得很长。',
     lon: -43.1729, lat: -22.9068,
     images: [
-      img('morning', 'https://images.unsplash.com/photo-1483729558489-99ef05a8aeb4?auto=format&fit=crop&w=1600&q=80', '50% 45%'),
-      img('afternoon', 'https://images.unsplash.com/photo-1483729558489-99ef05a8aeb4?auto=format&fit=crop&w=1600&q=80', '50% 35%'),
-      img('evening', 'https://images.unsplash.com/photo-1483729558489-99ef05a8aeb4?auto=format&fit=crop&w=1600&q=80', '50% 55%'),
-      img('night', 'https://images.unsplash.com/photo-1483729558489-99ef05a8aeb4?auto=format&fit=crop&w=1600&q=80', '50% 65%'),
+      img('landmark', 'afternoon', 'https://images.unsplash.com/photo-1777669212176-9ae41f7623ca?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('nature', 'morning', 'https://images.unsplash.com/photo-1663409809010-c39d9706f1d7?q=80&w=2076&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('street', 'evening', 'https://images.unsplash.com/photo-1658699793346-131bb2be8c76?q=80&w=1036&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('culture', 'night', 'https://plus.unsplash.com/premium_photo-1679692887186-3838992dc2e0?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
     ],
     imageCredit: 'Anthony Delanoix · Unsplash',
     href: '/cities/rio',
@@ -191,10 +202,10 @@ export const cities: readonly City[] = [
     momentZh: 'Hallgrímskirkja 的尖顶在等一场极光。',
     lon: -21.9426, lat: 64.1466,
     images: [
-      img('morning', 'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?auto=format&fit=crop&w=1600&q=80', '50% 30%'),
-      img('afternoon', 'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?auto=format&fit=crop&w=1600&q=80', '50% 20%'),
-      img('evening', 'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?auto=format&fit=crop&w=1600&q=80', '50% 40%'),
-      img('night', 'https://images.unsplash.com/photo-1539635278303-d4002c07eae3?auto=format&fit=crop&w=1600&q=80', '50% 50%'),
+      img('landmark', 'afternoon', 'https://images.unsplash.com/photo-1723923857128-4f6b88b4bfc6?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('nature', 'morning', 'https://images.unsplash.com/photo-1643481157380-223694f16b95?q=80&w=927&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('street', 'evening', 'https://images.unsplash.com/photo-1708017591604-25796717d692?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('culture', 'night', 'https://images.unsplash.com/photo-1602167352652-52dba4750482?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
     ],
     imageCredit: 'Tobias Reich · Unsplash',
     href: '/cities/reykjavik',
@@ -212,10 +223,10 @@ export const cities: readonly City[] = [
     momentZh: '桌山的"桌布"刚被风扯开一角，露出整片晴空。',
     lon: 18.4241, lat: -33.9249,
     images: [
-      img('morning', 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1600&q=80', '50% 45%'),
-      img('afternoon', 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1600&q=80', '50% 35%'),
-      img('evening', 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1600&q=80', '50% 55%'),
-      img('night', 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=1600&q=80', '50% 65%'),
+      img('landmark', 'afternoon', 'https://images.unsplash.com/photo-1585061528750-3baca2cb6a10?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('nature', 'morning', 'https://images.unsplash.com/photo-1576485375217-d6a95e34d043?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('street', 'evening', 'https://images.unsplash.com/photo-1669975617250-a0b6343c8d49?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('culture', 'night', 'https://images.unsplash.com/photo-1644488930611-2cb23b22c0bb?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
     ],
     imageCredit: 'Tobias Reich · Unsplash',
     href: '/cities/cape-town',
@@ -234,10 +245,10 @@ export const cities: readonly City[] = [
     momentZh: '大本钟刚敲完整点，伦敦眼的灯光同步亮起。',
     lon: -0.1276, lat: 51.5074,
     images: [
-      img('morning', 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ab?auto=format&fit=crop&w=1600&q=80', '50% 50%'),
-      img('afternoon', 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ab?auto=format&fit=crop&w=1600&q=80', '50% 40%'),
-      img('evening', 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ab?auto=format&fit=crop&w=1600&q=80', '50% 60%'),
-      img('night', 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ab?auto=format&fit=crop&w=1600&q=80', '50% 70%'),
+      img('landmark', 'afternoon', 'https://images.unsplash.com/photo-1745016176874-cd3ed3f5bfc6?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('nature', 'morning', 'https://plus.unsplash.com/premium_photo-1731256170940-50f3b5bfdb95?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('street', 'evening', 'https://images.unsplash.com/photo-1622143166019-ab65343466e4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('culture', 'night', 'https://images.unsplash.com/photo-1502700559166-5792585222ef?q=80&w=991&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
     ],
     imageCredit: 'Anthony Delanoix · Unsplash',
     href: '/cities/london',
@@ -256,10 +267,10 @@ export const cities: readonly City[] = [
     momentZh: '勃兰登堡门前有人刚放下一束花，献给柏林墙倒塌的日子。',
     lon: 13.4050, lat: 52.5200,
     images: [
-      img('morning', 'https://images.unsplash.com/photo-1587330979470-3016b6702d89?auto=format&fit=crop&w=1600&q=80', '50% 45%'),
-      img('afternoon', 'https://images.unsplash.com/photo-1587330979470-3016b6702d89?auto=format&fit=crop&w=1600&q=80', '50% 35%'),
-      img('evening', 'https://images.unsplash.com/photo-1587330979470-3016b6702d89?auto=format&fit=crop&w=1600&q=80', '50% 55%'),
-      img('night', 'https://images.unsplash.com/photo-1587330979470-3016b6702d89?auto=format&fit=crop&w=1600&q=80', '50% 65%'),
+      img('landmark', 'afternoon', 'https://images.unsplash.com/photo-1566413586575-680bc3adb162?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('nature', 'morning', 'https://images.unsplash.com/photo-1552553302-9211bf7f7053?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('street', 'evening', 'https://images.unsplash.com/photo-1680559100495-2cf9ce829a2c?q=80&w=2075&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('culture', 'night', 'https://images.unsplash.com/photo-1588010881333-68617b862b1f?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
     ],
     imageCredit: 'Anthony Delanoix · Unsplash',
     href: '/cities/berlin',
@@ -277,10 +288,10 @@ export const cities: readonly City[] = [
     momentZh: '特莱维喷泉前有人刚扔下一枚硬币，许了个愿。',
     lon: 12.4964, lat: 41.9028,
     images: [
-      img('morning', 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1600&q=80', '50% 50%'),
-      img('afternoon', 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1600&q=80', '50% 40%'),
-      img('evening', 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1600&q=80', '50% 60%'),
-      img('night', 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1600&q=80', '50% 70%'),
+      img('landmark', 'afternoon', 'https://images.unsplash.com/photo-1603199766980-fdd4ac568a11?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('nature', 'morning', 'https://plus.unsplash.com/premium_photo-1661964123160-8d049fa07f0c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('street', 'evening', 'https://images.unsplash.com/photo-1566896212627-e4f210557f0c?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('culture', 'night', 'https://images.unsplash.com/photo-1529154166925-574a0236a4f4?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
     ],
     imageCredit: 'Yacine Belarbi · Unsplash',
     href: '/cities/rome',
@@ -298,10 +309,10 @@ export const cities: readonly City[] = [
     momentZh: '歌剧院刚亮起灯，白色的帆在夜色里发亮。',
     lon: 151.2093, lat: -33.8688,
     images: [
-      img('morning', 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1600&q=80', '50% 45%'),
-      img('afternoon', 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1600&q=80', '50% 35%'),
-      img('evening', 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1600&q=80', '50% 55%'),
-      img('night', 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=1600&q=80', '50% 65%'),
+      img('landmark', 'afternoon', 'https://images.unsplash.com/photo-1549180030-48bf079fb38a?q=80&w=927&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('nature', 'morning', 'https://images.unsplash.com/photo-1573808459806-b2767c969edf?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('street', 'evening', 'https://images.unsplash.com/photo-1530276371031-2511efff9d5a?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
+      img('culture', 'night', 'https://images.unsplash.com/photo-1513343987712-5da15ea2a9bb?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', '50% 50%'),
     ],
     imageCredit: 'Andreas Selter · Unsplash',
     href: '/cities/sydney',
