@@ -30,3 +30,7 @@ lerna-debug.log*
 .env
 .env.local
 .env.*.local
+
+# v1.3 · PR #15 · Lighthouse CI 输出不入仓
+lighthouse-report-*.html
+lighthouse-report-*.report.json
