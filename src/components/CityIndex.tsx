@@ -114,8 +114,7 @@ export function CityIndex({
               id={`city-opt-${i}`}
               tabIndex={0}
               className={className}
-              aria-current={active ? 'true' : undefined}
-              aria-selected={active}
+              aria-current={active ? 'page' : undefined}
               aria-label={`打开 ${city.nameZh} ${city.nameEn} 详情页`}
               onMouseEnter={() => handleEnter(city.id)}
               onMouseLeave={handleLeave}

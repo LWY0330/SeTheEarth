@@ -110,7 +110,7 @@ export function TimezoneBar({
                 }
               }}
               aria-label={`${event.cityNameEn}, ${event.localTime}`}
-              aria-selected={isActive}
+              aria-checked={isActive}
               role="radio"
               tabIndex={0}
             >
