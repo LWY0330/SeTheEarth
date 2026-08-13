@@ -34,3 +34,7 @@ lerna-debug.log*
 # v1.3 · PR #15 · Lighthouse CI 输出不入仓
 lighthouse-report-*.html
 lighthouse-report-*.report.json
+
+# v1.3.x · PR #16 · Lighthouse 调试产物
+lh-*
+lighthouse-debug

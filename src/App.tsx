@@ -144,6 +144,7 @@ function HomeShell() {
 
   return (
     <div className={styles.app}>
+      <main id="main-content">
       <Meta
         title="看见地球 · See Earth"
         description="看见地球 — 沿时间轴穿越地球历史与生态"
@@ -349,6 +350,7 @@ function HomeShell() {
 
       {/* v1.3 · PR #13 · 中央快捷键帮助 Modal */}
       <HotkeyHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
+      </main>
     </div>
   );
 }
@@ -357,13 +359,13 @@ function HomeShell() {
 function AppRoutes() {
   const route = useRoute();
   if (route.name === 'cities-index') {
-    return <CityIndexPage />;
+    return <main><CityIndexPage /></main>;
   }
   if (route.name === 'about') {
-    return <AboutPage />;
+    return <main><AboutPage /></main>;
   }
   if (route.name === 'city') {
-    return <CityPage />;
+    return <main><CityPage /></main>;
   }
   return <HomeShell />;
 }

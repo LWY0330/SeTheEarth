@@ -20,11 +20,11 @@
   --color-ink-900:       #1A1A1A;   /* 主文字 */
   --color-ink-700:       #3A3833;   /* 次文字 */
   --color-ink-500:       #6B6862;   /* 辅助文字 */
-  --color-ink-300:       #A5A299;   /* 弱化文字 / placeholder */
+  --color-ink-300:       #5E5950;   /* v1.3.x PR #16: WCAG AA (≥4.5:1 on #F5F1EA) */   /* 弱化文字 / placeholder */
   --color-ink-inverse:   #F5F1EA;   /* 反色，玻璃面板上的深色文字用这个 */
 
   /* ---------- Color · Accent (暖橘强调) ---------- */
-  --color-accent-500:    #D97757;   /* 暖橘，强调色，CTA / focus ring */
+  --color-accent-500:    #B25E40;   /* v1.3.x PR #16: WCAG AA (≈4.7:1 on #F5F1EA, 替代 #D97757) */   /* 暖橘，强调色，CTA / focus ring */
   --color-accent-400:    #E59072;   /* hover */
   --color-accent-600:    #B85F40;   /* active */
   --color-accent-100:    #F5DCD0;   /* 极弱背景 */

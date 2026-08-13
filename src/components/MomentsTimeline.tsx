@@ -150,7 +150,7 @@ export function MomentsTimeline({
 
         {/* 全球时段分布 */}
         <div className={styles.subBlock}>
-          <h4 className={styles.subTitle}>WORLD RIGHT NOW</h4>
+          <h3 className={styles.subTitle}>WORLD RIGHT NOW</h3>
           <ul className={styles.periodList}>
             {activePeriods.map((period) => (
               <li key={period} className={styles.periodItem}>
@@ -175,7 +175,7 @@ export function MomentsTimeline({
             role={onSelectEvent ? "button" : undefined}
             tabIndex={onSelectEvent ? 0 : undefined}
           >
-            <h4 className={styles.subTitle}>CURRENTLY VIEWING</h4>
+            <h3 className={styles.subTitle}>CURRENTLY VIEWING</h3>
             <div className={styles.overviewContent}>
               <div className={styles.overviewCity}>
                 <span className={styles.overviewCityName}>{activeEvent.cityNameZh}</span>
@@ -255,7 +255,7 @@ export function MomentsTimeline({
                 }
               }}
               tabIndex={onSelectEvent ? 0 : undefined}
-              role={onSelectEvent ? 'button' : undefined}
+              
             >
               <span className={styles.eventIndex}>
                 {String(i + 1).padStart(2, '0')}
