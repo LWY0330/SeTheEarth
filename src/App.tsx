@@ -8,10 +8,10 @@
    - 键盘 ← / → 不止翻主图，同时清掉 focusedCityId 防止它压制 active
    ============================================================ */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { cities, getFeaturedCities } from '@/data/cities';
 import { liveEvents } from '@/data/liveMoments';
-import { Router, useRoute } from '@/router/Router';
+import { Router, useRoute, useNavigate } from '@/router/Router';
 import SearchBox from '@/components/SearchBox';
 import CityFeatured from '@/components/CityFeatured';
 import CityIndex from '@/components/CityIndex';
@@ -21,6 +21,8 @@ import CityPage from '@/components/CityPage';
 import CityIndexPage from '@/components/CityIndexPage';
 import AboutPage from '@/components/AboutPage';
 import Meta from '@/components/Meta';
+import HotkeyHelp from '@/components/HotkeyHelp';
+import { useHotkeys, type HotkeyActions } from '@/hooks/useHotkeys';
 import styles from './App.module.css';
 
 function HomeShell() {
@@ -57,36 +59,73 @@ function HomeShell() {
     setActiveCityId(featuredCities[j].id);
   }, [activeCityId, featuredCities]);
 
-  // 键盘 ← / → 仅切主图（不跳转）；焦点必须在 #cities 内。
-  // 同时清掉 focusedCityId 防止键盘焦点压制 ← → 浏览意图。
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.target && (e.target as HTMLElement).matches('input, textarea, [contenteditable="true"]')) return;
-      const root = citiesRef.current;
-      if (!root) return;
-      const active = document.activeElement as HTMLElement | null;
-      const inside = !!active && root.contains(active);
-      if (!inside) return;
-      if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        setFocusedCityId(null);
-        goPrev();
-      } else if (e.key === 'ArrowRight') {
-        e.preventDefault();
-        setFocusedCityId(null);
-        goNext();
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [goPrev, goNext]);
-
   // ── 板块 3：硬性 6 条事件（v2.21 数据层约束 · 超出数据源在详情页/Archive 用） ──
   const events = useMemo(() => liveEvents.slice(0, 6), []);
   const [activeEventId, setActiveEventId] = useState<string | null>(null);
   const activeEvent = activeEventId
     ? events.find((e: { id: string }) => e.id === activeEventId) ?? null
     : null;
+
+  // v1.3 · PR #13 · HotkeyHelp Modal 状态
+  const [helpOpen, setHelpOpen] = useState<boolean>(false);
+
+  // v1.3 · PR #13 · 路由导航（g h / g c / g a 用）
+  const { push: navigate } = useNavigate();
+
+  // v1.3 · PR #13 · 焦点检查：prevCity/nextCity/jk 只在 #cities 区域内触发
+  const insideCities = (): boolean => {
+    const root = citiesRef.current;
+    if (!root) return false;
+    const active = document.activeElement as HTMLElement | null;
+    return !!active && (active === document.body || root.contains(active));
+  };
+
+  // v1.3 · PR #13 · 11 个快捷键 action 回调
+  const actions: HotkeyActions = useMemo(() => ({
+    prevCity: () => {
+      if (!insideCities()) return;
+      setFocusedCityId(null); // 清掉 focused，避免压制 active
+      goPrev();
+    },
+    nextCity: () => {
+      if (!insideCities()) return;
+      setFocusedCityId(null);
+      goNext();
+    },
+    moveDown: () => {
+      if (!insideCities()) return;
+      const i = featuredCities.findIndex((c) => c.id === (focusedCityId ?? activeCityId));
+      const cur = i < 0 ? 0 : i;
+      const next = featuredCities[(cur + 1) % featuredCities.length];
+      setFocusedCityId(next.id);
+    },
+    moveUp: () => {
+      if (!insideCities()) return;
+      const i = featuredCities.findIndex((c) => c.id === (focusedCityId ?? activeCityId));
+      const cur = i < 0 ? 0 : i;
+      const prev = featuredCities[(cur - 1 + featuredCities.length) % featuredCities.length];
+      setFocusedCityId(prev.id);
+    },
+    focusSearch: () => {
+      const input = document.querySelector<HTMLInputElement>('input[aria-label="搜索城市"]');
+      input?.focus();
+      input?.select();
+    },
+    showHelp: () => setHelpOpen(true),
+    hideHelp: () => setHelpOpen(false),
+    // Esc 优先级：help modal > drawer > focused city
+    escape: () => {
+      if (helpOpen) { setHelpOpen(false); return; }
+      if (activeEventId) { setActiveEventId(null); return; }
+      if (focusedCityId) setFocusedCityId(null);
+    },
+    goHome:   () => navigate('/'),
+    goCities: () => navigate('/cities'),
+    goAbout:  () => navigate('/about'),
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }), [goPrev, goNext, navigate, helpOpen, activeEventId, focusedCityId, activeCityId, featuredCities]);
+
+  useHotkeys(actions, helpOpen);
 
   // ── Refs（用于导航） ──
   const heroRef = useRef<HTMLElement>(null);
@@ -307,6 +346,9 @@ function HomeShell() {
 
       {/* 详情抽屉 */}
       <EventDrawer event={activeEvent} onClose={() => setActiveEventId(null)} />
+
+      {/* v1.3 · PR #13 · 中央快捷键帮助 Modal */}
+      <HotkeyHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 }

@@ -6,7 +6,6 @@
    - 保留时间轴和事件列表的可见性
    ============================================================ */
 
-import { useEffect } from 'react';
 import { contentTypeColors, getTimeAgo, type LiveEvent } from '@/data/liveMoments';
 import styles from './EventDrawer.module.css';
 
@@ -16,15 +15,7 @@ export type EventDrawerProps = {
 };
 
 export function EventDrawer({ event, onClose }: EventDrawerProps) {
-  // ESC 关闭
-  useEffect(() => {
-    if (!event) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [event, onClose]);
+  // v1.3 · PR #13 · Esc 关闭交给 useHotkeys（src/hooks/useHotkeys.ts）统一处理
 
   if (!event) return null;
 
