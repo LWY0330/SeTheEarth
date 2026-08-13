@@ -1,6 +1,9 @@
 /* ============================================================
-   看见地球 · v2.80.0 · imageUrl
-   - 把 Unsplash 的 baseUrl 加上 width / format / quality 参数
+   看见地球 · v2.80.0 · imageUrl (v1.3 hotfix: relative URL support)
+   - 绝对 URL（Unsplash / Pexels）：加 width / format / quality 参数
+   - 相对路径（self-host 本地图，PR #16 落地）：直接返回原 URL
+     * 本地图已经过 PR #9 优化（WebP + 正确尺寸 + 正确尺寸的 jpg 副本）
+     * 不再加 w/q/fm/fit/auto（这些是 CDN 专属参数）
    - 用于 <img src> 和 <source srcset>
    - 支持 webp / jpg，<picture> 优雅降级用 jpg
    ============================================================ */
@@ -19,6 +22,13 @@ export function cityImageUrl(
   format: ImgFormat = 'webp',
   quality: number = DEFAULT_QUALITY[format],
 ): string {
+  // 相对路径（self-host 本地图，PR #16 落地）：已经是优化版（PR #9 WebP + 正确尺寸），
+  // 直接返回，不再加 w/q/fm/fit/auto 参数（unsplash/pexels 专属）
+  if (!baseUrl.startsWith('http://') && !baseUrl.startsWith('https://')) {
+    return baseUrl;
+  }
+
+  // 绝对 URL（Unsplash / Pexels CDN）：加 CDN 专属优化参数
   // baseUrl 形如 https://images.unsplash.com/photo-XXX?auto=format&fit=crop&w=1600&q=80
   // 用 URL 解析以兼容已有 query string
   const u = new URL(baseUrl);
