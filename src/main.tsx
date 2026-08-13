@@ -16,3 +16,14 @@ createRoot(container).render(
     <App />
   </StrictMode>
 );
+
+
+// v1.3 · PR #14 · PWA Service Worker 注册（仅生产环境）
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((reg) => console.log('[PWA] SW registered, scope:', reg.scope))
+      .catch((err) => console.error('[PWA] SW registration failed:', err));
+  });
+}
