@@ -324,8 +324,59 @@ export const cities: readonly City[] = [
   },
 ] as const;
 
-// v2.50.0 · 板块 2 主屏精选：6 城（其余 6 城只在 /cities 出现）
-export const featuredCities: readonly City[] = cities.filter((c) => c.isFeatured);
+// v1.3 · 板块 2 主屏精选：动态算法（PR #11b）
+// - 旧实现：cities.filter(c => c.isFeatured)，写死 6 城
+// - 新实现：12 城按各自时区计算当前时段，6 个槽位按时段顺序贪心取 1 城
+// - 切换节奏：每次刷新页面（mount 时算 1 次，App.tsx 用 useMemo([]) 锁住）
+// - 必返回 6 城；不足时按 PERIODS 顺序循环已有城市重复填满
+
+export const DAY_PERIODS = [
+  'dawn', 'morning', 'afternoon', 'evening', 'night', 'deepNight',
+] as const satisfies readonly DayPeriod[];
+
+export function getFeaturedCities(now: Date = new Date()): readonly City[] {
+  // 1. 12 城按时段分类（同时间段内按 cities 数组顺序，稳定）
+  const citiesByPeriod = new Map<DayPeriod, City[]>();
+  for (const period of DAY_PERIODS) citiesByPeriod.set(period, []);
+  for (const city of cities) {
+    const period = getCurrentPeriod(city.timezone, now);
+    citiesByPeriod.get(period)!.push(city);
+  }
+
+  // 2. 6 槽贪心：每槽优先取 earliest period 中未被用过的城市
+  const result: City[] = [];
+  const used = new Set<string>();
+
+  const pickFirstUnused = (period: DayPeriod): City | null => {
+    const bucket = citiesByPeriod.get(period)!;
+    for (const candidate of bucket) {
+      if (!used.has(candidate.id)) return candidate;
+    }
+    return null;
+  };
+
+  for (let slot = 0; slot < 6; slot++) {
+    let picked: City | null = null;
+    // 从 slot 对应的时段开始，沿 PERIODS 顺序偏移找第一个有未用城市的时段
+    for (let offset = 0; offset < 6; offset++) {
+      const period = DAY_PERIODS[(slot + offset) % 6];
+      picked = pickFirstUnused(period);
+      if (picked) break;
+    }
+    // fallback：去重后不足 6 城时，按 PERIODS 顺序循环已有城市填满
+    if (!picked && result.length > 0) {
+      picked = result[slot % result.length];
+    }
+    if (picked) {
+      result.push(picked);
+      used.add(picked.id); // Set.add 对已存在元素幂等，重复填槽不会破坏去重
+    }
+  }
+
+  // 极端兜底：12 城全部分类失败（理论上不可能）→ 直接拿前 6 城
+  if (result.length === 0) return cities.slice(0, 6);
+  return result;
+}
 
 /* ============================================================
    时段 / 图像选择 helpers（v2.40.0+）

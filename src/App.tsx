@@ -9,7 +9,7 @@
    ============================================================ */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { cities, featuredCities } from '@/data/cities';
+import { cities, getFeaturedCities } from '@/data/cities';
 import { liveEvents } from '@/data/liveMoments';
 import { Router, useRoute } from '@/router/Router';
 import SearchBox from '@/components/SearchBox';
@@ -30,7 +30,13 @@ function HomeShell() {
   // ── 三态：focused（键盘）> hovered（鼠标）> active（默认 / ← → 浏览）
   const [hoveredCityId, setHoveredCityId] = useState<string | null>(null);
   const [focusedCityId, setFocusedCityId] = useState<string | null>(null);
-  const [activeCityId, setActiveCityId] = useState<string>(featuredCities[0].id);
+  const [activeCityId, setActiveCityId] = useState<string>(() => {
+    const featured = getFeaturedCities();
+    return featured[0]?.id ?? cities[0].id;
+  });
+
+  // v1.3 · 板块 2 精选：mount 时算 1 次，整个 App 生命周期内不变（每次刷新页面 = 重新 mount）
+  const featuredCities = useMemo(() => getFeaturedCities(), []);
 
   const displayCity =
     (focusedCityId ? cities.find((c) => c.id === focusedCityId) : undefined) ??
@@ -44,12 +50,12 @@ function HomeShell() {
     const i = featuredCities.findIndex((c) => c.id === activeCityId);
     const j = i < 0 ? 0 : (i - 1 + featuredCities.length) % featuredCities.length;
     setActiveCityId(featuredCities[j].id);
-  }, [activeCityId]);
+  }, [activeCityId, featuredCities]);
   const goNext = useCallback(() => {
     const i = featuredCities.findIndex((c) => c.id === activeCityId);
     const j = i < 0 ? 0 : (i + 1) % featuredCities.length;
     setActiveCityId(featuredCities[j].id);
-  }, [activeCityId]);
+  }, [activeCityId, featuredCities]);
 
   // 键盘 ← / → 仅切主图（不跳转）；焦点必须在 #cities 内。
   // 同时清掉 focusedCityId 防止键盘焦点压制 ← → 浏览意图。
