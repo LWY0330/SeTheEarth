@@ -152,7 +152,7 @@ export function CityIndex({
       <Link
         href="/cities"
         className={styles.seeAll}
-        aria-label={`查看全部 ${totalCityCount ?? cities.length} 个城市`}
+        aria-label={`查看全部 ${totalCityCount ?? cities.length} 个城市 · SEE ALL ${totalCityCount ?? cities.length} CITIES`}
       >
         <span className={styles.seeAllLabel}>
           SEE ALL {totalCityCount ?? cities.length} CITIES

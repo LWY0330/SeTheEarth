@@ -6,6 +6,7 @@
 
 import Meta from '@/components/Meta';
 import { Link } from '@/router/Router';
+import { useUserCity } from '@/components/UserCityPicker/UserCityContext';
 import styles from './AboutPage.module.css';
 
 const SECTIONS = [
@@ -75,6 +76,7 @@ https://github.com/lwy0330/SeTheEarth
 ];
 
 export function AboutPage() {
+  const { openPicker } = useUserCity();
   return (
     <div className={styles.page}>
       <Meta
@@ -121,9 +123,18 @@ export function AboutPage() {
 
       {/* 底部 */}
       <footer className={styles.footer}>
-        <Link href="/" className={styles.footerLink}>
-          <span aria-hidden="true">↑</span> 回到 See Earth 主页
-        </Link>
+        <div className={styles.footerLinks}>
+          <Link href="/" className={styles.footerLink}>
+            <span aria-hidden="true">↑</span> 回到 See Earth 主页
+          </Link>
+          <button
+            type="button"
+            className={styles.footerReselect}
+            onClick={openPicker}
+          >
+            重新选择城市
+          </button>
+        </div>
       </footer>
     </div>
   );

@@ -505,3 +505,49 @@ export function findCityByAnyKey(key: string): City | undefined {
   const norm = key.toLowerCase().replace(/[\s_-]/g, '');
   return cities.find((c) => c.nameEn.toLowerCase().replace(/[\s_-]/g, '') === norm);
 }
+
+/* ============================================================
+   看见地球 · v1.4 · UserCity (PR #29)
+   - 角落小卡片需要的"用户本地城市"池
+   - 20 个代表城市：覆盖亚洲(8) + 欧洲(4) + 美洲(4) + 非洲(2) + 大洋洲(2)
+   - 字段比 City 轻：没有 images / weather / oneObservation …
+   - slug 必填：useWeather() 需要 city.slug 作 open-meteo 缓存 key
+   ============================================================ */
+
+export type UserCity = {
+  nameZh: string;
+  nameEn: string;
+  lat: number;
+  lon: number;
+  timezone: string;
+  /** 派生 slug（nameEn.toLowerCase()），用作 useWeather 缓存 key */
+  slug: string;
+};
+
+export const SUPPORTED_USER_CITIES: readonly UserCity[] = [
+  // 亚洲
+  { nameZh: '北京',   nameEn: 'Beijing',    lat:  39.9042, lon:  116.4074, timezone: 'Asia/Shanghai',         slug: 'beijing' },
+  { nameZh: '上海',   nameEn: 'Shanghai',   lat:  31.2304, lon:  121.4737, timezone: 'Asia/Shanghai',         slug: 'shanghai' },
+  { nameZh: '香港',   nameEn: 'Hong Kong',  lat:  22.3193, lon:  114.1694, timezone: 'Asia/Hong_Kong',        slug: 'hong-kong' },
+  { nameZh: '东京',   nameEn: 'Tokyo',      lat:  35.6762, lon:  139.6503, timezone: 'Asia/Tokyo',            slug: 'tokyo' },
+  { nameZh: '首尔',   nameEn: 'Seoul',      lat:  37.5665, lon:  126.9780, timezone: 'Asia/Seoul',            slug: 'seoul' },
+  { nameZh: '新加坡', nameEn: 'Singapore',  lat:   1.3521, lon:  103.8198, timezone: 'Asia/Singapore',        slug: 'singapore' },
+  { nameZh: '曼谷',   nameEn: 'Bangkok',    lat:  13.7563, lon:  100.5018, timezone: 'Asia/Bangkok',          slug: 'bangkok' },
+  { nameZh: '迪拜',   nameEn: 'Dubai',      lat:  25.2048, lon:   55.2708, timezone: 'Asia/Dubai',            slug: 'dubai' },
+  // 欧洲
+  { nameZh: '伦敦',   nameEn: 'London',     lat:  51.5074, lon:   -0.1278, timezone: 'Europe/London',         slug: 'london' },
+  { nameZh: '巴黎',   nameEn: 'Paris',      lat:  48.8566, lon:    2.3522, timezone: 'Europe/Paris',          slug: 'paris' },
+  { nameZh: '柏林',   nameEn: 'Berlin',     lat:  52.5200, lon:   13.4050, timezone: 'Europe/Berlin',         slug: 'berlin' },
+  { nameZh: '莫斯科', nameEn: 'Moscow',     lat:  55.7558, lon:   37.6173, timezone: 'Europe/Moscow',         slug: 'moscow' },
+  // 美洲
+  { nameZh: '纽约',     nameEn: 'New York',      lat:  40.7128, lon:  -74.0060, timezone: 'America/New_York',   slug: 'new-york' },
+  { nameZh: '旧金山',   nameEn: 'San Francisco', lat:  37.7749, lon: -122.4194, timezone: 'America/Los_Angeles', slug: 'san-francisco' },
+  { nameZh: '多伦多',   nameEn: 'Toronto',       lat:  43.6532, lon:  -79.3832, timezone: 'America/Toronto',    slug: 'toronto' },
+  { nameZh: '圣保罗',   nameEn: 'São Paulo',     lat: -23.5505, lon:  -46.6333, timezone: 'America/Sao_Paulo',  slug: 'sao-paulo' },
+  // 非洲
+  { nameZh: '开罗',   nameEn: 'Cairo',    lat:  30.0444, lon:   31.2357, timezone: 'Africa/Cairo',        slug: 'cairo' },
+  { nameZh: '内罗毕', nameEn: 'Nairobi',  lat:  -1.2921, lon:   36.8219, timezone: 'Africa/Nairobi',      slug: 'nairobi' },
+  // 大洋洲
+  { nameZh: '悉尼',   nameEn: 'Sydney',   lat: -33.8688, lon:  151.2093, timezone: 'Australia/Sydney',    slug: 'sydney' },
+  { nameZh: '奥克兰', nameEn: 'Auckland', lat: -36.8485, lon:  174.7633, timezone: 'Pacific/Auckland',    slug: 'auckland' },
+];

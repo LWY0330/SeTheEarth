@@ -1,0 +1,247 @@
+/* ============================================================
+   看见地球 · v1.4 · UserCityPicker.module.css (PR #29)
+   - 半透奶白遮罩 + 中央卡片
+   - 与品牌一致：衬线标题 + 奶白底 + 锐利 2px 圆角
+   ============================================================ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 11, 24, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  padding: 16px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.dialog {
+  background: var(--color-canvas, #F5F1EA);
+  color: var(--color-ink-900, #1A1A1A);
+  border-radius: 4px;
+  border: 1px solid #050b18;
+  min-width: 320px;
+  max-width: 440px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;
+  padding: 20px 24px 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  font-family: var(--font-sans, system-ui);
+  animation: dialogIn 0.18s ease-out;
+}
+
+@keyframes dialogIn {
+  from { transform: translateY(8px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.title {
+  margin: 0;
+  font-family: var(--font-serif, serif);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.close {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--color-ink-700, #3A3833);
+  padding: 4px 8px;
+  border-radius: 2px;
+  transition: background 0.12s;
+}
+.close:hover,
+.close:focus-visible {
+  background: var(--color-canvas-deep, #E8E2D5);
+  outline: none;
+}
+.close:focus-visible {
+  outline: 2px solid var(--color-accent-500, #B25E40);
+  outline-offset: 2px;
+}
+
+/* ── Subtitle ── */
+.subtitle {
+  margin: 0 0 14px;
+  font-size: 12px;
+  color: var(--color-ink-500-a11y, #5C5853);
+  line-height: 1.5;
+}
+
+/* ── Region Tabs ── */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--color-canvas-deep, #E8E2D5);
+  padding-bottom: 8px;
+  flex-wrap: wrap;
+}
+.tab {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-family: var(--font-sans, system-ui);
+  color: var(--color-ink-700, #3A3833);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.tab:hover {
+  background: var(--color-canvas-soft, #EFE9DC);
+}
+.tab:focus-visible {
+  outline: 2px solid var(--color-accent-500, #B25E40);
+  outline-offset: 2px;
+}
+.tabActive {
+  background: var(--color-ink-900, #1A1A1A);
+  color: var(--color-canvas, #F5F1EA);
+  border-color: var(--color-ink-900, #1A1A1A);
+}
+.tabActive:hover {
+  background: var(--color-ink-900, #1A1A1A);
+  color: var(--color-canvas, #F5F1EA);
+}
+
+/* ── City List ── */
+.list {
+  border: 1px solid var(--color-canvas-deep, #E8E2D5);
+  border-radius: 2px;
+  max-height: 280px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  background: var(--color-canvas, #F5F1EA);
+}
+.list:focus-visible {
+  outline: 2px solid var(--color-accent-500, #B25E40);
+  outline-offset: 2px;
+}
+.option {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-canvas-soft, #EFE9DC);
+  padding: 8px 12px;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--font-sans, system-ui);
+  font-size: 13px;
+  color: var(--color-ink-900, #1A1A1A);
+  transition: background 0.1s;
+}
+.option:last-child {
+  border-bottom: none;
+}
+.option:hover {
+  background: var(--color-canvas-soft, #EFE9DC);
+}
+.option:focus-visible {
+  outline: 2px solid var(--color-accent-500, #B25E40);
+  outline-offset: -2px;
+}
+.optionActive {
+  background: var(--color-accent-100, #F5DCD0);
+  color: var(--color-ink-900, #1A1A1A);
+  font-weight: 500;
+}
+.optZh {
+  font-size: 14px;
+}
+.optEn {
+  font-size: 11px;
+  color: var(--color-ink-500-a11y, #5C5853);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--color-ink-500-a11y, #5C5853);
+  font-size: 13px;
+  margin: 0;
+}
+
+/* ── Footnote ── */
+.footnote {
+  margin: 8px 0 12px;
+  font-size: 11px;
+  color: var(--color-ink-500-a11y, #5C5853);
+  line-height: 1.5;
+}
+
+/* ── Footer Buttons ── */
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.cancel,
+.confirm {
+  font-family: var(--font-sans, system-ui);
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  border: 1px solid #050b18;
+  transition: all 0.12s;
+}
+.cancel {
+  background: transparent;
+  color: var(--color-ink-900, #1A1A1A);
+}
+.cancel:hover {
+  background: var(--color-canvas-deep, #E8E2D5);
+}
+.confirm {
+  background: var(--color-ink-900, #1A1A1A);
+  color: var(--color-canvas, #F5F1EA);
+}
+.confirm:hover:not(:disabled) {
+  background: var(--color-accent-500, #B25E40);
+  border-color: var(--color-accent-500, #B25E40);
+}
+.confirm:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.cancel:focus-visible,
+.confirm:focus-visible {
+  outline: 2px solid var(--color-accent-500, #B25E40);
+  outline-offset: 2px;
+}
+
+/* ── 移动端 ── */
+@media (max-width: 480px) {
+  .dialog {
+    padding: 16px 16px 12px;
+  }
+  .title {
+    font-size: 18px;
+  }
+  .tab {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}

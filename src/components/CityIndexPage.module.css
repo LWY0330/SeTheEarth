@@ -274,3 +274,40 @@
     gap: 32px;
   }
 }
+
+/* ============================================================
+   看见地球 · v1.4 · CityIndexPage.module.css (PR #29)
+   - syncChip: chip 卡片在城市列表项内的位置（不挤压原 layout）
+   - footerReselect: footer 内的"重新选择城市"按钮
+   ============================================================ */
+
+.syncChip {
+  flex: 0 0 auto;
+  margin-left: auto;
+  /* 让 chip 不被 Link 的 hover/focus 误触发，但仍然可读 */
+  pointer-events: none;
+}
+.syncChip > * {
+  pointer-events: auto;
+}
+
+.footerReselect {
+  background: transparent;
+  border: 1px solid #050b18;
+  border-radius: 2px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-family: var(--font-sans, system-ui);
+  color: var(--color-ink-900, #1A1A1A);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.footerReselect:hover,
+.footerReselect:focus-visible {
+  background: var(--color-canvas-deep, #E8E2D5);
+  outline: none;
+}
+.footerReselect:focus-visible {
+  outline: 2px solid var(--color-accent-500, #B25E40);
+  outline-offset: 2px;
+}

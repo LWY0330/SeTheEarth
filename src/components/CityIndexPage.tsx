@@ -9,10 +9,13 @@
 import { Link } from '@/router/Router';
 import { cities } from '@/data/cities';
 import Meta from '@/components/Meta';
+import SyncMoment from '@/components/SyncMoment/SyncMoment';
+import { useUserCity } from '@/components/UserCityPicker/UserCityContext';
 import { cityImageUrl, cityImageSrcSet } from '@/lib/imageUrl';
 import styles from './CityIndexPage.module.css';
 
 export function CityIndexPage() {
+  const { openPicker } = useUserCity();
   return (
     <div className={styles.page}>
       <Meta
@@ -47,7 +50,7 @@ export function CityIndexPage() {
               <Link
                 href={city.href}
                 className={styles.item}
-                aria-label={`打开 ${city.nameZh} ${city.nameEn} 详情页`}
+                aria-label={`打开 ${city.nameZh} ${city.nameEn} 详情页 · ${city.nameZh} ${city.nameEn}`}
               >
                 <span className={styles.num}>
                   {String(i + 1).padStart(2, '0')}
@@ -73,6 +76,10 @@ export function CityIndexPage() {
                 <span className={styles.country}>
                   {city.countryEn.toUpperCase()}
                 </span>
+                {/* v1.4 · PR #29 · 角落小卡片（chip） */}
+                <span className={styles.syncChip}>
+                  <SyncMoment city={city} variant="chip" />
+                </span>
                 <span className={styles.arrow} aria-hidden="true">→</span>
               </Link>
             </li>
@@ -80,7 +87,7 @@ export function CityIndexPage() {
         </ol>
       </section>
 
-      {/* 底部链接：返回首页 + 关于 */}
+      {/* 底部链接：返回首页 + 关于 + 重新选择城市 */}
       <footer className={styles.footer}>
         <div className={styles.footerLinks}>
           <Link href="/" className={styles.footerLink}>
@@ -89,6 +96,13 @@ export function CityIndexPage() {
           <Link href="/about" className={styles.footerLink}>
             关于本项目 / About
           </Link>
+          <button
+            type="button"
+            className={styles.footerReselect}
+            onClick={openPicker}
+          >
+            重新选择城市
+          </button>
         </div>
       </footer>
     </div>

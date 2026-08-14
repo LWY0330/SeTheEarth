@@ -107,11 +107,5 @@ export const moments: readonly Moment[] = [
   },
 ] as const;
 
-export const momentCategoryColors: Record<MomentCategory, string> = {
-  finance: '#5BA8FF',  // 蓝
-  war: '#B85450',      // 红
-  art: '#C8924A',      // 棕
-  urban: '#6B8E5A',    // 绿
-  nature: '#82C0FF',   // 浅蓝
-  romance: '#D97757',  // 暖橘
-};
+// v1.4 a11y · 直接复用 liveMoments.ts 的 categoryColors（不再重复维护，避免漂移）
+export { categoryColors as momentCategoryColors } from './liveMoments';

@@ -476,7 +476,16 @@
    右侧 50% — 编辑式信息流（无圆角背景）
    ════════════════════════════════════════════════ */
 
+/* v1.4 · PR #26 · 右侧 50% 容器：包 WORLDS COLLIDE + 12 城时间轴 */
 .rightCol {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 12 城时间轴 scrollable list（原 rightCol 列表样式） */
+.rightList {
   list-style: none;
   margin: 0;
   padding: 8px 8px 8px 28px;
@@ -484,6 +493,7 @@
   flex-direction: column;
   min-height: 0;
   overflow-y: auto;
+  flex: 1 1 auto;
 }
 
 /* 事件行（无背景框 · 细线分隔 · hover 淡背景 · 选中 2px 暖橘竖线） */
@@ -709,7 +719,7 @@
     padding: 8px 16px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   }
-  .rightCol {
+  .rightList {
     padding: 8px 16px;
   }
   .utcNumber { font-size: 36px; }

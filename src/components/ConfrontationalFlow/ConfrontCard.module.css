@@ -1,0 +1,154 @@
+/* ============================================================
+   看见地球 · v1.4 · ConfrontCard.module.css (PR #26)
+   - 单张对峙卡片
+   - 背景 var(--color-canvas-soft, #EFE9DC)
+   - 左侧 3px 实线 + 颜色按 level
+   ============================================================ */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 18px 16px 20px;
+  background: var(--color-canvas-soft, #EFE9DC);
+  border: 1px solid var(--color-canvas-deep, #E8E2D5);
+  border-left-width: 3px;
+  border-left-style: solid;
+  border-radius: 2px;
+  position: relative;
+  min-height: 240px;
+  transition: border-left-width 0.15s ease, background 0.15s ease;
+}
+
+/* hover / focus-visible：左边线加粗 + 微微亮底 */
+.card:hover,
+.card:focus-within {
+  border-left-width: 5px;
+  background: var(--color-canvas, #F5F1EA);
+}
+
+/* ── Level 边框颜色 ── */
+.level_red    { border-left-color: #8B3530; }
+.level_yellow { border-left-color: #9C7B1A; }
+.level_blue   { border-left-color: #1F6FBC; }
+
+/* ── 城市名 ── */
+.cityBlock {
+  margin: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--font-serif, serif);
+  line-height: 1.1;
+}
+.cityZh {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--color-ink-900, #1A1A1A);
+}
+.cityEn {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--color-ink-700, #3A3833);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ── 一句话（serif 16px） ── */
+.moment {
+  margin: 6px 0 0;
+  padding: 0;
+  font-family: var(--font-serif, serif);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-ink-900, #1A1A1A);
+  border-left: none;
+  /* 不打引号也行；引号在 span 里 */
+}
+.moment::before,
+.moment::after {
+  content: ''; /* 引号在 JSX 里硬编码，避免某些屏幕阅读器读出引号 */
+}
+
+/* ── 数据行（dl/dt/dd） ── */
+.meta {
+  margin: auto 0 0; /* 推到底部 */
+  padding: 10px 0 0;
+  border-top: 1px dashed var(--color-canvas-deep, #E8E2D5);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-sans, system-ui);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.metaLabel {
+  flex: 0 0 auto;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--color-ink-700, #3A3833);
+  text-transform: uppercase;
+  min-width: 32px;
+}
+.metaValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  color: var(--color-ink-900, #1A1A1A);
+  font-weight: 500;
+}
+.metaIcon {
+  display: inline-flex;
+  align-items: center;
+}
+.diff {
+  opacity: 0.7;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+/* ── VIEW CITY / 不在 12 城内 ── */
+.viewCity,
+.noLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-sans, system-ui);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 4px 0;
+  color: var(--color-ink-700, #3A3833);
+}
+.viewCity:hover,
+.viewCity:focus-visible {
+  color: var(--color-ink-900, #1A1A1A);
+  outline: none;
+}
+.viewCity:focus-visible {
+  outline: 2px solid var(--color-accent-500, #B25E40);
+  outline-offset: 2px;
+}
+.noLink {
+  color: var(--color-ink-500, #6B6862);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* ── 移动端（compact） ── */
+@media (max-width: 900px) {
+  .card {
+    padding: 14px 14px 12px 16px;
+    min-height: 0;
+  }
+  .cityZh { font-size: 18px; }
+  .moment { font-size: 15px; }
+}

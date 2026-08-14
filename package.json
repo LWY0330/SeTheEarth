@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "start": "serve -s dist -l 8080",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "lighthouse": "bash scripts/lighthouse-ci.sh"
+    "lighthouse": "bash scripts/lighthouse-ci.sh",
+    "test": "node --test --experimental-strip-types src/lib/*.test.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

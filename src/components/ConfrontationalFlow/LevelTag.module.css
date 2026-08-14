@@ -1,0 +1,57 @@
+/* ============================================================
+   看见地球 · v1.4 · LevelTag.module.css (PR #26)
+   - 顶部 1px 边框 + 文字 + 一段彩色"棒"
+   - 3 个 level 配色见 §5.3 spec
+   ============================================================ */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans, system-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  padding: 4px 0 6px;
+  border-top: 1px solid currentColor;
+  /* 默认色（被下面的 .red / .yellow / .blue 覆盖） */
+  color: var(--level-color, #1A1A1A);
+}
+
+.bar {
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  flex: 0 0 auto;
+}
+
+.label {
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Red ── */
+.red {
+  --level-color: #8B3530;
+}
+
+/* ── Yellow ── */
+.yellow {
+  --level-color: #6B5500;
+}
+
+/* ── Blue ── */
+.blue {
+  --level-color: #145CA8;
+}
+
+/* ── Compact（移动端 10px） ── */
+.compact {
+  font-size: 10px;
+  padding: 3px 0 5px;
+  gap: 6px;
+}
+.compact .bar {
+  width: 14px;
+}

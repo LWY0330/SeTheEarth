@@ -22,6 +22,8 @@ import CityIndexPage from '@/components/CityIndexPage';
 import AboutPage from '@/components/AboutPage';
 import Meta from '@/components/Meta';
 import HotkeyHelp from '@/components/HotkeyHelp';
+import { UserCityProvider } from '@/components/UserCityPicker/UserCityContext';
+import UserCityPicker from '@/components/UserCityPicker/UserCityPicker';
 import { useHotkeys, type HotkeyActions } from '@/hooks/useHotkeys';
 import styles from './App.module.css';
 
@@ -59,8 +61,10 @@ function HomeShell() {
     setActiveCityId(featuredCities[j].id);
   }, [activeCityId, featuredCities]);
 
-  // ── 板块 3：硬性 6 条事件（v2.21 数据层约束 · 超出数据源在详情页/Archive 用） ──
-  const events = useMemo(() => liveEvents.slice(0, 6), []);
+  // ── 板块 3：v1.4 · PR #26 · 整集合（MomentsTimeline 内部按 level 字段分流）──
+  //   confrontEvents (level 字段存在) → 对峙式阅读流
+  //   其余 → 12 城时间轴背景层（slice(0, 6)）
+  const events = useMemo(() => liveEvents, []);
   const [activeEventId, setActiveEventId] = useState<string | null>(null);
   const activeEvent = activeEventId
     ? events.find((e: { id: string }) => e.id === activeEventId) ?? null
@@ -350,6 +354,8 @@ function HomeShell() {
 
       {/* v1.3 · PR #13 · 中央快捷键帮助 Modal */}
       <HotkeyHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
+      {/* v1.4 · PR #29 · 一次性用户城市选择器（受控于 UserCityContext） */}
+      <UserCityPicker />
       </main>
     </div>
   );
@@ -372,9 +378,11 @@ function AppRoutes() {
 
 export function App() {
   return (
-    <Router>
-      <AppRoutes />
-    </Router>
+    <UserCityProvider>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </UserCityProvider>
   );
 }
 
