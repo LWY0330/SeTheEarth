@@ -6,6 +6,8 @@
    - 半透明遮罩 + 居中卡片，纯 inline style（无新增 css 文件）
    ============================================================ */
 
+import { Button } from '@/components/ui';
+
 export type HotkeyHelpProps = {
   open: boolean;
   onClose: () => void;
@@ -69,22 +71,10 @@ export function HotkeyHelp({ open, onClose }: HotkeyHelpProps) {
           <h2 style={{ margin: 0, fontSize: 18, fontWeight: 600 }}>
             快捷键 · Hotkeys
           </h2>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="关闭"
-            style={{
-              background: 'transparent',
-              border: 'none',
-              fontSize: 22,
-              cursor: 'pointer',
-              color: '#666',
-              padding: 4,
-              lineHeight: 1,
-            }}
-          >
+          {/* v1.5 · PROMPT 17 · Stage 3 · Button 接入 close icon */}
+          <Button variant="ghost" size="md" onClick={onClose} aria-label="关闭">
             ×
-          </button>
+          </Button>
         </header>
 
         <table
