@@ -43,6 +43,8 @@ export function CityFeatured({ city, index, total, onPrev, onNext }: CityFeature
       className={styles.featured}
       data-slug={city.slug}
       data-period={period}
+      data-board-index={index}
+      data-board-total={total}
       aria-label={`${city.nameZh} 主视觉区 · 当前时段 ${period}`}
     >
       <div className={styles.imageWrap} data-period={period}>
@@ -105,9 +107,8 @@ export function CityFeatured({ city, index, total, onPrev, onNext }: CityFeature
 
       <div className={styles.content}>
         <div className={styles.meta}>
-          <span className={styles.number}>
-            {String(index + 1).padStart(2, '0')} <span className={styles.total}>/ {String(total).padStart(2, '0')}</span>
-          </span>
+          {/* v1.4.1 · D-B · 删除 carousel 风格 "01/06" 编号(D1 IA3 解决)
+              保留 index/total props 不变,只删 DOM(design contract 保护) */}
           <span className={styles.region}>FEATURED CITY</span>
         </div>
 

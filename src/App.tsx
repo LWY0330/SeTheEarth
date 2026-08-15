@@ -185,6 +185,14 @@ function HomeShell() {
             >
               Journal
             </a>
+            {/* v1.4.1 · D-A · 板块 4 nav 入口(D1 IA2 修复) */}
+            <a
+              className={styles.navLink}
+              onClick={(e) => { e.preventDefault(); document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' }); }}
+              href="#timeline"
+            >
+              Earth Archive
+            </a>
             <a
               className={styles.navLink}
               onClick={(e) => {
@@ -272,8 +280,16 @@ function HomeShell() {
             </div>
           </details>
 
-          <p className={styles.scrollHint}>
-            <span aria-hidden="true">↓</span> 上滑探索
+          {/* v1.4.1 · D-A · 指向板块 4 Earth Archive */}
+          <p
+            className={styles.scrollHint}
+            onClick={() => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' })}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' }); } }}
+            style={{ cursor: 'pointer' }}
+          >
+            <span aria-hidden="true">↓</span> 上滑探索 Earth Archive
           </p>
         </div>
       </section>
@@ -286,9 +302,8 @@ function HomeShell() {
         aria-label="城市精选"
       >
         <header className={styles.sectionHeader}>
-          <span className={styles.sectionNumber}>
-            {String(displayCityIndex + 1).padStart(2, '0')} / {String(featuredCities.length).padStart(2, '0')} ATLAS
-          </span>
+          {/* v1.4.1 · D-B 追加工单 · 删 "06/06 ATLAS" 编号(D1 IA3 补刀)
+              displayCityIndex / featuredCities 变量保留(只删 span,不删变量) */}
           <div className={styles.sectionTitleBlock}>
             <h2 className={styles.sectionTitle}>
               此刻 · {featuredCities.length} 座城市

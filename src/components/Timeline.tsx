@@ -97,7 +97,7 @@ export function Timeline({
   }, [activeIndex, events.length]);
 
   return (
-    <section className={styles.wrap} aria-labelledby="timeline-heading">
+    <section id="timeline" className={styles.wrap} aria-labelledby="timeline-heading">
       <header className={styles.intro}>
         <span className={styles.eyebrow}>{eyebrow}</span>
         <h2 id="timeline-heading" className={styles.title}>
