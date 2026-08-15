@@ -185,6 +185,14 @@ function HomeShell() {
             >
               Journal
             </a>
+            {/* v1.4.1 · D-A · 板块 4 nav 入口(D1 IA2 修复) */}
+            <a
+              className={styles.navLink}
+              onClick={(e) => { e.preventDefault(); document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' }); }}
+              href="#timeline"
+            >
+              Earth Archive
+            </a>
             <a
               className={styles.navLink}
               onClick={(e) => {
@@ -272,8 +280,16 @@ function HomeShell() {
             </div>
           </details>
 
-          <p className={styles.scrollHint}>
-            <span aria-hidden="true">↓</span> 上滑探索
+          {/* v1.4.1 · D-A · 指向板块 4 Earth Archive */}
+          <p
+            className={styles.scrollHint}
+            onClick={() => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' })}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' }); } }}
+            style={{ cursor: 'pointer' }}
+          >
+            <span aria-hidden="true">↓</span> 上滑探索 Earth Archive
           </p>
         </div>
       </section>
