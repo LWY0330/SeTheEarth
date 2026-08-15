@@ -1,0 +1,153 @@
+/* ============================================================
+   Button.module.css · v1.5
+   全 var() 引用,无硬编码色值 / 字号 / spacing
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-sans);
+  border: 1px solid transparent;
+  border-radius: var(--r-sharp);   /* 主路径 · 直角 */
+  cursor: pointer;
+  transition:
+    background var(--motion-fast) linear,
+    border-color var(--motion-fast) linear,
+    color var(--motion-fast) linear;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* ---------- sizes ---------- */
+.s-sm {
+  font-size: var(--fs-caption);
+  padding: var(--space-2) var(--space-4);
+  height: var(--search-height-sm);
+}
+.s-md {
+  font-size: var(--fs-body);
+  padding: var(--space-3) var(--space-5);
+  height: var(--search-height-md);
+}
+
+/* ---------- variants ---------- */
+/* primary: 实心 accent,用于主 CTA */
+.v-primary {
+  background: var(--color-accent-500);
+  color: var(--color-ink-inverse);
+  border-color: var(--color-accent-500);
+}
+.v-primary:hover {
+  background: var(--color-accent-600);
+  border-color: var(--color-accent-600);
+}
+.v-primary:active {
+  background: var(--color-accent-600);
+  transform: scale(0.98);
+}
+.v-primary:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+}
+
+/* secondary: 描边,用于次要操作 */
+.v-secondary {
+  background: transparent;
+  color: var(--color-ink-900);
+  border-color: var(--color-ink-900);
+}
+.v-secondary:hover {
+  background: var(--color-canvas-soft);
+}
+.v-secondary:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+}
+
+/* ghost: 文本按钮,无背景 */
+.v-ghost {
+  background: transparent;
+  color: var(--color-ink-700);
+  border-color: transparent;
+}
+.v-ghost:hover {
+  color: var(--color-ink-900);
+  background: color-mix(in srgb, var(--color-ink-900) 4%, transparent);
+}
+
+/* ---------- disabled ---------- */
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* ============================================================
+   Responsive · 移动端断点
+   ============================================================ */
+@media (max-width: 480px) {
+  .s-sm {
+    height: 32px;
+    padding: var(--space-1) var(--space-3);
+    font-size: var(--fs-micro);
+  }
+  .s-md {
+    height: 44px;
+    padding: var(--space-2) var(--space-4);
+  }
+  /* icon-only 在移动端最少 44x44 触摸目标 */
+  .btn:has(> :only-child:is(svg)) {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* ============================================================
+   prefers-reduced-motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .v-primary:active {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ============================================================
+   Print · 不打印按钮(只保留链接)
+   ============================================================ */
+@media print {
+  .btn {
+    border: 1px solid var(--color-ink-900);
+    background: transparent;
+    color: var(--color-ink-900);
+    box-shadow: none;
+  }
+}
+
+/* ============================================================
+   Loading state · 业务可用 [data-loading="true"] 触发
+   ============================================================ */
+.btn[data-loading="true"] {
+  cursor: wait;
+  opacity: 0.7;
+  pointer-events: none;
+}
+.btn[data-loading="true"]::after {
+  content: '';
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: var(--r-pill);
+  animation: btnSpin 0.8s linear infinite;
+}
+@keyframes btnSpin {
+  to { transform: rotate(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn[data-loading="true"]::after { animation: none; }
+}

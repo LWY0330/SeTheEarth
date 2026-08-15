@@ -1,0 +1,123 @@
+/* ============================================================
+   Modal.module.css · v1.5
+   - 直角(报志感) · elevated 阴影
+   ============================================================ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--modal-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  padding: var(--space-4);
+  animation: fadeIn var(--motion-fast) linear;
+}
+
+.dialog {
+  background: var(--modal-bg);
+  border-radius: var(--modal-radius);
+  box-shadow: var(--modal-shadow);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: slideUp var(--motion-slide) var(--ease-out);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--modal-padding);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-semibold);
+  color: var(--color-ink-900);
+}
+
+.close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: var(--fs-h2);
+  color: var(--color-ink-500);
+  padding: var(--space-1);
+  line-height: 1;
+  transition: color var(--motion-fast) linear;
+}
+.close:hover {
+  color: var(--color-ink-900);
+}
+.close:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+}
+
+.body {
+  padding: var(--modal-padding);
+  overflow-y: auto;
+  flex: 1 1 auto;
+}
+
+/* sizes */
+.s-sm { max-width: var(--modal-max-width-sm); }
+.s-md { max-width: var(--modal-max-width-md); }
+.s-lg { max-width: var(--modal-max-width-lg); }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .overlay, .dialog { animation: none; }
+}
+
+/* ============================================================
+   Responsive · 移动端全屏 sheet
+   ============================================================ */
+@media (max-width: 640px) {
+  .overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+  .dialog {
+    max-width: 100%;
+    max-height: 95vh;
+    border-radius: var(--r-sharp);
+    width: 100%;
+    animation: slideUpMobile var(--motion-slide) var(--ease-out);
+  }
+  @keyframes slideUpMobile {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+}
+
+/* ============================================================
+   Print · modal 不打印
+   ============================================================ */
+@media print {
+  .overlay { display: none; }
+}
+
+/* ============================================================
+   强制 dialog 内部滚动
+   ============================================================ */
+.body > *:last-child {
+  margin-bottom: 0;
+}
+.body > *:first-child {
+  margin-top: 0;
+}
