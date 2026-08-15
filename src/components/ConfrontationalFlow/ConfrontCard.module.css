@@ -8,13 +8,13 @@
 .card {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 18px 18px 16px 20px;
+  gap: var(--sp-3);
+  padding: 18px 18px var(--sp-4) 20px;
   background: var(--color-canvas-soft, #EFE9DC);
   border: 1px solid var(--color-canvas-deep, #E8E2D5);
   border-left-width: 3px;
   border-left-style: solid;
-  border-radius: 2px;
+  border-radius: var(--r-subtle);
   position: relative;
   min-height: 240px;
   transition: border-left-width 0.15s ease, background 0.15s ease;
@@ -28,13 +28,13 @@
 }
 
 /* ── Level 边框颜色 ── */
-.level_red    { border-left-color: #8B3530; }
+.level_red    { border-left-color: var(--level-red); }
 .level_yellow { border-left-color: #9C7B1A; }
-.level_blue   { border-left-color: #1F6FBC; }
+.level_blue   { border-left-color: var(--content-type-weather); }
 
 /* ── 城市名 ── */
 .cityBlock {
-  margin: 4px 0 0;
+  margin: var(--sp-1) 0 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -42,12 +42,12 @@
   line-height: 1.1;
 }
 .cityZh {
-  font-size: 20px;
+  font-size: var(--fs-h3);
   font-weight: 500;
   color: var(--color-ink-900, #1A1A1A);
 }
 .cityEn {
-  font-size: 12px;
+  font-size: var(--fs-micro);
   font-style: italic;
   color: var(--color-ink-700, #3A3833);
   letter-spacing: 0.04em;
@@ -59,7 +59,7 @@
   margin: 6px 0 0;
   padding: 0;
   font-family: var(--font-serif, serif);
-  font-size: 16px;
+  font-size: var(--fs-body);
   line-height: 1.5;
   color: var(--color-ink-900, #1A1A1A);
   border-left: none;
@@ -79,13 +79,13 @@
   flex-direction: column;
   gap: 6px;
   font-family: var(--font-sans, system-ui);
-  font-size: 12px;
+  font-size: var(--fs-micro);
   font-variant-numeric: tabular-nums;
 }
 .metaRow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--sp-2);
 }
 .metaLabel {
   flex: 0 0 auto;
@@ -93,12 +93,12 @@
   letter-spacing: 0.1em;
   color: var(--color-ink-700, #3A3833);
   text-transform: uppercase;
-  min-width: 32px;
+  min-width: var(--sp-6);
 }
 .metaValue {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--sp-1);
   margin: 0;
   color: var(--color-ink-900, #1A1A1A);
   font-weight: 500;
@@ -118,13 +118,13 @@
 .noLink {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--sp-1);
   font-family: var(--font-sans, system-ui);
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   text-decoration: none;
-  padding: 4px 0;
+  padding: var(--sp-1) 0;
   color: var(--color-ink-700, #3A3833);
 }
 .viewCity:hover,
@@ -146,7 +146,7 @@
 /* ── 移动端（compact） ── */
 @media (max-width: 900px) {
   .card {
-    padding: 14px 14px 12px 16px;
+    padding: 14px 14px var(--sp-3) var(--sp-4);
     min-height: 0;
   }
   .cityZh { font-size: 18px; }

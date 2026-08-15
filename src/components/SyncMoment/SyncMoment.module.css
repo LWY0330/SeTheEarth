@@ -9,13 +9,13 @@
 .sm {
   display: inline-flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--sp-1);
   font-family: var(--font-sans, system-ui);
   background: rgba(245, 241, 234, 0.92);
   color: var(--color-ink-900, #050b18);
   border: 1px solid #050b18;
-  border-radius: 2px;
-  padding: 8px 10px;
+  border-radius: var(--r-subtle);
+  padding: var(--sp-2) 10px;
   box-sizing: border-box;
   user-select: none;
   -webkit-user-select: none;
@@ -30,13 +30,13 @@
 /* ── Full 尺寸 ── */
 .sm-full {
   min-width: 160px;
-  font-size: 12px;
+  font-size: var(--fs-micro);
   line-height: 1.3;
 }
 .sm-full .sm-time-full {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: var(--sp-2);
   font-family: var(--font-serif, serif);
 }
 .sm-full .sm-time-clock {
@@ -55,7 +55,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 14px;
+  font-size: var(--fs-caption);
   font-variant-numeric: tabular-nums;
 }
 .sm-full .sm-temp-icon {
@@ -87,7 +87,7 @@
 /* ── Compact 尺寸（CityFeatured） ── */
 .sm-compact {
   min-width: 130px;
-  padding: 6px 8px;
+  padding: 6px var(--sp-2);
   font-size: 11px;
 }
 .sm-compact .sm-time-compact {
@@ -97,7 +97,7 @@
   font-family: var(--font-serif, serif);
 }
 .sm-compact .sm-time-clock {
-  font-size: 14px;
+  font-size: var(--fs-caption);
   font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
@@ -109,8 +109,8 @@
 .sm-compact .sm-temp {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
+  gap: var(--sp-1);
+  font-size: var(--fs-micro);
   font-variant-numeric: tabular-nums;
 }
 .sm-compact .sm-temp-value {
@@ -120,7 +120,7 @@
   font-size: 10px;
   opacity: 0.8;
   font-variant-numeric: tabular-nums;
-  padding-top: 4px;
+  padding-top: var(--sp-1);
   border-top: 1px dashed currentColor;
   margin-top: 2px;
 }
@@ -133,7 +133,7 @@
   font-size: 11px;
   line-height: 1.4;
   font-variant-numeric: tabular-nums;
-  border-radius: 2px;
+  border-radius: var(--r-subtle);
   white-space: nowrap;
 }
 
@@ -191,9 +191,9 @@
 @media (max-width: 480px) {
   .sm-full {
     min-width: 140px;
-    padding: 6px 8px;
+    padding: 6px var(--sp-2);
   }
   .sm-full .sm-time-clock {
-    font-size: 16px;
+    font-size: var(--fs-body);
   }
 }

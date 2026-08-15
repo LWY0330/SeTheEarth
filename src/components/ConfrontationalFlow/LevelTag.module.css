@@ -10,12 +10,12 @@
 .tag {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--sp-2);
   font-family: var(--level-font-sans, system-ui);
   font-size: var(--level-size-md, 16px);
   font-weight: 500;
   letter-spacing: 0.12em;
-  padding: 4px 0 6px;
+  padding: var(--sp-1) 0 6px;
   border-top: 1px solid currentColor;
   color: var(--level-color, #1A1A1A);
 }
@@ -61,7 +61,7 @@
   font-family: var(--level-font-serif, serif);
   font-weight: 700;
   font-size: var(--level-size-lg, 18px);
-  --level-color: #8B3530;
+  --level-color: var(--level-red);
 }
 
 /* ── Yellow：sans + 500 + md ── */
@@ -69,7 +69,7 @@
   font-family: var(--level-font-sans, system-ui);
   font-weight: 500;
   font-size: var(--level-size-md, 16px);
-  --level-color: #6B5500;
+  --level-color: var(--level-yellow);
 }
 
 /* ── Blue：sans-italic + 400 + sm ── */

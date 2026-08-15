@@ -69,7 +69,7 @@
 
 /* ── 信息条（极简） ── */
 .info {
-  padding: 16px 20px 18px;
+  padding: var(--sp-4) 20px 18px;
   background: var(--color-canvas);
   display: flex;
   flex-direction: column;
@@ -126,7 +126,7 @@
 }
 
 @media (max-width: 640px) {
-  .info { padding: 12px 14px 14px; }
+  .info { padding: var(--sp-3) 14px 14px; }
   .nameCn { font-size: 18px; }
-  .nameEn { font-size: 12px; }
+  .nameEn { font-size: var(--fs-micro); }
 }

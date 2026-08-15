@@ -7,8 +7,8 @@
 .region {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding: 0 28px 24px;
+  gap: var(--sp-4);
+  padding: 0 28px var(--sp-5);
   border-bottom: 1px solid var(--color-canvas-deep, #E8E2D5);
 }
 
@@ -16,7 +16,7 @@
 .header {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--sp-1);
 }
 .title {
   margin: 0;
@@ -38,21 +38,21 @@
 .groupNav {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-top: 8px;
+  gap: var(--sp-3);
+  margin-top: var(--sp-2);
 }
 .groupBtn {
   background: transparent;
   border: 1px solid var(--color-ink-900, #1A1A1A);
-  border-radius: 2px;
+  border-radius: var(--r-subtle);
   padding: 5px 10px;
-  font-size: 12px;
+  font-size: var(--fs-micro);
   font-family: var(--font-sans, system-ui);
   color: var(--color-ink-900, #1A1A1A);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--sp-1);
   transition: all 0.12s ease;
 }
 .groupBtn:hover:not(:disabled),
@@ -70,7 +70,7 @@
   cursor: not-allowed;
 }
 .groupCounter {
-  font-size: 12px;
+  font-size: var(--fs-micro);
   color: var(--color-ink-700, #3A3833);
   font-family: var(--font-sans, system-ui);
   font-variant-numeric: tabular-nums;
@@ -81,8 +81,8 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-top: 8px;
+  gap: var(--sp-5);
+  margin-top: var(--sp-2);
 }
 .gridItem {
   display: contents;
@@ -94,11 +94,11 @@
 
 @media (max-width: 900px) {
   .region {
-    padding: 0 16px 20px;
+    padding: 0 var(--sp-4) 20px;
   }
   .grid {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: var(--sp-4);
   }
   .title {
     font-size: 18px;

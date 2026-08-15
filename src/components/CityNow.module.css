@@ -10,7 +10,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 14px 18px 16px;
+  padding: 14px 18px var(--sp-4);
   background: var(--color-canvas);
   border-radius: var(--r-lg);
   border: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
@@ -30,7 +30,7 @@
 .timeRow {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: var(--sp-2);
   flex-wrap: wrap;
 }
 
@@ -56,7 +56,7 @@
 .dayPeriod {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: 12px;
+  font-size: var(--fs-micro);
   color: var(--color-ink-700);
 }
 
@@ -64,7 +64,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: var(--fs-micro);
   color: var(--color-ink-700);
 }
 
@@ -72,8 +72,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: var(--sp-4);
+  height: var(--sp-4);
   color: var(--color-ink-700);
   flex-shrink: 0;
 }
@@ -96,7 +96,7 @@
   font-family: var(--font-sans);
   font-style: italic;
   color: var(--color-ink-300);
-  font-size: 12px;
+  font-size: var(--fs-micro);
 }
 
 .observation {
@@ -115,7 +115,7 @@
 
 /* ── 数据源行（v2.60 · 与正文同区，弱化但可读） ── */
 .source {
-  margin-top: 4px;
+  margin-top: var(--sp-1);
   padding-top: 6px;
   border-top: 1px solid color-mix(in srgb, var(--color-ink-900) 6%, transparent);
   display: flex;
@@ -150,10 +150,10 @@
 
 /* ── 紧凑模式（hover preview / 移动端单行） ── */
 .compact {
-  padding: 10px 14px 12px;
-  gap: 4px;
+  padding: 10px 14px var(--sp-3);
+  gap: var(--sp-1);
 }
-.compact .localTime { font-size: 20px; }
+.compact .localTime { font-size: var(--fs-h3); }
 .compact .dayPeriod,
 .compact .tz { font-size: 10px; }
 .compact .weatherRow { font-size: 11px; }
