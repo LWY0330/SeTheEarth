@@ -197,15 +197,12 @@
   flex-shrink: 0;
 }
 
-.sectionNumber {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 500;
-  color: var(--color-ink-500);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
+/* v1.4.1 · D-B 追加工单 · 删除 .sectionNumber selector(App.module.css)
+   对应 App.tsx:305-306 的 <span className={styles.sectionNumber}> 已删
+   (AboutPage.tsx + CityPage.tsx 用各自的 .module.css,不受影响)
+   .sectionHeader 仍是 flex,gap:16px 现在只有 1 个子元素(.sectionTitleBlock),
+   视觉上 .sectionTitleBlock 现在贴左边(原本有 8px margin-left,可保留可删)
+   本工单不动 .sectionTitleBlock 的 margin-left,避免越界改动 */
 
 .sectionTitleBlock {
   display: flex;

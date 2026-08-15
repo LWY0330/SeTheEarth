@@ -302,9 +302,8 @@ function HomeShell() {
         aria-label="城市精选"
       >
         <header className={styles.sectionHeader}>
-          <span className={styles.sectionNumber}>
-            {String(displayCityIndex + 1).padStart(2, '0')} / {String(featuredCities.length).padStart(2, '0')} ATLAS
-          </span>
+          {/* v1.4.1 · D-B 追加工单 · 删 "06/06 ATLAS" 编号(D1 IA3 补刀)
+              displayCityIndex / featuredCities 变量保留(只删 span,不删变量) */}
           <div className={styles.sectionTitleBlock}>
             <h2 className={styles.sectionTitle}>
               此刻 · {featuredCities.length} 座城市
