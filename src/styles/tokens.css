@@ -341,14 +341,14 @@
   --content-type-local:        #5C4830;  /* 7.69 vs canvas · AAA · 暖土褐 */
   --content-type-daily-life:   var(--content-type-local);  /* alias */
   --content-type-culture:       #9C4B3E;  /* 5.35 vs canvas · AA · 陶土红 */
-  --content-type-weather:      #1F6FBC;  /* 4.60 vs canvas · AA · 冷蓝天空 */
+  --content-type-weather:      #1A5D9D;  /* 6.02 vs canvas · AA · 深冷蓝(data 层 contentTypeColors 对齐) */
   --content-type-nature:       #246A5A;  /* 5.50 vs canvas · AA · 青绿大地 */
   --content-type-transport:    #3F5E2D;  /* 6.54 vs canvas · AA · 深橄榄 */
   --content-type-finance:      #0F5FBF;  /* 5.47 vs canvas · AA · 深货币蓝 */
-  --content-type-world:        #1458A8;  /* = level-blue · 复用 */
-  --content-type-community:    #B25E40;  /* = accent-500 · 复用 */
-  --content-type-science:      #5C4896;  /* 5.10 vs canvas · AA · 深紫 */
-  --content-type-sports:       #B23A66;  /* 5.30 vs canvas · AA · 深玫红 */
+  --content-type-world:        #3F4DA8;  /* 6.57 vs canvas · AA · 深靛蓝(data 层 contentTypeColors 对齐) */
+  --content-type-community:    #9A4A2D;  /* 5.50 vs canvas · AA · 深暖棕(data 层 contentTypeColors 对齐,前 v1.3 #D97757 2.77 ✗) */
+  --content-type-science:      #6B4DA8;  /* 5.74 vs canvas · AA · 深紫(data 层 contentTypeColors 对齐) */
+  --content-type-sports:       #A03E6E;  /* 5.47 vs canvas · AA · 深玫红(data 层 contentTypeColors 对齐) */
 
 /* ============================================================
      19. SearchBox / 表单专用 token
