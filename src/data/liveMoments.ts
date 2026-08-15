@@ -12,6 +12,11 @@ export type Scale = 'global' | 'national' | 'regional' | 'local' | 'everyday';
 export type SourceType = 'local-media' | 'official' | 'community' | 'weather-data' | 'transport-data' | 'editorial';
 export type VerificationStatus = 'verified' | 'developing' | 'editorial';
 
+import type { Level, LevelMeta } from '@/lib/editorialLevel';
+// v1.4 · PR #30 · Level 单一真相源在 @/lib/editorialLevel
+// 这里 re-export 保持向后兼容（旧 import 不破坏）
+export type { Level } from '@/lib/editorialLevel';
+
 export type LiveEvent = {
   id: string;
   cityId: string;
@@ -50,6 +55,14 @@ export type LiveEvent = {
   longitude?: number;
   isLive: boolean;
   verificationStatus: VerificationStatus;
+  /** v1.4 · PR #26 · 对峙式阅读流 · 情绪层级；存在 → 进入 ConfrontationalFlow */
+  level?: Level;
+  /** v1.4 · PR #26 · 对峙式阅读流 · 配对标识（同一组 3 条共享） */
+  groupId?: string;
+  /** v1.4 · PR #26 · 对峙卡片主标题（一句话，serif 16px） */
+  momentZh?: string;
+  /** v1.4 · PR #30 · 编辑可选 override（不填则用 editorialLevels 默认） */
+  editorialLevel?: LevelMeta;
 };
 
 export const liveEvents: readonly LiveEvent[] = [
@@ -389,29 +402,306 @@ export const liveEvents: readonly LiveEvent[] = [
     isLive: true,
     verificationStatus: 'developing',
   },
+
+  // v1.4 · PR #26 · 对峙式阅读流（9 条 · 3 组 × 3 级情绪）
+  // ── group-1 · 2026-08-14 ──
+  {
+    id: 'confront-sudan-01',
+    cityId: 'cape-town',
+    cityNameZh: '喀土穆',
+    cityNameEn: 'Khartoum',
+    countryZh: '苏丹',
+    countryEn: 'SUDAN',
+    category: 'war',
+    categoryLabelZh: '冲突',
+    contentType: 'world',
+    contentTypeZh: '世界',
+    scale: 'global',
+    title: '喀土穆的炮弹声在凌晨三点再次响起',
+    description: '喀土穆的炮弹声在凌晨三点再次响起。',
+    momentZh: '喀土穆的炮弹声在凌晨三点再次响起',
+    localTime: '00:00',
+    timezone: 'CAT',
+    utcOffset: 2,
+    observedAt: '2026-08-14T00:00:00+02:00',
+    updatedAt: '2026-08-14T00:00:00+02:00',
+    sourceName: '编辑观察 · 对峙阅读流',
+    thumbnailUrl: '',
+    sourceType: 'editorial',
+    latitude: 15.5007,
+    longitude: 32.5599,
+    isLive: false,
+    verificationStatus: 'editorial',
+    level: 'red',
+    groupId: 'confront-2026-08-14',
+  },
+  {
+    id: 'confront-kyoto-01',
+    cityId: 'kyoto',
+    cityNameZh: '京都',
+    cityNameEn: 'Kyoto',
+    countryZh: '日本',
+    countryEn: 'JAPAN',
+    category: 'art',
+    categoryLabelZh: '文化',
+    contentType: 'culture',
+    contentTypeZh: '文化',
+    scale: 'national',
+    title: '京都的五月祭典，灯笼把鸭川染成金色',
+    description: '京都的五月祭典，灯笼把鸭川染成金色。',
+    momentZh: '京都的五月祭典，灯笼把鸭川染成金色',
+    localTime: '07:00',
+    timezone: 'JST',
+    utcOffset: 9,
+    observedAt: '2026-08-14T07:00:00+09:00',
+    updatedAt: '2026-08-14T07:00:00+09:00',
+    sourceName: '编辑观察 · 对峙阅读流',
+    thumbnailUrl: '',
+    sourceType: 'editorial',
+    latitude: 35.0116,
+    longitude: 135.7681,
+    isLive: false,
+    verificationStatus: 'editorial',
+    level: 'yellow',
+    groupId: 'confront-2026-08-14',
+  },
+  {
+    id: 'confront-lisbon-01',
+    cityId: 'lisbon',
+    cityNameZh: '里斯本',
+    cityNameEn: 'Lisbon',
+    countryZh: '葡萄牙',
+    countryEn: 'PORTUGAL',
+    category: 'nature',
+    categoryLabelZh: '日常',
+    contentType: 'daily-life',
+    contentTypeZh: '日常',
+    scale: 'everyday',
+    title: '里斯本 Alfama 坡道上有只鸽子停下来看老奶奶织毛衣',
+    description: '里斯本 Alfama 坡道上有只鸽子停下来看老奶奶织毛衣。',
+    momentZh: '里斯本 Alfama 坡道上有只鸽子停下来看老奶奶织毛衣',
+    localTime: '23:00',
+    timezone: 'WEST',
+    utcOffset: 1,
+    observedAt: '2026-08-14T23:00:00+01:00',
+    updatedAt: '2026-08-14T23:00:00+01:00',
+    sourceName: '编辑观察 · 对峙阅读流',
+    thumbnailUrl: '',
+    sourceType: 'editorial',
+    latitude: 38.7223,
+    longitude: -9.1393,
+    isLive: false,
+    verificationStatus: 'editorial',
+    level: 'blue',
+    groupId: 'confront-2026-08-14',
+  },
+
+  // ── group-2 · 2026-08-15 ──
+  {
+    id: 'confront-beirut-01',
+    cityId: 'rome', // 借用 Rome 做导航（beirut 不在 12 城）
+    cityNameZh: '贝鲁特',
+    cityNameEn: 'Beirut',
+    countryZh: '黎巴嫩',
+    countryEn: 'LEBANON',
+    category: 'war',
+    categoryLabelZh: '冲突',
+    contentType: 'world',
+    contentTypeZh: '世界',
+    scale: 'global',
+    title: '贝鲁特的发电机在凌晨四点再次停摆',
+    description: '贝鲁特的发电机在凌晨四点再次停摆。',
+    momentZh: '贝鲁特的发电机在凌晨四点再次停摆',
+    localTime: '01:00',
+    timezone: 'EET',
+    utcOffset: 3,
+    observedAt: '2026-08-15T01:00:00+03:00',
+    updatedAt: '2026-08-15T01:00:00+03:00',
+    sourceName: '编辑观察 · 对峙阅读流',
+    thumbnailUrl: '',
+    sourceType: 'editorial',
+    latitude: 33.8938,
+    longitude: 35.5018,
+    isLive: false,
+    verificationStatus: 'editorial',
+    level: 'red',
+    groupId: 'confront-2026-08-15',
+  },
+  {
+    id: 'confront-mexico-01',
+    cityId: 'mexico-city',
+    cityNameZh: '墨西哥城',
+    cityNameEn: 'Mexico City',
+    countryZh: '墨西哥',
+    countryEn: 'MEXICO',
+    category: 'art',
+    categoryLabelZh: '转折',
+    contentType: 'culture',
+    contentTypeZh: '文化',
+    scale: 'national',
+    title: '墨西哥城宪法广场，计票结束后的第一次欢呼',
+    description: '墨西哥城宪法广场，计票结束后的第一次欢呼。',
+    momentZh: '墨西哥城宪法广场，计票结束后的第一次欢呼',
+    localTime: '20:00',
+    timezone: 'CST',
+    utcOffset: -6,
+    observedAt: '2026-08-15T20:00:00-06:00',
+    updatedAt: '2026-08-15T20:00:00-06:00',
+    sourceName: '编辑观察 · 对峙阅读流',
+    thumbnailUrl: '',
+    sourceType: 'editorial',
+    latitude: 19.4326,
+    longitude: -99.1332,
+    isLive: false,
+    verificationStatus: 'editorial',
+    level: 'yellow',
+    groupId: 'confront-2026-08-15',
+  },
+  {
+    id: 'confront-reykjavik-01',
+    cityId: 'reykjavik',
+    cityNameZh: '雷克雅未克',
+    cityNameEn: 'Reykjavik',
+    countryZh: '冰岛',
+    countryEn: 'ICELAND',
+    category: 'nature',
+    categoryLabelZh: '日常',
+    contentType: 'daily-life',
+    contentTypeZh: '日常',
+    scale: 'everyday',
+    title: '雷克雅未克的温泉池边有个女孩在教她爸游泳',
+    description: '雷克雅未克的温泉池边有个女孩在教她爸游泳。',
+    momentZh: '雷克雅未克的温泉池边有个女孩在教她爸游泳',
+    localTime: '14:00',
+    timezone: 'GMT',
+    utcOffset: 0,
+    observedAt: '2026-08-15T14:00:00+00:00',
+    updatedAt: '2026-08-15T14:00:00+00:00',
+    sourceName: '编辑观察 · 对峙阅读流',
+    thumbnailUrl: '',
+    sourceType: 'editorial',
+    latitude: 64.1466,
+    longitude: -21.9426,
+    isLive: false,
+    verificationStatus: 'editorial',
+    level: 'blue',
+    groupId: 'confront-2026-08-15',
+  },
+
+  // ── group-3 · 2026-08-16 ──
+  {
+    id: 'confront-kyiv-01',
+    cityId: 'berlin', // 借用 Berlin 做导航（kyiv 不在 12 城）
+    cityNameZh: '基辅',
+    cityNameEn: 'Kyiv',
+    countryZh: '乌克兰',
+    countryEn: 'UKRAINE',
+    category: 'war',
+    categoryLabelZh: '冲突',
+    contentType: 'world',
+    contentTypeZh: '世界',
+    scale: 'global',
+    title: '基辅的空袭警报在凌晨两点响了三声',
+    description: '基辅的空袭警报在凌晨两点响了三声。',
+    momentZh: '基辅的空袭警报在凌晨两点响了三声',
+    localTime: '21:00',
+    timezone: 'EEST',
+    utcOffset: 3,
+    observedAt: '2026-08-16T21:00:00+03:00',
+    updatedAt: '2026-08-16T21:00:00+03:00',
+    sourceName: '编辑观察 · 对峙阅读流',
+    thumbnailUrl: '',
+    sourceType: 'editorial',
+    latitude: 50.4501,
+    longitude: 30.5234,
+    isLive: false,
+    verificationStatus: 'editorial',
+    level: 'red',
+    groupId: 'confront-2026-08-16',
+  },
+  {
+    id: 'confront-cairo-01',
+    cityId: 'rome', // cairo 不在 12 城内 → 借用 rome 做导航（避免 404）
+    cityNameZh: '开罗',
+    cityNameEn: 'Cairo',
+    countryZh: '埃及',
+    countryEn: 'EGYPT',
+    category: 'art',
+    categoryLabelZh: '节日',
+    contentType: 'culture',
+    contentTypeZh: '文化',
+    scale: 'national',
+    title: '开罗的开斋节早餐，整条街飘着椰枣蜜的甜',
+    description: '开罗的开斋节早餐，整条街飘着椰枣蜜的甜。',
+    momentZh: '开罗的开斋节早餐，整条街飘着椰枣蜜的甜',
+    localTime: '06:30',
+    timezone: 'EET',
+    utcOffset: 2,
+    observedAt: '2026-08-16T06:30:00+02:00',
+    updatedAt: '2026-08-16T06:30:00+02:00',
+    sourceName: '编辑观察 · 对峙阅读流',
+    thumbnailUrl: '',
+    sourceType: 'editorial',
+    latitude: 30.0444,
+    longitude: 31.2357,
+    isLive: false,
+    verificationStatus: 'editorial',
+    level: 'yellow',
+    groupId: 'confront-2026-08-16',
+  },
+  {
+    id: 'confront-tokyo-01',
+    cityId: 'tokyo',
+    cityNameZh: '东京',
+    cityNameEn: 'Tokyo',
+    countryZh: '日本',
+    countryEn: 'JAPAN',
+    category: 'nature',
+    categoryLabelZh: '日常',
+    contentType: 'daily-life',
+    contentTypeZh: '日常',
+    scale: 'everyday',
+    title: '东京代官山的老人和狗在自动贩卖机前各要了一罐午后咖啡',
+    description: '东京代官山的老人和狗在自动贩卖机前各要了一罐午后咖啡。',
+    momentZh: '东京代官山的老人和狗在自动贩卖机前各要了一罐午后咖啡',
+    localTime: '15:00',
+    timezone: 'JST',
+    utcOffset: 9,
+    observedAt: '2026-08-16T15:00:00+09:00',
+    updatedAt: '2026-08-16T15:00:00+09:00',
+    sourceName: '编辑观察 · 对峙阅读流',
+    thumbnailUrl: '',
+    sourceType: 'editorial',
+    latitude: 35.6762,
+    longitude: 139.6503,
+    isLive: false,
+    verificationStatus: 'editorial',
+    level: 'blue',
+    groupId: 'confront-2026-08-16',
+  },
 ];
 
 export const categoryColors: Record<MomentCategory, string> = {
-  finance: '#5BA8FF',
-  war: '#B85450',
-  art: '#C8924A',
-  urban: '#6B8E5A',
-  nature: '#82C0FF',
-  romance: '#D97757',
+  finance: '#0F5FBF',  // 5.47 ✓ 同 contentType.finance
+  war: '#8B3530',      // 7.04 ✓ 深血红色
+  art: '#9C4B3E',      // 5.35 ✓ 同 contentType.culture
+  urban: '#3F5E2D',    // 6.54 ✓ 同 contentType.transport
+  nature: '#246A5A',   // 5.68 ✓ 同 contentType.nature
+  romance: '#9A4A2D',  // 5.50 ✓ 同 contentType.community
 };
 
 export const contentTypeColors: Record<ContentType, string> = {
-  world: '#5E6AD2',
-  local: '#8B7355',
-  culture: '#C8924A',
-  'daily-life': '#8B7355',
-  weather: '#82C0FF',
-  nature: '#82C0FF',
-  transport: '#6B8E5A',
-  finance: '#5BA8FF',
-  science: '#A088D0',
-  community: '#D97757',
-  sports: '#E85A8C',
+  world: '#3F4DA8',        // 6.57 ✓ 深靛蓝
+  local: '#5C4830',        // 7.69 ✓ 深褐（土）
+  culture: '#9C4B3E',      // 5.35 ✓ 陶土红
+  'daily-life': '#5C4830', // 7.69 ✓ 同 local
+  weather: '#1A5D9D',      // 6.02 ✓ 深冷蓝
+  nature: '#246A5A',       // 5.68 ✓ 青绿
+  transport: '#3F5E2D',    // 6.54 ✓ 深橄榄绿
+  finance: '#0F5FBF',      // 5.47 ✓ 深蓝
+  science: '#6B4DA8',      // 5.74 ✓ 深紫
+  community: '#9A4A2D',    // 5.50 ✓ 深暖棕（v1.3 brand #D97757 2.77 ✗）
+  sports: '#A03E6E',       // 5.47 ✓ 深玫红
 };
 
 export function getSortedByLocalTime(): readonly LiveEvent[] {
@@ -462,3 +752,18 @@ export const momentsMeta: SectionMeta = {
 
 // 未来接真实数据时只需改为：
 // { status: "live", label: "WORLD SNAPSHOT · LIVE", subtitle: "..." }
+
+/* ============================================================
+   v1.4 · PR #26 · 对峙式阅读流（3 组 × 3 = 9 条）
+   - 配对标识 groupId 把同一组 3 条绑在一起（同一日不同情绪层）
+   - cityId 用最近 12 城做"导航目的"借用：
+       khartoum / beirut / kyiv / cairo 不在 12 城内，按 spec §9 风险表借用最近的 12 城
+       （避免点击卡片跳 404；显示名仍是被描述的真实城市）
+   - 这 9 条在 MomentsTimeline 渲染时按 `level` 字段过滤，不进入 12 城时间轴
+   ============================================================ */
+
+// v1.4 · PR #26 · 对峙事件的引用别名（实际数据已在 liveEvents 内）
+// 用 level 字段过滤即可：liveEvents.filter((e) => !!e.level)
+export const confrontEvents: readonly LiveEvent[] = liveEvents.filter(
+  (e): e is LiveEvent => e.level !== undefined,
+);

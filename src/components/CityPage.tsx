@@ -18,6 +18,8 @@ import {
   type City,
 } from '@/data/cities';
 import CityNow from './CityNow';
+import SyncMoment from '@/components/SyncMoment/SyncMoment';
+import { useUserCity } from '@/components/UserCityPicker/UserCityContext';
 import Meta from '@/components/Meta';
 import { cityImageUrl, cityImageSrcSet, HERO_WIDTHS } from '@/lib/imageUrl';
 import styles from './CityPage.module.css';
@@ -73,6 +75,7 @@ export function CityPage() {
 
   const snap = getCityNow(city, now);
   const tz = getTimezoneAbbrev(city, now);
+  const { openPicker } = useUserCity();
   const related = pickRelated(city);
 
   // v2.80.0 · hero 图在 return 前算一次（PR #9 去掉 IIFE）
@@ -129,6 +132,11 @@ export function CityPage() {
             </h1>
           </div>
         </div>
+      </section>
+
+      {/* v1.4 · PR #29 · 角落小卡片（同步时刻 · full 尺寸） */}
+      <section className={styles.syncMoment}>
+        <SyncMoment city={city} variant="full" />
       </section>
 
       {/* 城市简介 + 时间 + 一句观察 */}
@@ -217,11 +225,20 @@ export function CityPage() {
         </div>
       </section>
 
-      {/* 返回首页 */}
+      {/* 返回首页 + 重新选择城市 */}
       <footer className={styles.footer}>
-        <Link href="/" className={styles.footerLink}>
-          <span aria-hidden="true">↑</span> 回到 See Earth 主页
-        </Link>
+        <div className={styles.footerLinks}>
+          <button
+            type="button"
+            className={styles.footerReselect}
+            onClick={openPicker}
+          >
+            重新选择城市
+          </button>
+          <Link href="/" className={styles.footerLink}>
+            <span aria-hidden="true">↑</span> 回到 See Earth 主页
+          </Link>
+        </div>
       </footer>
     </div>
   );

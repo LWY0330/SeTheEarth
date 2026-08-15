@@ -14,6 +14,7 @@ import { contentTypeColors, momentsMeta, type LiveEvent } from '@/data/liveMomen
 import { findCityByAnyKey, type City } from '@/data/cities';
 import TimezoneBar from './TimezoneBar';
 import EventWeatherChip from './EventWeatherChip';
+import ConfrontationalFlow from '@/components/ConfrontationalFlow/ConfrontationalFlow';
 import styles from './MomentsTimeline.module.css';
 
 export type MomentsTimelineProps = {
@@ -72,16 +73,27 @@ export function MomentsTimeline({
     ? events.find((e) => e.id === activeEventId) ?? null
     : null;
 
+  // v1.4 · PR #26 · 对峙式阅读流：9 条 level 事件单独走 ConfrontationalFlow
+  // 不进入 12 城时间轴背景层
+  const confrontEvents = useMemo<readonly LiveEvent[]>(
+    () => events.filter((e) => !!e.level),
+    [events],
+  );
+  const backgroundEvents = useMemo<readonly LiveEvent[]>(
+    () => events.filter((e) => !e.level).slice(0, 6),
+    [events],
+  );
+
   // 板块 3 天气：把每个事件的 cityId 映射到 cities.ts 的 City（找不到则为 undefined）
   const cityByEventId = useMemo<Record<string, City | undefined>>(() => {
     const m: Record<string, City | undefined> = {};
-    for (const ev of events) m[ev.id] = findCityByAnyKey(ev.cityId);
+    for (const ev of backgroundEvents) m[ev.id] = findCityByAnyKey(ev.cityId);
     return m;
-  }, [events]);
+  }, [backgroundEvents]);
   const activeCity = activeEvent ? cityByEventId[activeEvent.id] : undefined;
 
   // 计算 6 事件的时段分布
-  const periodCounts = events.reduce<Record<string, number>>((acc, ev) => {
+  const periodCounts = backgroundEvents.reduce<Record<string, number>>((acc, ev) => {
     const period = getLocalTimePeriod(ev.localTime);
     acc[period] = (acc[period] ?? 0) + 1;
     return acc;
@@ -233,9 +245,14 @@ export function MomentsTimeline({
       {/* 中间 1px 细线分隔 */}
       <div className={styles.divider} aria-hidden="true" />
 
-      {/* ── 右 50%（编辑式信息流） ── */}
-      <ol className={styles.rightCol}>
-        {events.map((ev, i) => {
+      {/* ── 右 50%（WORLDS COLLIDE 顶部 + 12 城时间轴背景层） ── */}
+      <div className={styles.rightCol}>
+        {/* v1.4 · PR #26 · 对峙式阅读流 */}
+        {confrontEvents.length > 0 && <ConfrontationalFlow events={confrontEvents} />}
+
+      {/* ── 12 城时间轴背景层（编辑式信息流） ── */}
+      <ol className={styles.rightList}>
+        {backgroundEvents.map((ev, i) => {
           const accent = contentTypeColors[ev.contentType];
           const isActive = activeEventId === ev.id;
           return (
@@ -295,6 +312,7 @@ export function MomentsTimeline({
           );
         })}
       </ol>
+      </div>
     </div>
   );
 }

@@ -1,0 +1,21 @@
+/* ============================================================
+   看见地球 · v1.4 · PR #30 · 红黄蓝正式 taxonomy tokens
+   - CSS 自定义属性：字体族 + 字号档位 + 动效时长
+   - 给 LevelTag / ConfrontCard 用
+   ============================================================ */
+
+:root {
+  /* 字体族（项目用 system font stack） */
+  --level-font-serif: ui-serif, Georgia, "Times New Roman", serif;
+  --level-font-sans: var(--font-sans), system-ui, -apple-system, sans-serif;
+
+  /* 字号档位 */
+  --level-size-sm: 14px;
+  --level-size-md: 16px;
+  --level-size-lg: 18px;
+
+  /* 动效时长（用 CSS 变量让 prefers-reduced-motion 可覆盖） */
+  --level-motion-duration-scale: 400ms;
+  --level-motion-duration-slide: 300ms;
+  --level-motion-duration-fade: 500ms;
+}

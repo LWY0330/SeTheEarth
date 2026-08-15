@@ -38,3 +38,9 @@ lighthouse-report-*.report.json
 # v1.3.x · PR #16 · Lighthouse 调试产物
 lh-*
 lighthouse-debug
+
+# v1.4 · 设计稿 / 调研 / 截图（本地保留，不进项目库）
+outputs/
+
+# 备份文件
+*.bak

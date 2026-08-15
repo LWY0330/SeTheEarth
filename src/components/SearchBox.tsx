@@ -107,6 +107,7 @@ export function SearchBox({ onSearch, autoFocus = false }: SearchBoxProps) {
         <input
           ref={inputRef}
           type="text"
+          role="combobox"
           className={styles.input}
           placeholder="搜索一座城市 · Search a city"
           value={value}

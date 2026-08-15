@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 
 import App from './App';
 import './styles/globals.css';
+import './styles/level-tokens.css';
 
 const container = document.getElementById('root');
 if (!container) {

@@ -12,6 +12,7 @@ import { getCurrentPeriod, pickImage } from '@/data/cities';
 import { cityImageUrl, cityImageSrcSet, HERO_WIDTHS } from '@/lib/imageUrl';
 import { Link } from '@/router/Router';
 import CityNow from './CityNow';
+import SyncMoment from '@/components/SyncMoment/SyncMoment';
 import styles from './CityFeatured.module.css';
 
 export type CityFeaturedProps = {
@@ -95,6 +96,11 @@ export function CityFeatured({ city, index, total, onPrev, onNext }: CityFeature
             <span aria-hidden="true">›</span>
           </button>
         )}
+
+        {/* v1.4 · PR #29 · 角落小卡片（同步时刻 · compact · 覆盖在深色主图上 → inverted） */}
+        <div className={styles.syncMomentCorner}>
+          <SyncMoment city={city} variant="compact" inverted />
+        </div>
       </div>
 
       <div className={styles.content}>
@@ -115,7 +121,7 @@ export function CityFeatured({ city, index, total, onPrev, onNext }: CityFeature
         <Link
           href={city.href}
           className={styles.viewCity}
-          aria-label={`查看 ${city.nameZh} 详情页`}
+          aria-label={`查看 ${city.nameZh} · VIEW CITY 详情页`}
         >
           VIEW CITY <span aria-hidden="true">→</span>
         </Link>

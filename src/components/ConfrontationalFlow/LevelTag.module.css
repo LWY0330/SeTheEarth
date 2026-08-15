@@ -1,0 +1,92 @@
+/* ============================================================
+   看见地球 · v1.4 · PR #30 · LevelTag.module.css
+   - 顶部 1px 边框 + 文字 + 一段彩色"棒"
+   - 排版按 editorialLevels 元数据：
+       red    serif 700 / lg (18px)
+       yellow sans 500 / md (16px)
+       blue   sans-italic 400 / sm (14px)
+   ============================================================ */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--level-font-sans, system-ui);
+  font-size: var(--level-size-md, 16px);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  padding: 4px 0 6px;
+  border-top: 1px solid currentColor;
+  color: var(--level-color, #1A1A1A);
+}
+
+.bar {
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  flex: 0 0 auto;
+}
+
+.label {
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 字号档位（sm / md / lg） ── */
+.levelSize_sm {
+  font-size: var(--level-size-sm, 14px);
+}
+.levelSize_md {
+  font-size: var(--level-size-md, 16px);
+}
+.levelSize_lg {
+  font-size: var(--level-size-lg, 18px);
+}
+
+/* ── 字体族 ── */
+.levelFont_serif {
+  font-family: var(--level-font-serif, serif);
+}
+.levelFont_sans {
+  font-family: var(--level-font-sans, system-ui);
+}
+.levelFont_sans-italic {
+  font-family: var(--level-font-sans, system-ui);
+  font-style: italic;
+}
+
+/* ── Red：serif + 700 + lg（覆盖默认 size） ── */
+.level_red {
+  font-family: var(--level-font-serif, serif);
+  font-weight: 700;
+  font-size: var(--level-size-lg, 18px);
+  --level-color: #8B3530;
+}
+
+/* ── Yellow：sans + 500 + md ── */
+.level_yellow {
+  font-family: var(--level-font-sans, system-ui);
+  font-weight: 500;
+  font-size: var(--level-size-md, 16px);
+  --level-color: #6B5500;
+}
+
+/* ── Blue：sans-italic + 400 + sm ── */
+.level_blue {
+  font-family: var(--level-font-sans, system-ui);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--level-size-sm, 14px);
+  --level-color: #145CA8;
+}
+
+/* ── Compact（移动端 10px） ── */
+.compact {
+  font-size: 10px !important;
+  padding: 3px 0 5px;
+  gap: 6px;
+}
+.compact .bar {
+  width: 14px;
+}

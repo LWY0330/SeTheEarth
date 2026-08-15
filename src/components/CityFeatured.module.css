@@ -338,3 +338,22 @@
   outline-offset: 6px;
   border-radius: var(--r-xs);
 }
+
+/* ============================================================
+   看见地球 · v1.4 · CityFeatured.module.css (PR #29)
+   - syncMomentCorner: compact 卡片定位到 imageWrap 右下角
+   ============================================================ */
+
+.syncMomentCorner {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 3; /* 高于 periodOverlay / textGradient */
+  pointer-events: auto;
+}
+@media (max-width: 480px) {
+  .syncMomentCorner {
+    right: 8px;
+    bottom: 8px;
+  }
+}
