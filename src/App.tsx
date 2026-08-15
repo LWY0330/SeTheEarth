@@ -354,8 +354,6 @@ function HomeShell() {
 
       {/* v1.3 · PR #13 · 中央快捷键帮助 Modal */}
       <HotkeyHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
-      {/* v1.4 · PR #29 · 一次性用户城市选择器（受控于 UserCityContext） */}
-      <UserCityPicker />
       </main>
     </div>
   );
@@ -381,6 +379,8 @@ export function App() {
     <UserCityProvider>
       <Router>
         <AppRoutes />
+        {/* v1.4 · PR #29 · hotfix: 顶层挂载,所有路由可见（之前在 HomeShell 内,/cities /:slug /about 不弹） */}
+        <UserCityPicker />
       </Router>
     </UserCityProvider>
   );
