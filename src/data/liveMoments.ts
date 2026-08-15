@@ -12,13 +12,10 @@ export type Scale = 'global' | 'national' | 'regional' | 'local' | 'everyday';
 export type SourceType = 'local-media' | 'official' | 'community' | 'weather-data' | 'transport-data' | 'editorial';
 export type VerificationStatus = 'verified' | 'developing' | 'editorial';
 
-/**
- * v1.4 · PR #26 · 对峙式阅读流的情绪层级（临时字段，PR #30 升级正式 taxonomy）
- * red    = 生死 / 灾难 / 颠覆
- * yellow = 转折 / 节日 / 变革
- * blue   = 个体 / 日常 / 平凡
- */
-export type Level = 'red' | 'yellow' | 'blue';
+import type { Level, LevelMeta } from '@/lib/editorialLevel';
+// v1.4 · PR #30 · Level 单一真相源在 @/lib/editorialLevel
+// 这里 re-export 保持向后兼容（旧 import 不破坏）
+export type { Level } from '@/lib/editorialLevel';
 
 export type LiveEvent = {
   id: string;
@@ -64,6 +61,8 @@ export type LiveEvent = {
   groupId?: string;
   /** v1.4 · PR #26 · 对峙卡片主标题（一句话，serif 16px） */
   momentZh?: string;
+  /** v1.4 · PR #30 · 编辑可选 override（不填则用 editorialLevels 默认） */
+  editorialLevel?: LevelMeta;
 };
 
 export const liveEvents: readonly LiveEvent[] = [

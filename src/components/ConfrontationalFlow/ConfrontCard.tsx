@@ -7,7 +7,9 @@
 
 import { useEffect, useState } from 'react';
 import { Link } from '@/router/Router';
-import type { LiveEvent, Level } from '@/data/liveMoments';
+import type { LiveEvent } from '@/data/liveMoments';
+import type { Level } from '@/lib/editorialLevel';
+import { getEditorialLevel } from '@/lib/editorialLevel';
 import { findCityByAnyKey } from '@/data/cities';
 import { useWeather } from '@/lib/useWeather';
 import { getWeatherIcon } from '@/lib/weatherCodes';
@@ -53,12 +55,18 @@ export function ConfrontCard({ event }: ConfrontCardProps) {
   const canNavigate = !!city;
 
   const level: Level = event.level ?? 'blue';
+  const meta = event.editorialLevel ?? getEditorialLevel(level);
 
   return (
     <article
-      className={`${styles.card} ${styles[`level_${level}`]}`}
+      className={[
+        styles.card,
+        styles[`level_${level}`],
+        styles[`motion_${meta.motion}`],
+      ].join(' ')}
       aria-labelledby={titleId}
       data-level={level}
+      data-motion={meta.motion}
     >
       <LevelTag level={level} />
 
