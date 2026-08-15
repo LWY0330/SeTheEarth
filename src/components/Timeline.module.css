@@ -1,4 +1,11 @@
-/* Timeline · horizontal Earth history rail */
+/* ============================================================
+   Timeline · horizontal Earth history rail
+   v1.5.1 · PROMPT 16.6 fix (视觉修复)
+   - 修复前:背景 v1.3 暗色 gradient (rgba(17,36,56,.92)) + 文字 v1.3 token (--text-primary 等未定义) → 几乎不可读
+   - 修复后:背景 var(--color-canvas-deep) + 文字 var(--color-ink-900),对比度 ~12.7:1(完美 AA)
+   - 所有 v1.3 未定义 token 替换为 v1.5 等价物
+   - Designer 后续可重新设计 Timeline 视觉(D4 / Stage 3+),本次先解决可读性
+   ============================================================ */
 
 .wrap {
   position: relative;
@@ -20,7 +27,7 @@
   font-size: var(--fs-micro);
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: var(--color-ink-500);
 }
 
 .title {
@@ -29,7 +36,8 @@
   line-height: var(--lh-tight);
   font-weight: var(--fw-bold);
   margin: 0;
-  background: linear-gradient(120deg, var(--text-primary) 0%, var(--ocean-shine) 100%);
+  /* v1.5 · 浅色背景上:用 ink-900 + 暖橘渐变结尾(不再用 teal --ocean-shine) */
+  background: linear-gradient(120deg, var(--color-ink-900) 0%, var(--color-accent-500) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -37,7 +45,7 @@
 
 .subtitle {
   font-size: var(--fs-body);
-  color: var(--text-secondary);
+  color: var(--color-ink-700);
   line-height: var(--lh-base);
 }
 
@@ -46,6 +54,9 @@
   padding-top: 220px; /* room for the detail card */
 }
 
+/* ── Detail card ───────────────────────────────────────────────
+   v1.3: linear-gradient(160deg, rgba(17,36,56,.92), rgba(10,25,41,.92))(暗色蓝渐变 + 暗文字 → 不可读)
+   v1.5: var(--color-canvas-deep) (浅米色) + var(--color-ink-900) (深棕) → 12.7:1 AA ─ */
 .detail {
   position: absolute;
   top: 0;
@@ -53,11 +64,10 @@
   transform: translateX(-50%);
   width: min(560px, 92%);
   padding: var(--sp-5) var(--sp-5) var(--sp-4);
-  background: linear-gradient(160deg, rgba(17,36,56,.92), rgba(10,25,41,.92));
-  border: 1px solid var(--border-soft);
+  background: var(--color-canvas-deep);
+  border: 1px solid color-mix(in srgb, var(--color-ink-900) 12%, transparent);
   border-radius: var(--r-lg);
-  box-shadow: var(--shadow-3), 0 0 0 1px rgba(125,249,255,.05);
-  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-3);
   display: flex;
   flex-direction: column;
   gap: var(--sp-3);
@@ -72,7 +82,9 @@
   left: 50%;
   width: 1px;
   height: 28px;
-  background: linear-gradient(180deg, var(--border-strong), transparent);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--color-ink-900) 30%, transparent),
+    transparent);
   transform: translateX(-50%);
 }
 
@@ -87,26 +99,29 @@
   gap: var(--sp-3);
   font-family: var(--font-mono);
   font-size: var(--fs-micro);
-  color: var(--text-secondary);
+  color: var(--color-ink-500);
   letter-spacing: 0.05em;
 }
 
 .detailYear {
   font-family: var(--font-mono);
   font-size: var(--fs-h2);
-  color: var(--accent-stellar);
+  color: var(--color-accent-500);
   font-weight: var(--fw-medium);
 }
 
+/* ── Era tag ───────────────────────────────────────────────────
+   v1.3: 背景 rgba(125, 249, 255, 0.08) (teal 半透明,在浅米色上看不见)
+   v1.5: 背景 var(--color-canvas-soft) + 暖橘 border → 清晰可见 ─ */
 .eraTag {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-1);
   padding: 2px var(--sp-2);
   border-radius: var(--r-pill);
-  background: rgba(125, 249, 255, 0.08);
-  border: 1px solid var(--border-soft);
-  color: var(--text-secondary);
+  background: var(--color-canvas-soft);
+  border: 1px solid color-mix(in srgb, var(--color-accent-500) 25%, transparent);
+  color: var(--color-ink-700);
   font-family: var(--font-sans);
   font-size: var(--fs-micro);
   text-transform: uppercase;
@@ -118,12 +133,12 @@
   font-size: var(--fs-h2);
   line-height: var(--lh-tight);
   margin: 0;
-  color: var(--text-primary);
+  color: var(--color-ink-900);
 }
 
 .detailDesc {
   font-size: var(--fs-body);
-  color: var(--text-secondary);
+  color: var(--color-ink-700);
   line-height: var(--lh-loose);
   margin: 0;
 }
@@ -138,37 +153,41 @@
   padding: var(--sp-4) 0;
 }
 
+/* v1.3: teal gradient rgba(125,249,255,X) (浅米色背景上几乎不可见)
+   v1.5: ink gradient color-mix(...X%, transparent) → 浅灰渐变 */
 .railTrack {
   position: absolute;
   top: 50%;
   left: 0;
   right: 0;
-  height: var(--timeline-rail-h);
+  height: var(--sp-1);
   background: linear-gradient(
     90deg,
-    rgba(125,249,255,.05) 0%,
-    rgba(125,249,255,.35) 50%,
-    rgba(125,249,255,.05) 100%
+    color-mix(in srgb, var(--color-ink-900) 8%, transparent) 0%,
+    color-mix(in srgb, var(--color-ink-900) 30%, transparent) 50%,
+    color-mix(in srgb, var(--color-ink-900) 8%, transparent) 100%
   );
   transform: translateY(-50%);
   border-radius: var(--r-pill);
 }
 
+/* v1.3: var(--accent-life) → var(--accent-stellar) gradient(teal → teal,浅米色上看不见)
+   v1.5: var(--color-accent-500) → var(--level-yellow) gradient(暖橘 → 暖黄) */
 .railProgress {
   position: absolute;
   top: 50%;
   left: 0;
-  height: var(--timeline-rail-h);
-  background: linear-gradient(90deg, var(--accent-life), var(--accent-stellar));
+  height: var(--sp-1);
+  background: linear-gradient(90deg, var(--color-accent-500), var(--level-yellow));
   border-radius: var(--r-pill);
   transform: translateY(-50%);
   transition: width var(--dur-slow) var(--ease-out);
-  box-shadow: 0 0 18px rgba(125,249,255,.5);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent-500) 50%, transparent);
 }
 
 .node {
   position: relative;
-  z-index: var(--z-timeline);
+  z-index: 5;
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
@@ -180,13 +199,15 @@
   color: inherit;
 }
 
+/* v1.3: var(--space-deep) (暗背景,未定义 → 实际 = inherit/empty → 不可见)
+   v1.5: var(--color-canvas) (浅米色,作为 node dot 的 "default" 状态) */
 .nodeDot {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--space-deep);
-  border: 2px solid var(--accent-stellar);
-  box-shadow: 0 0 0 4px rgba(125,249,255,.08);
+  background: var(--color-canvas);
+  border: 2px solid color-mix(in srgb, var(--color-ink-900) 40%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-ink-900) 8%, transparent);
   transition:
     transform var(--dur-fast) var(--ease-spring),
     box-shadow var(--dur-fast) var(--ease-out),
@@ -195,47 +216,48 @@
 
 .node[data-active="true"] .nodeDot {
   transform: scale(1.4);
-  background: var(--accent-stellar);
+  background: var(--color-accent-500);
+  border-color: var(--color-accent-500);
   box-shadow:
-    0 0 0 6px rgba(125,249,255,.18),
-    0 0 28px rgba(125,249,255,.55);
+    0 0 0 6px color-mix(in srgb, var(--color-accent-500) 18%, transparent),
+    0 0 24px color-mix(in srgb, var(--color-accent-500) 55%, transparent);
 }
 
 .node[data-accent="life"][data-active="true"] .nodeDot {
-  background: var(--accent-life);
+  background: var(--level-yellow);
+  border-color: var(--level-yellow);
   box-shadow:
-    0 0 0 6px rgba(182,243,107,.22),
-    0 0 28px rgba(182,243,107,.55);
-  border-color: var(--accent-life);
+    0 0 0 6px color-mix(in srgb, var(--level-yellow) 22%, transparent),
+    0 0 24px color-mix(in srgb, var(--level-yellow) 55%, transparent);
 }
 
 .node[data-accent="warm"][data-active="true"] .nodeDot {
-  background: var(--accent-warm);
+  background: var(--color-accent-500);
+  border-color: var(--color-accent-500);
   box-shadow:
-    0 0 0 6px rgba(255,184,107,.22),
-    0 0 28px rgba(255,184,107,.55);
-  border-color: var(--accent-warm);
+    0 0 0 6px color-mix(in srgb, var(--color-accent-500) 22%, transparent),
+    0 0 24px color-mix(in srgb, var(--color-accent-500) 55%, transparent);
 }
 
 .node[data-accent="human"][data-active="true"] .nodeDot {
-  background: var(--accent-human);
+  background: var(--level-yellow);
+  border-color: var(--level-yellow);
   box-shadow:
-    0 0 0 6px rgba(255,209,102,.22),
-    0 0 28px rgba(255,209,102,.55);
-  border-color: var(--accent-human);
+    0 0 0 6px color-mix(in srgb, var(--level-yellow) 22%, transparent),
+    0 0 24px color-mix(in srgb, var(--level-yellow) 55%, transparent);
 }
 
 .nodeYear {
   font-family: var(--font-mono);
   font-size: var(--fs-micro);
-  color: var(--text-tertiary);
+  color: var(--color-ink-500);
   letter-spacing: 0.04em;
   white-space: nowrap;
   transition: color var(--dur-fast) var(--ease-out);
 }
 
 .node[data-active="true"] .nodeYear {
-  color: var(--accent-stellar);
+  color: var(--color-accent-500);
 }
 
 /* Focus state for keyboard nav */
@@ -244,15 +266,15 @@
 }
 .node:focus-visible .nodeDot {
   box-shadow:
-    0 0 0 4px rgba(125,249,255,.4),
-    0 0 28px rgba(125,249,255,.6);
+    0 0 0 4px color-mix(in srgb, var(--color-accent-500) 40%, transparent),
+    0 0 24px color-mix(in srgb, var(--color-accent-500) 60%, transparent);
 }
 
 .hint {
   margin-top: var(--sp-4);
   text-align: center;
   font-size: var(--fs-micro);
-  color: var(--text-tertiary);
+  color: var(--color-ink-500);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -262,11 +284,11 @@
   padding: 1px 6px;
   margin: 0 2px;
   border-radius: var(--r-xs);
-  background: rgba(125,249,255,.08);
-  border: 1px solid var(--border-soft);
+  background: var(--color-canvas-soft);
+  border: 1px solid color-mix(in srgb, var(--color-ink-900) 12%, transparent);
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: var(--text-secondary);
+  color: var(--color-ink-700);
 }
 
 @media (max-width: 720px) {
