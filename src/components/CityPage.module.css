@@ -443,14 +443,14 @@
   width: 100%;
   margin: 0 auto;
   padding: 0 24px;
-  margin-top: -56px; /* 让卡片叠在 hero 底部右上方（不挡主图） */
+  margin-top: 32px; /* 不再用负 margin 叠在 hero 上,改为 hero 与 summary 之间的独立 section,避免与 summary 右侧栏碰撞 */
   display: flex;
   justify-content: flex-end;
-  z-index: 2;
+  z-index: 10; /* 从 2 提到 10,盖过 hero 内部任何潜在 stacking context */
 }
 @media (max-width: 768px) {
   .syncMoment {
-    margin-top: -40px;
+    margin-top: 24px;
     padding: 0 16px;
   }
 }
