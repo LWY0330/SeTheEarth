@@ -6,8 +6,28 @@
    - 保留时间轴和事件列表的可见性
    ============================================================ */
 
-import { contentTypeColors, getTimeAgo, type LiveEvent } from '@/data/liveMoments';
+import { contentTypeColors, getTimeAgo, type LiveEvent, type ContentType } from '@/data/liveMoments';
 import styles from './EventDrawer.module.css';
+import { Button, Tag, type TagTone } from '@/components/ui';
+
+// v1.5 · PROMPT 17 · Stage 3 · contentType → Tag.tone 映射
+// Tag 只有 5 tones, contentType 有 11 个;按语义聚类成 3 level 色调
+// (blue: 世界/天气/金融/科学 · yellow: 本地/日常/自然/交通 · red: 文化/社区/体育)
+// 注意:原 chip 用 per-contentType hex(11 色),改用 Tag tone 后视觉略有标准化
+// (这是 ui/ 整合的预期 trade-off,Designer 后续可细化映射)
+const contentTypeToTone: Record<ContentType, TagTone> = {
+  world: 'level-blue',
+  weather: 'level-blue',
+  finance: 'level-blue',
+  science: 'level-blue',
+  local: 'level-yellow',
+  'daily-life': 'level-yellow',
+  nature: 'level-yellow',
+  transport: 'level-yellow',
+  culture: 'level-red',
+  community: 'level-red',
+  sports: 'level-red',
+};
 
 export type EventDrawerProps = {
   event: LiveEvent | null;
@@ -50,13 +70,10 @@ export function EventDrawer({ event, onClose }: EventDrawerProps) {
           <span className={styles.index}>
             {String(event.id.split('-').pop()).padStart(2, '0')}
           </span>
-          <button
-            className={styles.close}
-            onClick={onClose}
-            aria-label="关闭详情"
-          >
+          {/* v1.5 · Button 接入 close icon */}
+          <Button variant="ghost" size="md" onClick={onClose} aria-label="关闭详情">
             ✕
-          </button>
+          </Button>
         </header>
 
         <div className={styles.body}>
@@ -73,15 +90,10 @@ export function EventDrawer({ event, onClose }: EventDrawerProps) {
           <div className={styles.timeBlock}>
             <span className={styles.localTime}>{event.localTime}</span>
             <span className={styles.timezone}>{event.timezone}</span>
-            <span
-              className={styles.typeChip}
-              style={{
-                color: accent,
-                borderColor: `color-mix(in srgb, ${accent} 40%, transparent)`,
-              }}
-            >
+            {/* v1.5 · Tag 接入 contentType chip */}
+            <Tag tone={contentTypeToTone[event.contentType]} size="sm">
               {event.contentTypeZh}
-            </span>
+            </Tag>
           </div>
 
           {/* 事件标题 */}
@@ -143,9 +155,10 @@ export function EventDrawer({ event, onClose }: EventDrawerProps) {
                 查看来源 →
               </a>
             )}
-            <button className={styles.actionSecondary} onClick={onClose}>
+            {/* v1.5 · Button 接入 secondary CTA */}
+            <Button variant="secondary" size="md" onClick={onClose}>
               关闭
-            </button>
+            </Button>
           </div>
         </div>
       </aside>

@@ -57,30 +57,7 @@
   font-weight: 500;
   color: var(--color-ink-500);
   letter-spacing: 0.1em;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
 }
-
-.close {
-  width: var(--sp-6);
-  height: var(--sp-6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--r-pill);
-  color: var(--color-ink-500);
-  font-size: var(--fs-caption);
-  background: transparent;
-  border: 1px solid color-mix(in srgb, var(--color-ink-900) 10%, transparent);
-  transition: all var(--dur-fast) var(--ease-out);
-  cursor: pointer;
-}
-
-.close:hover {
-  background: var(--color-ink-900);
-  color: var(--color-canvas);
-}
-
 .body {
   padding: var(--sp-5) 28px var(--sp-6);
   flex: 1;
@@ -145,19 +122,6 @@
   color: var(--color-ink-500);
   text-transform: uppercase;
   letter-spacing: 0.2em;
-}
-
-.typeChip {
-  margin-left: auto;
-  font-family: var(--font-sans);
-  font-size: 10px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  padding: var(--sp-1) 10px;
-  border: 1px solid;
-  border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--drawer-accent, var(--color-ink-500)) 8%, transparent);
 }
 
 .title {
@@ -273,24 +237,6 @@
 }
 
 .actionLink:hover { background: var(--color-accent-500); }
-
-.actionSecondary {
-  padding: 10px var(--sp-4);
-  background: transparent;
-  color: var(--color-ink-700);
-  border: 1px solid color-mix(in srgb, var(--color-ink-900) 15%, transparent);
-  border-radius: var(--r-md);
-  font-family: var(--font-sans);
-  font-size: var(--fs-micro);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all var(--dur-fast) var(--ease-out);
-}
-
-.actionSecondary:hover {
-  border-color: var(--color-ink-900);
-  color: var(--color-ink-900);
-}
 
 /* 移动端：底部 Sheet */
 @media (max-width: 640px) {
