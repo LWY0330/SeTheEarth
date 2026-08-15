@@ -112,6 +112,7 @@ export function Timeline({
           aria-live="polite"
           aria-atomic="true"
           key={active.id}
+          data-accent={(active.accent as AccentTag) || 'stellar'}
         >
           <div className={styles.detailMeta}>
             <span className={styles.eraTag}>{ERA_LABELS[active.era]}</span>

@@ -13,7 +13,19 @@ export type TagTone =
   | 'level-red'
   | 'level-yellow'
   | 'level-blue'
-  | 'semantic';
+  | 'semantic'
+  // PROMPT 20 · 11 contentType tones (per spec content-type-tones-v1.5.md)
+  | 'content-type-world'
+  | 'content-type-weather'
+  | 'content-type-local'
+  | 'content-type-culture'
+  | 'content-type-daily-life'
+  | 'content-type-nature'
+  | 'content-type-transport'
+  | 'content-type-finance'
+  | 'content-type-science'
+  | 'content-type-community'
+  | 'content-type-sports';
 
 export type TagSize = 'sm' | 'md';
 

@@ -1,10 +1,13 @@
 /* ============================================================
-   Timeline · horizontal Earth history rail
-   v1.5.1 · PROMPT 16.6 fix (视觉修复)
-   - 修复前:背景 v1.3 暗色 gradient (rgba(17,36,56,.92)) + 文字 v1.3 token (--text-primary 等未定义) → 几乎不可读
-   - 修复后:背景 var(--color-canvas-deep) + 文字 var(--color-ink-900),对比度 ~12.7:1(完美 AA)
-   - 所有 v1.3 未定义 token 替换为 v1.5 等价物
-   - Designer 后续可重新设计 Timeline 视觉(D4 / Stage 3+),本次先解决可读性
+   Timeline.module.css · v1.5 · PROMPT 20 重设计
+   基于设计师 spec (timeline-redesign-v1.5.md) + mockup (timeline-desktop.png)
+   - 4px accent 侧栏(detail card 报志引文语言)
+   - 9 节点对数刻度(flex-grow 0.4/1.2/1.4/1.6/1.7/1.9/2.2/2.4/2.8)
+   - 4 accent 颜色映射:stellar=accent-500 / life=level-yellow / warm=accent-500 / human=ink-900
+   - 进度条:左 ink 渐变 + 右 accent→yellow 渐变(88% 至 active node)
+   - active node:scale 1.6 + 双层 glow(6px + 24px)+ ▾ 指示符
+   - 主副字号比 4:1(设计原则"视觉节奏")
+   - 详情卡 0 阴影 + 1px 边框(设计原则"刻意稀薄")
    ============================================================ */
 
 .wrap {
@@ -36,7 +39,6 @@
   line-height: var(--lh-tight);
   font-weight: var(--fw-bold);
   margin: 0;
-  /* v1.5 · 浅色背景上:用 ink-900 + 暖橘渐变结尾(不再用 teal --ocean-shine) */
   background: linear-gradient(120deg, var(--color-ink-900) 0%, var(--color-accent-500) 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -51,12 +53,22 @@
 
 .stage {
   position: relative;
-  padding-top: 220px; /* room for the detail card */
+  padding-top: 240px; /* room for the detail card (260px on mobile) */
 }
 
-/* ── Detail card ───────────────────────────────────────────────
-   v1.3: linear-gradient(160deg, rgba(17,36,56,.92), rgba(10,25,41,.92))(暗色蓝渐变 + 暗文字 → 不可读)
-   v1.5: var(--color-canvas-deep) (浅米色) + var(--color-ink-900) (深棕) → 12.7:1 AA ─ */
+/* ---------- --accent CSS variable ----------
+ * Active event accent 注入到 detail article 上的 CSS variable
+ * stellar/life/warm/human → 不同色,影响 sidebar + border + connector
+ */
+.detail[data-accent="stellar"] { --accent: var(--color-accent-500); }
+.detail[data-accent="life"]    { --accent: var(--level-yellow); }
+.detail[data-accent="warm"]    { --accent: var(--color-accent-500); }
+.detail[data-accent="human"]   { --accent: var(--color-ink-900); }
+
+/* ---------- Detail card ----------
+ * 0 阴影 + 1px 边框(刻意稀薄)
+ * 4px accent 侧栏(报志引文语言)
+ */
 .detail {
   position: absolute;
   top: 0;
@@ -65,13 +77,25 @@
   width: min(560px, 92%);
   padding: var(--sp-5) var(--sp-5) var(--sp-4);
   background: var(--color-canvas-deep);
-  border: 1px solid color-mix(in srgb, var(--color-ink-900) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
   border-radius: var(--r-lg);
-  box-shadow: var(--shadow-3);
   display: flex;
   flex-direction: column;
   gap: var(--sp-3);
-  animation: detail-in var(--dur-base) var(--ease-out);
+  animation: detail-in var(--dur-slow) var(--ease-out);
+}
+
+/* 4px accent 侧栏 */
+.detail::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--accent);
+  border-top-left-radius: var(--r-lg);
+  border-bottom-left-radius: var(--r-lg);
 }
 
 /* Connector from detail card down to the active node */
@@ -82,9 +106,7 @@
   left: 50%;
   width: 1px;
   height: 28px;
-  background: linear-gradient(180deg,
-    color-mix(in srgb, var(--color-ink-900) 30%, transparent),
-    transparent);
+  background: linear-gradient(180deg, var(--accent) 0%, transparent 100%);
   transform: translateX(-50%);
 }
 
@@ -110,17 +132,14 @@
   font-weight: var(--fw-medium);
 }
 
-/* ── Era tag ───────────────────────────────────────────────────
-   v1.3: 背景 rgba(125, 249, 255, 0.08) (teal 半透明,在浅米色上看不见)
-   v1.5: 背景 var(--color-canvas-soft) + 暖橘 border → 清晰可见 ─ */
 .eraTag {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-1);
   padding: 2px var(--sp-2);
   border-radius: var(--r-pill);
-  background: var(--color-canvas-soft);
-  border: 1px solid color-mix(in srgb, var(--color-accent-500) 25%, transparent);
+  background: var(--color-canvas);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
   color: var(--color-ink-700);
   font-family: var(--font-sans);
   font-size: var(--fs-micro);
@@ -136,11 +155,19 @@
   color: var(--color-ink-900);
 }
 
+.detailTitle em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-ink-500);
+  font-size: 0.92em;
+  margin-left: var(--sp-1);
+}
+
 .detailDesc {
   font-size: var(--fs-body);
   color: var(--color-ink-700);
-  line-height: var(--lh-loose);
-  margin: 0;
+  line-height: 1.65;
+  margin: var(--sp-2) 0 0;
 }
 
 /* ---------- Rail ---------- */
@@ -148,13 +175,10 @@
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-3);
-  padding: var(--sp-4) 0;
+  padding: var(--sp-5) 0 var(--sp-3);
 }
 
-/* v1.3: teal gradient rgba(125,249,255,X) (浅米色背景上几乎不可见)
-   v1.5: ink gradient color-mix(...X%, transparent) → 浅灰渐变 */
+/* Track: ink 渐变(8% → 30% → 8%, 强调"起点淡→中间浓→终点淡") */
 .railTrack {
   position: absolute;
   top: 50%;
@@ -171,8 +195,7 @@
   border-radius: var(--r-pill);
 }
 
-/* v1.3: var(--accent-life) → var(--accent-stellar) gradient(teal → teal,浅米色上看不见)
-   v1.5: var(--color-accent-500) → var(--level-yellow) gradient(暖橘 → 暖黄) */
+/* Progress: accent→yellow 渐变填充(active 在 88% 位置 = 8/9) */
 .railProgress {
   position: absolute;
   top: 50%;
@@ -182,69 +205,74 @@
   border-radius: var(--r-pill);
   transform: translateY(-50%);
   transition: width var(--dur-slow) var(--ease-out);
-  box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent-500) 50%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-accent-500) 45%, transparent);
+  width: 88%; /* 8/9 = 88.89% (default for last-active "智人") */
 }
 
-.node {
-  position: relative;
-  z-index: 5;
-  flex: 1 1 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--sp-2);
-  background: none;
-  border: 0;
-  padding: 0;
-  color: inherit;
-}
+/* ---------- 9 nodes (logarithmic spacing) ----------
+ * 0.4 / 1.2 / 1.4 / 1.6 / 1.7 / 1.9 / 2.2 / 2.4 / 2.8
+ * 强调"我们的故事在右 25%"
+ * nth-child 选 9 个具体 flex 值(不可合并,1:1 映射每个节点)
+ */
+.node { position: relative; z-index: 5; background: none; border: 0; padding: 0; color: inherit; cursor: pointer; }
+.node:nth-child(1) { flex: 0.4 1 0; }
+.node:nth-child(2) { flex: 1.2 1 0; }
+.node:nth-child(3) { flex: 1.4 1 0; }
+.node:nth-child(4) { flex: 1.6 1 0; }
+.node:nth-child(5) { flex: 1.7 1 0; }
+.node:nth-child(6) { flex: 1.9 1 0; }
+.node:nth-child(7) { flex: 2.2 1 0; }
+.node:nth-child(8) { flex: 2.4 1 0; }   /* active 智人 300K */
+.node:nth-child(9) { flex: 2.8 1 0; }   /* Now · 额外间距避免重叠 */
 
-/* v1.3: var(--space-deep) (暗背景,未定义 → 实际 = inherit/empty → 不可见)
-   v1.5: var(--color-canvas) (浅米色,作为 node dot 的 "default" 状态) */
+.nodeInner { display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); }
+
 .nodeDot {
   width: 14px;
   height: 14px;
   border-radius: 50%;
   background: var(--color-canvas);
-  border: 2px solid color-mix(in srgb, var(--color-ink-900) 40%, transparent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  border: 2px solid color-mix(in srgb, var(--color-ink-900) 35%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-ink-900) 6%, transparent);
   transition:
     transform var(--dur-fast) var(--ease-spring),
     box-shadow var(--dur-fast) var(--ease-out),
-    background var(--dur-fast) var(--ease-out);
+    background var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
 }
 
-.node[data-active="true"] .nodeDot {
-  transform: scale(1.4);
+/* 4 accent → active dot color (PROMPT 20 关键:human 用 ink-900 不是 orange) */
+.node[data-accent="stellar"][data-active="true"] .nodeDot {
   background: var(--color-accent-500);
   border-color: var(--color-accent-500);
+  transform: scale(1.6);
   box-shadow:
     0 0 0 6px color-mix(in srgb, var(--color-accent-500) 18%, transparent),
     0 0 24px color-mix(in srgb, var(--color-accent-500) 55%, transparent);
 }
-
 .node[data-accent="life"][data-active="true"] .nodeDot {
   background: var(--level-yellow);
   border-color: var(--level-yellow);
+  transform: scale(1.6);
   box-shadow:
     0 0 0 6px color-mix(in srgb, var(--level-yellow) 22%, transparent),
     0 0 24px color-mix(in srgb, var(--level-yellow) 55%, transparent);
 }
-
 .node[data-accent="warm"][data-active="true"] .nodeDot {
   background: var(--color-accent-500);
   border-color: var(--color-accent-500);
+  transform: scale(1.6);
   box-shadow:
     0 0 0 6px color-mix(in srgb, var(--color-accent-500) 22%, transparent),
     0 0 24px color-mix(in srgb, var(--color-accent-500) 55%, transparent);
 }
-
 .node[data-accent="human"][data-active="true"] .nodeDot {
-  background: var(--level-yellow);
-  border-color: var(--level-yellow);
+  background: var(--color-ink-900);
+  border-color: var(--color-ink-900);
+  transform: scale(1.6);
   box-shadow:
-    0 0 0 6px color-mix(in srgb, var(--level-yellow) 22%, transparent),
-    0 0 24px color-mix(in srgb, var(--level-yellow) 55%, transparent);
+    0 0 0 6px color-mix(in srgb, var(--color-ink-900) 18%, transparent),
+    0 0 24px color-mix(in srgb, var(--color-ink-900) 30%, transparent);
 }
 
 .nodeYear {
@@ -255,35 +283,34 @@
   white-space: nowrap;
   transition: color var(--dur-fast) var(--ease-out);
 }
-
 .node[data-active="true"] .nodeYear {
   color: var(--color-accent-500);
+  font-weight: var(--fw-medium);
+}
+.node[data-active="true"] .nodeYear::before {
+  content: "▾";
+  display: block;
+  color: var(--accent);
+  font-size: 10px;
+  margin-bottom: 2px;
+  text-align: center;
 }
 
-/* Focus state for keyboard nav */
-.node:focus-visible {
-  outline: none;
-}
-.node:focus-visible .nodeDot {
-  box-shadow:
-    0 0 0 4px color-mix(in srgb, var(--color-accent-500) 40%, transparent),
-    0 0 24px color-mix(in srgb, var(--color-accent-500) 60%, transparent);
-}
-
+/* ---------- Hint ---------- */
 .hint {
-  margin-top: var(--sp-4);
+  margin-top: var(--sp-5);
   text-align: center;
   font-size: var(--fs-micro);
   color: var(--color-ink-500);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .hint kbd {
   display: inline-block;
-  padding: 1px 6px;
+  padding: 2px 8px;
   margin: 0 2px;
-  border-radius: var(--r-xs);
+  border-radius: var(--r-subtle);
   background: var(--color-canvas-soft);
   border: 1px solid color-mix(in srgb, var(--color-ink-900) 12%, transparent);
   font-family: var(--font-mono);
@@ -291,8 +318,27 @@
   color: var(--color-ink-700);
 }
 
+/* ---------- Mobile (≤ 720px) ----------
+ * 节点年份 display:none · 节点间距收缩 · 详情卡 padding 减
+ */
 @media (max-width: 720px) {
-  .stage { padding-top: 260px; }
+  .stage { padding-top: 280px; }
   .nodeYear { display: none; }
-  .rail { gap: var(--sp-1); }
+  .rail { gap: var(--sp-1); padding: var(--sp-4) 0 var(--sp-2); }
+  .detail { padding: var(--sp-4); }
+  .detail::after { bottom: -22px; height: 22px; }
+  /* 移动端节点等宽(对数刻度失去意义,屏幕窄) */
+  .node:nth-child(1),
+  .node:nth-child(2),
+  .node:nth-child(3),
+  .node:nth-child(4),
+  .node:nth-child(5),
+  .node:nth-child(6),
+  .node:nth-child(7),
+  .node:nth-child(8),
+  .node:nth-child(9) {
+    flex: 1 1 0;
+  }
+  /* 移动端 active scale 略减 */
+  .node[data-active="true"] .nodeDot { transform: scale(1.4); }
 }
