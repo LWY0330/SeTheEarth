@@ -61,6 +61,25 @@
   border-color: color-mix(in srgb, var(--color-info) 25%, transparent);
 }
 
+/* ---------- PROMPT 20 · 11 contentType tones ----------
+ * 沿用 tokens.css 已锁的 --content-type-* 11 色
+ * 全部 WCAG AA (≥4.5 vs canvas),local/daily-life AAA (≥7.0)
+ * 模式:color=token · background=8% mix · border-color=30% mix
+ * 用法:EventDrawer typeChip / 城市详情 contentType 标签
+ */
+.t-content-type-world        { color: var(--content-type-world);        background: color-mix(in srgb, var(--content-type-world) 8%, transparent);        border-color: color-mix(in srgb, var(--content-type-world) 30%, transparent); }
+.t-content-type-weather      { color: var(--content-type-weather);      background: color-mix(in srgb, var(--content-type-weather) 8%, transparent);      border-color: color-mix(in srgb, var(--content-type-weather) 30%, transparent); }
+.t-content-type-local        { color: var(--content-type-local);        background: color-mix(in srgb, var(--content-type-local) 8%, transparent);        border-color: color-mix(in srgb, var(--content-type-local) 30%, transparent); }
+.t-content-type-culture      { color: var(--content-type-culture);      background: color-mix(in srgb, var(--content-type-culture) 8%, transparent);      border-color: color-mix(in srgb, var(--content-type-culture) 30%, transparent); }
+/* daily-life: 复用 local(同 #5C4830) */
+.t-content-type-daily-life   { color: var(--content-type-daily-life);   background: color-mix(in srgb, var(--content-type-daily-life) 8%, transparent);   border-color: color-mix(in srgb, var(--content-type-daily-life) 30%, transparent); }
+.t-content-type-nature       { color: var(--content-type-nature);       background: color-mix(in srgb, var(--content-type-nature) 8%, transparent);       border-color: color-mix(in srgb, var(--content-type-nature) 30%, transparent); }
+.t-content-type-transport    { color: var(--content-type-transport);    background: color-mix(in srgb, var(--content-type-transport) 8%, transparent);    border-color: color-mix(in srgb, var(--content-type-transport) 30%, transparent); }
+.t-content-type-finance      { color: var(--content-type-finance);      background: color-mix(in srgb, var(--content-type-finance) 8%, transparent);      border-color: color-mix(in srgb, var(--content-type-finance) 30%, transparent); }
+.t-content-type-science      { color: var(--content-type-science);      background: color-mix(in srgb, var(--content-type-science) 8%, transparent);      border-color: color-mix(in srgb, var(--content-type-science) 30%, transparent); }
+.t-content-type-community    { color: var(--content-type-community);    background: color-mix(in srgb, var(--content-type-community) 8%, transparent);    border-color: color-mix(in srgb, var(--content-type-community) 30%, transparent); }
+.t-content-type-sports       { color: var(--content-type-sports);       background: color-mix(in srgb, var(--content-type-sports) 8%, transparent);       border-color: color-mix(in srgb, var(--content-type-sports) 30%, transparent); }
+
 /* ============================================================
    Removable · 业务可用 [data-removable] 触发关闭按钮
    ============================================================ */

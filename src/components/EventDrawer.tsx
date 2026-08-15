@@ -10,23 +10,22 @@ import { contentTypeColors, getTimeAgo, type LiveEvent, type ContentType } from 
 import styles from './EventDrawer.module.css';
 import { Button, Tag, type TagTone } from '@/components/ui';
 
-// v1.5 · PROMPT 17 · Stage 3 · contentType → Tag.tone 映射
-// Tag 只有 5 tones, contentType 有 11 个;按语义聚类成 3 level 色调
-// (blue: 世界/天气/金融/科学 · yellow: 本地/日常/自然/交通 · red: 文化/社区/体育)
-// 注意:原 chip 用 per-contentType hex(11 色),改用 Tag tone 后视觉略有标准化
-// (这是 ui/ 整合的预期 trade-off,Designer 后续可细化映射)
+// v1.5 · PROMPT 20 · contentType → Tag.tone 映射(11 → 11,per spec content-type-tones-v1.5.md)
+// Stage 3 阶段曾临时聚类到 3 level tone;PROMPT 20 还原 11 个独立 tone
+// 全部 WCAG AA(≥4.5 vs canvas),local / daily-life 达 AAA(≥7.0)
+// 3 level tone 与 11 content-type tone 共存:level 管"轻重",content-type 管"本质"
 const contentTypeToTone: Record<ContentType, TagTone> = {
-  world: 'level-blue',
-  weather: 'level-blue',
-  finance: 'level-blue',
-  science: 'level-blue',
-  local: 'level-yellow',
-  'daily-life': 'level-yellow',
-  nature: 'level-yellow',
-  transport: 'level-yellow',
-  culture: 'level-red',
-  community: 'level-red',
-  sports: 'level-red',
+  world:        'content-type-world',
+  weather:      'content-type-weather',
+  local:        'content-type-local',
+  culture:      'content-type-culture',
+  'daily-life': 'content-type-daily-life',
+  nature:       'content-type-nature',
+  transport:    'content-type-transport',
+  finance:      'content-type-finance',
+  science:      'content-type-science',
+  community:    'content-type-community',
+  sports:       'content-type-sports',
 };
 
 export type EventDrawerProps = {
