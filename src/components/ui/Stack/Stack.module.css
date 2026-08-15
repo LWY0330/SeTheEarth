@@ -1,0 +1,41 @@
+/* ============================================================
+   Stack.module.css · v1.5
+   - 只负责 layout,无视觉
+   - gap 由 inline --stack-gap 控制
+   ============================================================ */
+
+.stack {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--stack-gap, var(--space-4));
+}
+
+.block {
+  display: flex;
+}
+
+.d-row {
+  flex-direction: row;
+}
+.d-column {
+  flex-direction: column;
+}
+
+/* ============================================================
+   Responsive · gap 自适应
+   ============================================================ */
+@media (max-width: 480px) {
+  .stack {
+    --stack-gap-fallback: var(--space-3);
+  }
+}
+
+/* ============================================================
+   Print · 折叠 stack(防止分页断裂)
+   ============================================================ */
+@media print {
+  .stack {
+    break-inside: avoid;
+    gap: var(--space-2);
+  }
+}

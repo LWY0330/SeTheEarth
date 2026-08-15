@@ -16,6 +16,9 @@ import SearchBox from '@/components/SearchBox';
 import CityFeatured from '@/components/CityFeatured';
 import CityIndex from '@/components/CityIndex';
 import MomentsTimeline from '@/components/MomentsTimeline';
+// v1.4.1 · D-A 追加工单 + PROMPT 15 · 渲染板块 4 Earth Archive Timeline
+// 之前 Timeline 是孤儿组件,D-A 加的 nav 'Earth Archive' 点击无目标,现接到 HomeShell
+import Timeline from '@/components/Timeline';
 import EventDrawer from '@/components/EventDrawer';
 import CityPage from '@/components/CityPage';
 import CityIndexPage from '@/components/CityIndexPage';
@@ -280,17 +283,18 @@ function HomeShell() {
             </div>
           </details>
 
-          {/* v1.4.1 · D-A · 指向板块 4 Earth Archive */}
-          <p
+          {/* v1.4.1 · PROMPT 15 · scrollHint 升级 <p role="button"> → <button type="button">
+              a11y 最佳实践: <button> 自带 focus / keyboard / role="button" / Enter 键触发,
+              不需要手动 tabIndex / role / onKeyDown(全部移除)
+              保留 className 让 CSS 不变(type="button" 避免在 form 里触发 submit) */}
+          <button
+            type="button"
             className={styles.scrollHint}
             onClick={() => document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' })}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); document.getElementById('timeline')?.scrollIntoView({ behavior: 'smooth' }); } }}
-            style={{ cursor: 'pointer' }}
+            aria-label="上滑探索 Earth Archive"
           >
             <span aria-hidden="true">↓</span> 上滑探索 Earth Archive
-          </p>
+          </button>
         </div>
       </section>
 
@@ -363,6 +367,11 @@ function HomeShell() {
           />
         </div>
       </section>
+
+      {/* v1.4.1 · PROMPT 15 · 板块 4 · Earth Archive / Timeline
+          (D-A 加的 id='timeline' 现在有真实 DOM 目标,
+          nav 'Earth Archive' 点击能平滑滚到这里) */}
+      <Timeline />
 
       {/* 详情抽屉 */}
       <EventDrawer event={activeEvent} onClose={() => setActiveEventId(null)} />

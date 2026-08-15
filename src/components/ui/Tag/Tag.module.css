@@ -1,0 +1,99 @@
+/* ============================================================
+   Tag.module.css · v1.5
+   - 直角 pill 视觉(没边框,带背景色)
+   - tone 决定色,size 决定 padding+字号
+   ============================================================ */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-sans);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-sans);
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* ---------- sizes ---------- */
+.s-sm {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--ls-micro);
+  padding: 2px var(--space-3);
+}
+.s-md {
+  font-size: var(--fs-caption);
+  letter-spacing: var(--ls-caption);
+  padding: var(--space-1) var(--space-4);
+}
+
+/* ---------- tones ---------- */
+/* neutral: 默认 · 用 canvas-soft 浅底 */
+.t-neutral {
+  color: var(--color-ink-700);
+  background: color-mix(in srgb, var(--color-ink-900) 6%, transparent);
+  border-color: color-mix(in srgb, var(--color-ink-900) 12%, transparent);
+}
+
+/* level-red / yellow / blue: editorial taxonomy */
+.t-level-red {
+  color: var(--level-red);
+  background: color-mix(in srgb, var(--level-red) 8%, transparent);
+  border-color: color-mix(in srgb, var(--level-red) 30%, transparent);
+}
+.t-level-yellow {
+  color: var(--level-yellow);
+  background: color-mix(in srgb, var(--level-yellow) 10%, transparent);
+  border-color: color-mix(in srgb, var(--level-yellow) 35%, transparent);
+}
+.t-level-blue {
+  color: var(--level-blue);
+  background: color-mix(in srgb, var(--level-blue) 8%, transparent);
+  border-color: color-mix(in srgb, var(--level-blue) 30%, transparent);
+}
+
+/* semantic: 用 --color-success/warning/error/info */
+.t-semantic {
+  color: var(--color-ink-700);
+  background: color-mix(in srgb, var(--color-info) 8%, transparent);
+  border-color: color-mix(in srgb, var(--color-info) 25%, transparent);
+}
+
+/* ============================================================
+   Removable · 业务可用 [data-removable] 触发关闭按钮
+   ============================================================ */
+.tag[data-removable] {
+  padding-right: var(--space-2);
+}
+.tag[data-removable] > .tagClose {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: var(--space-1);
+  color: inherit;
+  opacity: 0.6;
+  line-height: 1;
+  font-size: var(--fs-caption);
+  transition: opacity var(--motion-fast) linear;
+}
+.tag[data-removable] > .tagClose:hover {
+  opacity: 1;
+}
+
+/* ============================================================
+   Responsive · 移动端更紧凑
+   ============================================================ */
+@media (max-width: 480px) {
+  .s-sm { font-size: 0.625rem; }
+  .s-md { font-size: var(--fs-micro); padding: 2px var(--space-3); }
+}
+
+/* ============================================================
+   prefers-reduced-motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .tag[data-removable] > .tagClose { transition: none; }
+}

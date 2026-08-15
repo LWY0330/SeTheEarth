@@ -155,14 +155,33 @@
 }
 
 .scrollHint {
+  /* v1.4.1 · PROMPT 15 · scrollHint 升级 <p role="button"> → <button type="button">
+     <button> 默认有 2px outset border + buttonface 背景 + 内置 padding + default cursor,
+     全部 reset 成 transparent,让 button 视觉上仍是"低调文本提示",不出现浏览器按钮框 */
   margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: var(--color-ink-300);
   font-family: var(--font-sans);
   font-size: 11px;
-  color: var(--color-ink-300);
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  cursor: pointer;
   animation: scrollHint 2.5s var(--ease-in-out) infinite;
+}
+
+.scrollHint:focus-visible {
+  /* <button> 自带 focus,但要确保 :focus-visible 有可见 outline(键盘 Tab 时) */
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.scrollHint:hover {
+  color: var(--color-ink-900);
 }
 
 @keyframes scrollHint {

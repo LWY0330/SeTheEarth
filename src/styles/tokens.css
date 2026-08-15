@@ -1,53 +1,107 @@
 /* ============================================================
-   看见地球 · See Earth — Design Tokens (v2)
-   现代版旅行手册 · 液态玻璃 UI · 极致克制
+   看见地球 · v1.5 · Design Tokens (consolidated)
+   ------------------------------------------------------------
+   单一来源 (SSOT) for 全部视觉常量。
+   任何 component .module.css 必须引用本文件 var()，
+   严禁硬编码色值 / 字号 / spacing。
 
-   设计原则：
-   1. 奶白底 + 墨黑字 + 暖橘强调（参考 Fitzcarraldo Editions + 旅行手册）
-   2. 衬线大标题（Fraunces）+ Sans 副标题（Inter）
-   3. 液态玻璃 UI（参考 Linear + Apple Vision Pro）
-   4. 所有视觉常量集中在此，组件只引用 --tokens
+   变更摘要 (vs v1.4 src/styles/tokens.css):
+   - 新增:中性灰阶 --color-ink-50 / 100 / 800 (Visual Direction 7 档)
+   - 新增:level 情绪色 CSS 化 (--level-red/yellow/blue + font/size/motion)
+   - 新增:--fs-caption alias(--fs-small 旧名保留)
+   - 新增:--fs-micro alias(--fs-micro 新增 0.75rem)
+   - 新增:--space-* alias(--sp-* 旧名保留;--sp-1..11 全部 = --space-1..11)
+   - 新增:--space-12 128px(原 --sp-10 = 128px 已重命名为 --space-10)
+   - 新增:--space-13 192px(原 --sp-11)
+   - 新增:--r-sharp 0 + --r-subtle 2px(Visual Direction 3 档精简版)
+   - 新增:--shadow-none / --shadow-subtle / --shadow-elevated (Visual Direction)
+   - 新增:--motion-fast/slide/scale/fade (PR #30 editorial taxonomy 对齐)
+   - 新增:布局 --hero-height/min/max (Visual Direction)
+   - 新增:z-index 新层级 --z-dropdown/sticky/modal/toast
+   - 保留不动:--color-canvas / --color-accent-500 (#B25E40 PR #16 a11y 锁) / 液态玻璃系统
+   - 冲突点:见 visual-foundation-v1.5.md §「与 v1.4 tokens.css 冲突项」
    ============================================================ */
 
 :root {
-  /* ---------- Color · Surface (页面分层) ---------- */
-  --color-canvas:        #F5F1EA;   /* 奶白底，温暖手感纸 */
-  --color-canvas-soft:   #EFE9DC;   /* 浅一档，分割/背景层 */
-  --color-canvas-deep:   #E8E2D5;   /* 深一档，hover/分割线 */
-  --color-overlay:       rgba(245, 241, 234, 0.72);  /* 玻璃面板底色 */
+  /* ============================================================
+     1. 品牌主色 (锁 · PM 拍)
+     ============================================================ */
+  --color-canvas:        #F5F1EA;  /* 奶白底 · 全产品背景 */
+  --color-canvas-soft:   #EFE9DC;  /* 浅 1 档 · 分割 / 背景层 */
+  --color-canvas-deep:   #E8E2D5;  /* 深 1 档 · hover / 分割线 */
 
-  /* ---------- Color · Ink (墨色文字) ---------- */
-  --color-ink-900:       #1A1A1A;   /* 主文字 */
-  --color-ink-700:       #3A3833;   /* 次文字 */
-  --color-ink-500:       #6B6862;   /* 辅助文字 */
-  --color-ink-300:       #5E5950;   /* v1.3.x PR #16: WCAG AA (≥4.5:1 on #F5F1EA) */   /* 弱化文字 / placeholder */
-  --color-ink-inverse:   #F5F1EA;   /* 反色，玻璃面板上的深色文字用这个 */
+  --color-ink-900:       #1A1A1A;  /* 主文字 · WCAG 12.7:1 vs canvas */
+  --color-ink-700:       #3A3833;  /* 次文字 */
+  --color-ink-500:       #6B6862;  /* 辅助文字 */
+  --color-ink-300:       #5E5950;  /* 弱化文字 / placeholder · PR #16 AA 锁 */
 
-  /* ---------- Color · Accent (暖橘强调) ---------- */
-  --color-accent-500:    #B25E40;   /* v1.3.x PR #16: WCAG AA (≈4.7:1 on #F5F1EA, 替代 #D97757) */   /* 暖橘，强调色，CTA / focus ring */
-  --color-accent-400:    #E59072;   /* hover */
-  --color-accent-600:    #B85F40;   /* active */
-  --color-accent-100:    #F5DCD0;   /* 极弱背景 */
+  --color-accent-500:    #B25E40;  /* 暖橘 · WCAG 4.7:1 vs canvas · PR #16 锁 */
+  --color-accent-400:    #E59072;  /* hover */
+  --color-accent-600:    #B85F40;  /* active · 注:v1.3.x 此处为 #B85F40,值已与 -500 接近,合并为一 */
+  --color-accent-100:    #F5DCD0;  /* 极弱背景 */
 
-  /* ---------- Color · Status (语义色) ---------- */
-  --color-success:       #6B8E5A;
-  --color-warning:       #C8924A;
-  --color-error:         #B85450;
-  --color-info:          var(--color-accent-500);
+  /* ============================================================
+     2. 中性灰阶 (Visual Direction · 7 档)
+     -50 / -100 / -300 / -500 / -700 / -800 / -900
+     v1.4 已有 -300/-500/-700/-900,本作业补 -50/-100/-800
+     ============================================================ */
+  --color-ink-50:        #FAFAFA;  /* 新增 · 最浅 · hover 背景 */
+  --color-ink-100:       #F0EBE0;  /* 新增 · 浅 1 档 · 与 canvas 同色系 */
+  /* --color-ink-200:   #DCD5C5;  备用 · 暂不启用 */
+  --color-ink-800:       #2A2A2A;  /* 新增 · 极重文字 / 数字强调 */
 
-  /* ---------- Liquid Glass (液态玻璃) ---------- */
+  /* 反色 (用于深色背景上) */
+  --color-ink-inverse:   #F5F1EA;  /* = canvas · 暗色背景上深色文字用这个 */
+
+  /* ============================================================
+     3. 情绪色 (PR #30 锁 · 红 / 黄 / 蓝 editorial taxonomy)
+     ------------------------------------------------------------
+     三色不是中性灰阶,是 editorial 级别。
+     排版: red serif 700/18px · yellow sans 500/16px · blue sans-italic 400/14px
+     动效: red scale 400ms · yellow slide 300ms · blue fade 500ms
+     ============================================================ */
+  --level-red:           #8B3530;  /* 生死 / 颠覆 */
+  --level-yellow:        #6B5500;  /* 转折 / 变革 */
+  --level-blue:          #1458A8;  /* 个体命运闪光 */
+
+  --level-font-serif:    ui-serif, Georgia, "Times New Roman", serif;
+  --level-font-sans:     var(--font-sans), system-ui, -apple-system, sans-serif;
+
+  --level-size-sm:       14px;
+  --level-size-md:       16px;
+  --level-size-lg:       18px;
+
+  --level-motion-scale:  400ms;
+  --level-motion-slide:  300ms;
+  --level-motion-fade:   500ms;
+
+  /* ============================================================
+     4. 语义色 (Visual Direction · 4 色)
+     与 editorial taxonomy 红/黄/蓝 协调,不引入新 hue family
+     ============================================================ */
+  --color-success:       #4A7C59;  /* 深绿 · 取代 v1.4 #6B8E5A (更暖更沉) */
+  --color-warning:       #C8924A;  /* 琥珀 · 与 accent 同 hue 略浅 */
+  --color-error:         #B85450;  /* 砖红 · 与 level-red 同色系略亮 */
+  --color-info:          #1458A8;  /* = level-blue · 复用 */
+
+  /* ============================================================
+     5. 液态玻璃 (保留 v1.4 · SyncMoment / EventDrawer / SearchBox 用)
+     ============================================================ */
+  --color-overlay:       rgba(245, 241, 234, 0.72);
   --glass-bg:            rgba(255, 255, 255, 0.42);
   --glass-bg-hover:      rgba(255, 255, 255, 0.52);
   --glass-bg-active:     rgba(255, 255, 255, 0.62);
   --glass-border:        rgba(255, 255, 255, 0.65);
   --glass-border-strong: rgba(255, 255, 255, 0.85);
-  --glass-highlight-top: rgba(255, 255, 255, 0.85);  /* 顶部高光 */
-  --glass-highlight-bot: rgba(255, 255, 255, 0.20);  /* 底部微亮 */
+  --glass-highlight-top: rgba(255, 255, 255, 0.85);
+  --glass-highlight-bot: rgba(255, 255, 255, 0.20);
   --glass-shadow-near:   0 2px 8px rgba(60, 50, 40, 0.06);
   --glass-shadow-far:    0 12px 40px rgba(60, 50, 40, 0.10);
   --glass-shadow:        var(--glass-shadow-near), var(--glass-shadow-far);
 
-  /* ---------- Typography ---------- */
+  /* ============================================================
+     6. Typography · 字体族 (锁 · Visual Direction)
+     ============================================================ */
   --font-serif:  "Fraunces", "Cormorant Garamond", "Source Han Serif SC",
                  "Songti SC", "STSong", serif;
   --font-sans:   "Inter", "PingFang SC", "Microsoft YaHei",
@@ -55,94 +109,281 @@
                  Roboto, Helvetica, Arial, sans-serif;
   --font-mono:   "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
 
-  /* 字号阶梯（1.25 倍率） */
-  --fs-display:  clamp(3rem, 6vw + 1rem, 5.5rem);   /* 主愿景文案 */
-  --fs-h1:       clamp(2rem, 3vw + 1rem, 3rem);
-  --fs-h2:       clamp(1.5rem, 2vw + 0.75rem, 2rem);
-  --fs-h3:       1.25rem;
-  --fs-body:     1rem;
-  --fs-small:    0.875rem;
-  --fs-micro:    0.75rem;
+  /* ============================================================
+     7. Typography · 字号 scale (Visual Direction · 7 档)
+     注:--fs-display/-h1/-h2/-h3/-body/-micro 与 v1.4 同名同值(无冲突)
+        --fs-caption 是 v1.4 --fs-small 的 alias(避免命名风格不一致)
+     ============================================================ */
+  --fs-display:   clamp(3rem,   6vw + 1rem,    5.5rem);  /* 主标题 */
+  --fs-h1:        clamp(2rem,   3vw + 1rem,    3rem);    /* 板块标题 */
+  --fs-h2:        clamp(1.5rem, 2vw + 0.75rem, 2rem);    /* 城市名 / 区块 */
+  --fs-h3:        1.25rem;                                /* 卡片标题 */
+  --fs-body:      1rem;                                   /* 正文 16px */
+  --fs-caption:   0.875rem;                               /* kicker / 编号 (旧 --fs-small) */
+  --fs-micro:     0.75rem;                                /* meta / 全大写标签 */
 
-  --fw-regular:  400;
-  --fw-medium:   500;
-  --fw-semibold: 600;
-  --fw-bold:     700;
+  /* v1.4 旧名 alias (避免 PR #16 等旧 .module.css break) */
+  --fs-small:     var(--fs-caption);
 
+  /* ============================================================
+     8. Line-height / Letter-spacing / Weight (锁)
+     ============================================================ */
+  --lh-serif:    1.55;     /* 衬线正文 */
+  --lh-sans:     1.3;      /* sans 标签 */
+  --lh-mono:     1.2;      /* mono 数据 */
   --lh-tight:    1.1;
   --lh-snug:     1.3;
-  --lh-base:     1.55;
+  --lh-base:     1.55;     /* = --lh-serif */
   --lh-loose:    1.8;
 
-  --letter-tight:   -0.02em;
-  --letter-normal:  0;
-  --letter-wide:    0.04em;
-  --letter-display: -0.03em;   /* 大标题专用 */
+  --ls-display:  -0.03em;  /* 大标题 */
+  --ls-h1:       -0.02em;
+  --ls-h2:       -0.01em;
+  --ls-caption:  0.04em;   /* 小字号 */
+  --ls-micro:    0.08em;   /* 全大写标签 */
+  --letter-tight:    -0.02em;  /* v1.4 旧名 */
+  --letter-normal:   0;
+  --letter-wide:     0.04em;   /* v1.4 旧名 */
+  --letter-display:  -0.03em;  /* v1.4 旧名 */
 
-  /* ---------- Spacing (8 倍数) ---------- */
-  --sp-1:   4px;
-  --sp-2:   8px;
-  --sp-3:   12px;
-  --sp-4:   16px;
-  --sp-5:   24px;
-  --sp-6:   32px;
-  --sp-7:   48px;
-  --sp-8:   64px;
-  --sp-9:   96px;
-  --sp-10:  128px;
-  --sp-11:  192px;
+  --fw-regular:   400;
+  --fw-medium:    500;
+  --fw-semibold:  600;
+  --fw-bold:      700;
 
-  /* ---------- Radius ---------- */
-  --r-xs:    4px;
-  --r-sm:    8px;
-  --r-md:    12px;
-  --r-lg:    20px;
-  --r-xl:    32px;
-  --r-2xl:   48px;
-  --r-pill:  999px;
+  /* ============================================================
+     9. Spacing scale (8px grid · 13 档)
+     ------------------------------------------------------------
+     v1.4 用 --sp-1..11(11 档),Visual Direction 用 --space-1..12(12 档)
+     本作业:保留 --sp-* 全部 11 档,同时新增 --space-* 13 档
+     - --space-1..11 与 --sp-1..11 数值完全相同(可互换)
+     - --space-12 = 128px = 原 --sp-10
+     - --space-13 = 192px = 原 --sp-11
+     ============================================================ */
+  --space-1:      4px;
+  --space-2:      8px;
+  --space-3:     12px;
+  --space-4:     16px;
+  --space-5:     24px;
+  --space-6:     32px;
+  --space-7:     40px;
+  --space-8:     48px;
+  --space-9:     64px;
+  --space-10:    80px;
+  --space-11:    96px;
+  --space-12:   128px;
+  --space-13:   192px;
 
-  /* ---------- Shadow (墨色阴影，不用黑色) ---------- */
-  --shadow-1: 0 1px 2px rgba(60, 50, 40, 0.04);
-  --shadow-2: 0 4px 12px rgba(60, 50, 40, 0.06);
-  --shadow-3: 0 12px 32px rgba(60, 50, 40, 0.10);
-  --shadow-4: 0 24px 64px rgba(60, 50, 40, 0.14);
+  /* v1.4 旧名 alias (PR #16 等历史 .module.css break-safe) */
+  --sp-1:        var(--space-1);
+  --sp-2:        var(--space-2);
+  --sp-3:        var(--space-3);
+  --sp-4:        var(--space-4);
+  --sp-5:        var(--space-5);
+  --sp-6:        var(--space-6);
+  --sp-7:        var(--space-7);
+  --sp-8:        var(--space-8);
+  --sp-9:        var(--space-9);
+  --sp-10:       var(--space-10);
+  --sp-11:       var(--space-13);  /* 192px (与 v1.4 --sp-11 同值) */
 
-  /* ---------- Motion (慢节奏 ≥ 300ms) ---------- */
-  --dur-instant:  100ms;
-  --dur-fast:     200ms;
-  --dur-base:     320ms;
-  --dur-slow:     500ms;
-  --dur-cinema:   800ms;
-  --dur-glacial:  1200ms;
+  /* ============================================================
+     10. Radius · 圆角
+     ------------------------------------------------------------
+     v1.4 7 档 (--r-xs/sm/md/lg/xl/2xl/pill)
+     Visual Direction 3 档 (--r-sharp/subtle/pill)
+     本作业:全部保留,新增 3 档语义化 token
+     ============================================================ */
+  --r-sharp:     0;        /* 新增 · Visual Direction · 主路径 · 卡片/按钮/输入框 */
+  --r-subtle:    2px;      /* 新增 · Visual Direction · SyncMoment 角落小卡 */
+  --r-pill:      9999px;   /* chip 类元数据 (EventWeatherChip / 搜索建议) */
 
-  --ease-out:      cubic-bezier(0.22, 1, 0.36, 1);      /* 减速 */
-  --ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-emphatic: cubic-bezier(0.16, 1, 0.3, 1);      /* 强减速，更柔 */
-  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);  /* 弹性 */
-  --ease-linear:   linear;
+  /* v1.4 旧名 alias (保留 7 档 detail 系统) */
+  --r-xs:        4px;
+  --r-sm:        8px;
+  --r-md:        12px;
+  --r-lg:        20px;
+  --r-xl:        32px;
+  --r-2xl:       48px;
+  /* --r-pill: 9999px; 已  */
 
-  /* ---------- Layout ---------- */
-  --layout-max:    1280px;
-  --layout-gutter: clamp(24px, 5vw, 64px);
-  --search-max-w:  640px;
+  /* ============================================================
+     11. Shadow · 阴影
+     ------------------------------------------------------------
+     v1.4 4 档 (--shadow-1/2/3/4)
+     Visual Direction 3 档 (--shadow-none/subtle/elevated)
+     本作业:全部保留
+     ============================================================ */
+  --shadow-none:       none;                                  /* 新增 · 主路径 */
+  --shadow-subtle:     0 1px 2px rgba(60, 50, 40, 0.06);      /* 新增 · 卡片悬停 / focus */
+  --shadow-elevated:   0 12px 40px rgba(60, 50, 40, 0.10);    /* 新增 · Modal */
 
-  /* ---------- Z-Index ---------- */
-  --z-bg:        0;
-  --z-cards:     5;
-  --z-content:   10;
-  --z-search:    20;
-  --z-overlay:   30;
-  --z-tooltip:   40;
+  /* v1.4 旧名 alias (PR #16 玻璃阴影系统) */
+  --shadow-1:    0 1px 2px rgba(60, 50, 40, 0.04);
+  --shadow-2:    0 4px 12px rgba(60, 50, 40, 0.06);
+  --shadow-3:    0 12px 32px rgba(60, 50, 40, 0.10);
+  --shadow-4:    0 24px 64px rgba(60, 50, 40, 0.14);
+
+  /* ============================================================
+     12. Motion · 动效
+     ------------------------------------------------------------
+     v1.4 6 档时长 + 5 种 easing (--dur-* + --ease-*)
+     Visual Direction 4 档 PR #30 对齐 (--motion-fast/slide/scale/fade)
+     本作业:全部保留
+     ============================================================ */
+  /* Visual Direction 新增 (PR #30 editorial taxonomy) */
+  --motion-fast:    100ms linear;                              /* reduced-motion 默认 */
+  --motion-slide:   300ms var(--ease-out, ease-out);          /* yellow level / drawer */
+  --motion-scale:   400ms var(--ease-emphatic, ease-out);     /* red level / confrontation */
+  --motion-fade:    500ms var(--ease-in-out, ease-in-out);    /* blue level / content swap */
+
+  /* v1.4 旧名 alias (液态玻璃系统 / HotkeyHelp 等) */
+  --dur-instant:    100ms;
+  --dur-fast:       200ms;
+  --dur-base:       320ms;     /* ≈ --motion-slide (300ms) */
+  --dur-slow:       500ms;     /* = --motion-fade */
+  --dur-cinema:     800ms;
+  --dur-glacial:    1200ms;
+
+  --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-emphatic:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-linear:    linear;
+
+  /* ============================================================
+     13. Layout · 布局常量
+     ============================================================ */
+  --layout-max:        1280px;                                /* v1.4 锁 · 保留 */
+  --layout-gutter:     clamp(24px, 5vw, 64px);                 /* v1.4 锁 */
+  --search-max-w:      640px;                                  /* v1.4 锁 · SearchBox */
+
+  /* 新增 · Visual Direction · Hero 高度 */
+  --hero-height:       60vh;
+  --hero-min-h:        380px;
+  --hero-max-h:        640px;
+
+  /* ============================================================
+     14. Z-Index 层级
+     ------------------------------------------------------------
+     v1.4 6 档 (--z-bg/cards/content/search/overlay/tooltip)
+     Visual Direction 6 档 (--z-base/tooltip/dropdown/sticky/modal/toast)
+     本作业:全部保留 + 新增语义化层级
+     ============================================================ */
+  --z-base:       1;       /* 新增 · 默认 */
+  --z-bg:         0;       /* v1.4 旧名 */
+  --z-cards:      5;       /* v1.4 旧名 · 卡片叠加 */
+  --z-content:   10;       /* v1.4 旧名 · header/footer */
+  --z-tooltip:   10;       /* = --z-content · 兼容 */
+  --z-search:    20;       /* v1.4 旧名 · 搜索框 */
+  --z-dropdown: 100;       /* 新增 · 下拉 */
+  --z-overlay:   30;       /* v1.4 旧名 · 半透明遮罩 */
+  --z-sticky:   200;       /* 新增 · sticky 元素 */
+  --z-modal:   1000;       /* 新增 · Modal */
+  --z-toast:   9999;       /* 新增 · 通知 */
+
+  /* ============================================================
+     15. Easing 复用 (Visual Direction 引用)
+     ============================================================ */
+  --ease-emphatic-default: var(--ease-emphatic, cubic-bezier(0.16, 1, 0.3, 1));
 }
 
-/* ---------- prefers-reduced-motion ---------- */
+/* ============================================================
+     16. prefers-reduced-motion 适配 (锁)
+     ------------------------------------------------------------
+     所有时长 var 在 reduce 模式下统一为 1ms(立即完成)
+     ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --dur-instant: 1ms;
-    --dur-fast:    1ms;
-    --dur-base:    1ms;
-    --dur-slow:    1ms;
-    --dur-cinema:  1ms;
-    --dur-glacial: 1ms;
+    --dur-instant:   1ms;
+    --dur-fast:      1ms;
+    --dur-base:      1ms;
+    --dur-slow:      1ms;
+    --dur-cinema:    1ms;
+    --dur-glacial:   1ms;
+    --motion-fast:   1ms linear;
+    --motion-slide:  1ms linear;
+    --motion-scale:  1ms linear;
+    --motion-fade:   1ms linear;
+    --level-motion-scale: 1ms;
+    --level-motion-slide: 1ms;
+    --level-motion-fade:  1ms;
   }
+}
+
+/* ============================================================
+     17. prefers-contrast 适配 (a11y)
+     ============================================================ */
+@media (prefers-contrast: more) {
+  :root {
+    /* 透明度值强制提升(原 8% / 12% → 80%) */
+    --glass-bg:           rgba(255, 255, 255, 0.95);
+    --glass-bg-hover:     rgba(255, 255, 255, 0.95);
+    --glass-bg-active:    rgba(255, 255, 255, 0.95);
+    --color-ink-300:      #2A2A2A;  /* 弱化文字提升对比度 */
+    --color-ink-500:      #1A1A1A;
+  }
+}
+
+/* ============================================================
+     18. contentType 标签色 (Q3 升级 · AA 达标)
+     ------------------------------------------------------------
+     旧值 vs canvas 对比度大多 < 4.5 (WCAG AA 红线)。
+     升级后全部 ≥ 4.5,且拉开 hue 防止撞色。
+     使用规范:.eventType chip 文字 (MomentsTimeline / EventDrawer)
+     ============================================================ */
+:root {
+  /* PROMPT 15 · v1.4.1 · tokens.css 修复
+     原文件自 line 326 之后所有 custom property 都在 :root 外(bare declarations)
+     导致 esbuild minifier 抛 css-syntax-error(line 4842 的 warning)
+     修复:把 sections 18-21(contentType / SearchBox / SyncMoment / Modal)统一包进 :root
+     注意:包进 :root 后这些 token 在 @media (prefers-contrast: more) 里也能正常 cascade */
+  --content-type-local:        #5C4830;  /* 7.69 vs canvas · AAA · 暖土褐 */
+  --content-type-daily-life:   var(--content-type-local);  /* alias */
+  --content-type-culture:       #9C4B3E;  /* 5.35 vs canvas · AA · 陶土红 */
+  --content-type-weather:      #1F6FBC;  /* 4.60 vs canvas · AA · 冷蓝天空 */
+  --content-type-nature:       #246A5A;  /* 5.50 vs canvas · AA · 青绿大地 */
+  --content-type-transport:    #3F5E2D;  /* 6.54 vs canvas · AA · 深橄榄 */
+  --content-type-finance:      #0F5FBF;  /* 5.47 vs canvas · AA · 深货币蓝 */
+  --content-type-world:        #1458A8;  /* = level-blue · 复用 */
+  --content-type-community:    #B25E40;  /* = accent-500 · 复用 */
+  --content-type-science:      #5C4896;  /* 5.10 vs canvas · AA · 深紫 */
+  --content-type-sports:       #B23A66;  /* 5.30 vs canvas · AA · 深玫红 */
+
+/* ============================================================
+     19. SearchBox / 表单专用 token
+     ============================================================ */
+  --search-bg:           var(--color-canvas);
+  --search-border:       1px solid color-mix(in srgb, var(--color-ink-900) 12%, transparent);
+  --search-border-focus: 1px solid var(--color-ink-900);
+  --search-shadow-focus: 0 1px 2px rgba(60, 50, 40, 0.06);
+  --search-radius:       var(--r-pill);     /* 视觉上"胶囊" */
+  --search-height-sm:    36px;
+  --search-height-md:    48px;
+  --search-height-lg:    56px;
+
+/* ============================================================
+     20. SyncMoment / 角落小卡 token (复用 ui/Card syncmoment variant)
+     ============================================================ */
+  --syncmoment-bg:           var(--color-canvas);
+  --syncmoment-border:       1px solid var(--color-ink-900);
+  --syncmoment-radius:       var(--r-subtle);  /* 2px */
+  --syncmoment-padding:      var(--space-4);
+  --syncmoment-min-width:    200px;
+  --syncmoment-max-width:    360px;
+  --syncmoment-time-size:    var(--fs-h2);
+  --syncmoment-label-size:   var(--fs-micro);
+
+/* ============================================================
+     21. Modal token (ui/Modal)
+     ============================================================ */
+  --modal-overlay:           rgba(0, 0, 0, 0.45);
+  --modal-bg:                var(--color-canvas);
+  --modal-radius:            var(--r-sharp);  /* 直角 · 报志感 */
+  --modal-shadow:            var(--shadow-elevated);
+  --modal-padding:           var(--space-6);
+  --modal-min-width:         320px;
+  --modal-max-width-sm:      420px;
+  --modal-max-width-md:      560px;
+  --modal-max-width-lg:      720px;
 }

@@ -1,0 +1,133 @@
+/* ============================================================
+   Input.module.css · v1.5
+   ============================================================ */
+
+.wrap {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: var(--fs-caption);
+  font-weight: var(--fw-medium);
+  color: var(--color-ink-700);
+  letter-spacing: var(--ls-caption);
+}
+
+.field {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--search-bg);
+  border: var(--search-border);
+  border-radius: var(--search-radius);
+  padding: 0 var(--space-4);
+  transition:
+    border-color var(--motion-fast) linear,
+    box-shadow var(--motion-fast) linear;
+}
+
+.field:focus-within {
+  border: var(--search-border-focus);
+  box-shadow: var(--search-shadow-focus);
+}
+
+.input {
+  flex: 1 1 auto;
+  min-width: 0;          /* 防止 flex item 溢出 */
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  color: var(--color-ink-900);
+  padding: 0;
+}
+
+.input::placeholder {
+  color: var(--color-ink-300);
+}
+
+.prefix,
+.suffix {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-ink-500);
+}
+
+/* ---------- sizes ---------- */
+.s-md .field { height: var(--search-height-md); }
+.s-lg .field { height: var(--search-height-lg); }
+
+/* ---------- variants ---------- */
+.v-search .input {
+  font-family: var(--font-sans);
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-regular);
+}
+
+.v-text .input {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+}
+
+/* ---------- error state ---------- */
+.errored .field {
+  border-color: var(--color-error);
+}
+
+.error {
+  font-size: var(--fs-caption);
+  color: var(--color-error);
+  margin: 0;
+}
+
+.hint {
+  font-size: var(--fs-caption);
+  color: var(--color-ink-500);
+  margin: 0;
+}
+
+/* ============================================================
+   Disabled state
+   ============================================================ */
+.input:disabled {
+  cursor: not-allowed;
+  color: var(--color-ink-300);
+  background: transparent;
+}
+
+.wrap[data-disabled="true"] .field {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Responsive · 移动端
+   ============================================================ */
+@media (max-width: 480px) {
+  .s-lg .field {
+    height: var(--search-height-md);
+  }
+  .v-search .input {
+    font-size: var(--fs-body);
+  }
+}
+
+/* ============================================================
+   Read-only state · 视觉与 disabled 区分
+   ============================================================ */
+.input:read-only {
+  background: color-mix(in srgb, var(--color-ink-900) 3%, transparent);
+}
+
+/* ============================================================
+   Print · 简化为单行边框
+   ============================================================ */
+@media print {
+  .field {
+    border: 1px solid var(--color-ink-900);
+    border-radius: 0;
+  }
+}

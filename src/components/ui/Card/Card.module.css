@@ -1,0 +1,84 @@
+/* ============================================================
+   Card.module.css · v1.5
+   - 直角(报志感)· 阴影等级由 variant 决定
+   ============================================================ */
+
+.card {
+  background: var(--color-canvas);
+  border: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  padding: var(--space-5);
+  border-radius: var(--r-sharp);
+}
+
+/* syncmoment: 角落小卡 · 2px 圆角 · 浅边框 */
+.v-syncmoment {
+  background: var(--syncmoment-bg);
+  border: var(--syncmoment-border);
+  border-radius: var(--syncmoment-radius);
+  padding: var(--syncmoment-padding);
+  min-width: var(--syncmoment-min-width);
+  max-width: var(--syncmoment-max-width);
+}
+
+/* editorial: 报志感 · 浅分割线 · 无阴影 */
+.v-editorial {
+  background: var(--color-canvas);
+  border: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  box-shadow: var(--shadow-none);
+  padding: var(--space-6);
+}
+
+/* elevated: Modal 内子卡 · elevated 阴影 */
+.v-elevated {
+  background: var(--color-canvas);
+  border: 1px solid color-mix(in srgb, var(--color-ink-900) 12%, transparent);
+  box-shadow: var(--shadow-elevated);
+  padding: var(--space-6);
+}
+
+/* dark-on-dark 场景(SyncMoment 落在 CityFeatured 主图上) */
+.v-syncmoment.dark {
+  background: var(--color-ink-900);
+  border-color: var(--color-canvas);
+  color: var(--color-canvas);
+}
+.v-syncmoment.dark .body {
+  color: var(--color-canvas);
+}
+
+/* ============================================================
+   Dark mode (color-scheme)
+   ============================================================ */
+@media (prefers-color-scheme: dark) {
+  /* 暂不启用:产品本身强制亮色(canvas 永远是 #F5F1EA)
+     保留 hook 位以便未来扩展 */
+  .v-editorial,
+  .v-elevated {
+    /* 仍用 canvas,品牌强制 light mode */
+    background: var(--color-canvas);
+  }
+}
+
+/* ============================================================
+   Responsive · 移动端紧凑
+   ============================================================ */
+@media (max-width: 480px) {
+  .v-editorial,
+  .v-elevated {
+    padding: var(--space-4);
+  }
+  .v-syncmoment {
+    padding: var(--space-3);
+    min-width: 160px;
+  }
+}
+
+/* ============================================================
+   可选 header / footer · 业务可放进 [data-card-header]
+   ============================================================ */
+.card[data-padded="lg"] {
+  padding: var(--space-8);
+}
+.card[data-padded="sm"] {
+  padding: var(--space-3);
+}
