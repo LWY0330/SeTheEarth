@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px var(--layout-gutter) 16px;
+  padding: 18px var(--layout-gutter) var(--sp-4);
   border-bottom: 1px solid color-mix(in srgb, #f5f1e8 8%, transparent);
   position: sticky;
   top: 0;
@@ -37,8 +37,8 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
+  gap: var(--sp-2);
+  padding: 6px var(--sp-3);
   border-radius: var(--r-pill, 999px);
   border: 1px solid color-mix(in srgb, #f5f1e8 12%, transparent);
   transition: color var(--dur-fast, 180ms) var(--ease-out, ease-out),
@@ -58,7 +58,7 @@
   max-width: var(--layout-max, 1200px);
   width: 100%;
   margin: 0 auto;
-  padding: 64px var(--layout-gutter) 32px;
+  padding: var(--sp-9) var(--layout-gutter) var(--sp-6);
   text-align: left;
 }
 
@@ -99,7 +99,7 @@
   font-size: clamp(15px, 1vw + 0.4rem, 18px);
   font-style: italic;
   color: color-mix(in srgb, #f5f1e8 75%, transparent);
-  margin: 16px 0 0;
+  margin: var(--sp-4) 0 0;
   max-width: 52ch;
 }
 
@@ -151,7 +151,7 @@
   max-width: 64ch;
   margin: 0 0 18px;
   font-family: var(--font-serif, serif);
-  font-size: 16px;
+  font-size: var(--fs-body);
   font-style: italic;
   line-height: 1.85;
   color: color-mix(in srgb, #f5f1e8 88%, transparent);
@@ -160,7 +160,7 @@
 .pre {
   max-width: 64ch;
   margin: 0 0 18px;
-  padding: 16px 18px;
+  padding: var(--sp-4) 18px;
   background: transparent;
   font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 13px;
@@ -182,14 +182,14 @@
 
 .footerLink {
   font-family: var(--font-sans, system-ui, sans-serif);
-  font-size: 12px;
+  font-size: var(--fs-micro);
   font-weight: 500;
   color: color-mix(in srgb, #f5f1e8 60%, transparent);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
+  gap: var(--sp-2);
+  padding: var(--sp-2) 14px;
   border-radius: var(--r-pill, 999px);
   border: 1px solid color-mix(in srgb, #f5f1e8 12%, transparent);
   transition: color var(--dur-fast, 180ms) var(--ease-out, ease-out),
@@ -208,15 +208,15 @@
 .footerLinks {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--sp-4);
   flex-wrap: wrap;
   justify-content: space-between;
 }
 .footerReselect {
   background: transparent;
   border: 1px solid #050b18;
-  border-radius: 2px;
-  padding: 6px 12px;
+  border-radius: var(--r-subtle);
+  padding: 6px var(--sp-3);
   font-size: 13px;
   font-family: var(--font-sans, system-ui);
   color: var(--color-ink-900, #1A1A1A);

@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: center;
   z-index: 10000;
-  padding: 16px;
+  padding: var(--sp-4);
   animation: fadeIn 0.15s ease-out;
 }
 
@@ -24,14 +24,14 @@
 .dialog {
   background: var(--color-canvas, #F5F1EA);
   color: var(--color-ink-900, #1A1A1A);
-  border-radius: 4px;
+  border-radius: var(--r-xs);
   border: 1px solid #050b18;
   min-width: 320px;
   max-width: 440px;
   width: 100%;
   max-height: 90vh;
   overflow: auto;
-  padding: 20px 24px 16px;
+  padding: 20px var(--sp-5) var(--sp-4);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
   font-family: var(--font-sans, system-ui);
   animation: dialogIn 0.18s ease-out;
@@ -52,7 +52,7 @@
 .title {
   margin: 0;
   font-family: var(--font-serif, serif);
-  font-size: 20px;
+  font-size: var(--fs-h3);
   font-weight: 500;
   letter-spacing: 0.01em;
 }
@@ -63,8 +63,8 @@
   line-height: 1;
   cursor: pointer;
   color: var(--color-ink-700, #3A3833);
-  padding: 4px 8px;
-  border-radius: 2px;
+  padding: var(--sp-1) var(--sp-2);
+  border-radius: var(--r-subtle);
   transition: background 0.12s;
 }
 .close:hover,
@@ -80,7 +80,7 @@
 /* ── Subtitle ── */
 .subtitle {
   margin: 0 0 14px;
-  font-size: 12px;
+  font-size: var(--fs-micro);
   color: var(--color-ink-500-a11y, #5C5853);
   line-height: 1.5;
 }
@@ -88,18 +88,18 @@
 /* ── Region Tabs ── */
 .tabs {
   display: flex;
-  gap: 4px;
-  margin-bottom: 12px;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-3);
   border-bottom: 1px solid var(--color-canvas-deep, #E8E2D5);
-  padding-bottom: 8px;
+  padding-bottom: var(--sp-2);
   flex-wrap: wrap;
 }
 .tab {
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 2px;
+  border-radius: var(--r-subtle);
   padding: 5px 10px;
-  font-size: 12px;
+  font-size: var(--fs-micro);
   font-family: var(--font-sans, system-ui);
   color: var(--color-ink-700, #3A3833);
   cursor: pointer;
@@ -125,7 +125,7 @@
 /* ── City List ── */
 .list {
   border: 1px solid var(--color-canvas-deep, #E8E2D5);
-  border-radius: 2px;
+  border-radius: var(--r-subtle);
   max-height: 280px;
   overflow-y: auto;
   margin-bottom: 10px;
@@ -143,7 +143,7 @@
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--color-canvas-soft, #EFE9DC);
-  padding: 8px 12px;
+  padding: var(--sp-2) var(--sp-3);
   text-align: left;
   cursor: pointer;
   font-family: var(--font-sans, system-ui);
@@ -167,7 +167,7 @@
   font-weight: 500;
 }
 .optZh {
-  font-size: 14px;
+  font-size: var(--fs-caption);
 }
 .optEn {
   font-size: 11px;
@@ -176,7 +176,7 @@
   text-transform: uppercase;
 }
 .empty {
-  padding: 16px;
+  padding: var(--sp-4);
   text-align: center;
   color: var(--color-ink-500-a11y, #5C5853);
   font-size: 13px;
@@ -185,7 +185,7 @@
 
 /* ── Footnote ── */
 .footnote {
-  margin: 8px 0 12px;
+  margin: var(--sp-2) 0 var(--sp-3);
   font-size: 11px;
   color: var(--color-ink-500-a11y, #5C5853);
   line-height: 1.5;
@@ -195,14 +195,14 @@
 .footer {
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
+  gap: var(--sp-2);
 }
 .cancel,
 .confirm {
   font-family: var(--font-sans, system-ui);
   font-size: 13px;
   padding: 6px 14px;
-  border-radius: 2px;
+  border-radius: var(--r-subtle);
   cursor: pointer;
   border: 1px solid #050b18;
   transition: all 0.12s;
@@ -235,13 +235,13 @@
 /* ── 移动端 ── */
 @media (max-width: 480px) {
   .dialog {
-    padding: 16px 16px 12px;
+    padding: var(--sp-4) var(--sp-4) var(--sp-3);
   }
   .title {
     font-size: 18px;
   }
   .tab {
     font-size: 11px;
-    padding: 4px 8px;
+    padding: var(--sp-1) var(--sp-2);
   }
 }

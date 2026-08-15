@@ -18,7 +18,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px var(--layout-gutter) 16px;
+  padding: 18px var(--layout-gutter) var(--sp-4);
   border-bottom: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
   position: sticky;
   top: 0;
@@ -36,8 +36,8 @@
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
+  gap: var(--sp-2);
+  padding: 6px var(--sp-3);
   border-radius: var(--r-pill);
   border: 1px solid color-mix(in srgb, var(--color-ink-900) 10%, transparent);
   transition: color var(--dur-fast) var(--ease-out),
@@ -169,7 +169,7 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
-  padding-left: 24px;
+  padding-left: var(--sp-5);
   border-left: 1px solid color-mix(in srgb, var(--color-ink-900) 10%, transparent);
 }
 .summaryTime {
@@ -206,7 +206,7 @@
 .summaryObservation {
   margin: 0;
   font-family: var(--font-serif);
-  font-size: 14px;
+  font-size: var(--fs-caption);
   font-style: italic;
   color: var(--color-ink-700);
   line-height: 1.5;
@@ -222,7 +222,7 @@
   gap: 14px;
   max-width: var(--layout-max);
   margin: 0 auto 18px;
-  padding-bottom: 12px;
+  padding-bottom: var(--sp-3);
   border-bottom: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
 }
 .sectionNumber {
@@ -259,7 +259,7 @@
   max-width: 60ch;
   margin: 0 auto;
   font-family: var(--font-serif);
-  font-size: 16px;
+  font-size: var(--fs-body);
   font-style: italic;
   color: var(--color-ink-700);
   line-height: 1.6;
@@ -322,8 +322,8 @@
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 14px 18px 16px;
+  gap: var(--sp-2);
+  padding: 14px 18px var(--sp-4);
 }
 .relatedCn {
   font-family: var(--font-serif);
@@ -333,7 +333,7 @@
 }
 .relatedEn {
   font-family: var(--font-serif);
-  font-size: 12px;
+  font-size: var(--fs-micro);
   font-style: italic;
   color: var(--color-ink-500);
 }
@@ -349,7 +349,7 @@
 
 /* ── footer ── */
 .footer {
-  margin-top: 48px;
+  margin-top: var(--sp-8);
   padding: 28px var(--layout-gutter) 56px;
   border-top: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
   display: flex;
@@ -357,13 +357,13 @@
 }
 .footerLink {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: var(--fs-micro);
   font-weight: 500;
   color: var(--color-ink-500);
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  padding: 8px 16px;
+  padding: var(--sp-2) var(--sp-4);
   border-radius: var(--r-pill);
   border: 1px solid color-mix(in srgb, var(--color-ink-900) 10%, transparent);
   transition: color var(--dur-fast) var(--ease-out),
@@ -382,7 +382,7 @@
   align-items: center;
   justify-content: center;
   gap: 18px;
-  padding: 40px var(--layout-gutter);
+  padding: var(--sp-7) var(--layout-gutter);
   background: var(--color-canvas);
   color: var(--color-ink-900);
   text-align: center;
@@ -395,13 +395,13 @@
 }
 .notFoundLink {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: var(--fs-micro);
   font-weight: 500;
   color: var(--color-accent-500);
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  padding: 8px 16px;
+  padding: var(--sp-2) var(--sp-4);
   border-radius: var(--r-pill);
   border: 1px solid color-mix(in srgb, var(--color-accent-500) 40%, transparent);
 }
@@ -409,7 +409,7 @@
 
 /* ── 响应式 ── */
 @media (max-width: 900px) {
-  .summaryGrid { grid-template-columns: 1fr; gap: 24px; }
+  .summaryGrid { grid-template-columns: 1fr; gap: var(--sp-5); }
   .summaryMeta { padding-left: 0; border-left: none; border-top: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent); padding-top: 18px; }
   .relatedGrid { grid-template-columns: 1fr 1fr; }
   .heroText { padding: 28px 28px; }
@@ -442,31 +442,31 @@
   max-width: var(--page-max-width, 1200px);
   width: 100%;
   margin: 0 auto;
-  padding: 0 24px;
-  margin-top: 32px; /* 不再用负 margin 叠在 hero 上,改为 hero 与 summary 之间的独立 section,避免与 summary 右侧栏碰撞 */
+  padding: 0 var(--sp-5);
+  margin-top: var(--sp-6); /* 不再用负 margin 叠在 hero 上,改为 hero 与 summary 之间的独立 section,避免与 summary 右侧栏碰撞 */
   display: flex;
   justify-content: flex-end;
   z-index: 10; /* 从 2 提到 10,盖过 hero 内部任何潜在 stacking context */
 }
 @media (max-width: 768px) {
   .syncMoment {
-    margin-top: 24px;
-    padding: 0 16px;
+    margin-top: var(--sp-5);
+    padding: 0 var(--sp-4);
   }
 }
 
 .footerLinks {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: var(--sp-4);
   flex-wrap: wrap;
   justify-content: space-between;
 }
 .footerReselect {
   background: transparent;
   border: 1px solid #050b18;
-  border-radius: 2px;
-  padding: 6px 12px;
+  border-radius: var(--r-subtle);
+  padding: 6px var(--sp-3);
   font-size: 13px;
   font-family: var(--font-sans, system-ui);
   color: var(--color-ink-900, #1A1A1A);
