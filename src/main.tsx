@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 
 import App from './App';
 import './styles/globals.css';
-import './styles/level-tokens.css';
+// level-tokens.css deleted in v1.5 Stage 4 (merged into tokens.css)
 
 const container = document.getElementById('root');
 if (!container) {
