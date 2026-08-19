@@ -146,6 +146,8 @@ export interface MomentStats {
 
 /* ---------- 完整 City 对象 ---------- */
 
+import type { CityContent } from './cityContent';
+
 export interface City {
   identity: CityIdentity;
   visual?: CityVisual;
@@ -155,6 +157,8 @@ export interface City {
   page_state: CityPageState;
   /** 仅 L2+ 才有 */
   moment_stats?: MomentStats;
+  /** v1.6.1 · 编辑文案层（PROMPT 39 A.3）— 可选,运行时由 Editorial CMS 注入 */
+  content?: CityContent;
 }
 
 /**
