@@ -1,9 +1,41 @@
 # 看见地球 · See Earth
 
-> 沿时间轴穿越地球四十六亿年历史的交互式应用 — **M0 原型**
+> 沿时间轴穿越地球四十六亿年历史的交互式应用 — **当前 v1.6 Phase 0**
 
-M0 目标:搭建可运行的项目骨架,验证核心叙事组件 —— 一颗会自转的地球 + 一条
-9 节点的时间轴。后续 milestone 会逐步替换静态数据并接入真实地图瓦片。
+| 维度 | 状态 |
+|---|---|
+| **当前版本** | v1.6 Phase 0 ✅ delivered(2026-08-19) |
+| **下一里程碑** | v1.6 Phase 1 — Global City Coverage 数据架构接入(等 4 项设计 Gate) |
+| **已合并** | M0 → v1.0 → v1.1 → v1.2 → v1.3 (PWA + a11y) → v1.4 (5 段 CityPage + 11 城市) → v1.5 (Lighthouse + hotkeys) |
+| **Branch** | `main` (latest merged) · `codex/v1.6-p36-data-arch` (Phase 0 当前分支) |
+| **测试** | `npm run test` — 77 / 77 pass |
+| **类型** | `npm run typecheck` — 0 errors |
+| **Bundle** | 229 KB(gzip 82 KB,与 v1.5 持平)|
+
+> M0 目标:搭建可运行的项目骨架,验证核心叙事组件 —— 一颗会自转的地球 + 一条
+> 9 节点的时间轴。后续 milestone 会逐步替换静态数据并接入真实地图瓦片。
+
+---
+
+## 📍 v1.6 Phase 0 · Global City Coverage 数据架构
+
+**核心交付**(3 commits,8 新文件,77 测试):
+
+- **City Schema v1** — Identity 12 字段 + Dynamic(runtime)+ Visual/Seed 7 字段 + State 双层枚举
+- **Moment Schema v1** — 17 字段,`captured_at` 唯一决定 NOW / TODAY / PAST
+- **时间分桶** — `getMomentTimeBucket` + `NOW_WINDOW_HOURS` 可配置,DST 跨夏令时保护
+- **City State 推导** — L0-L4(后台)+ A-E(前台)双层枚举
+- **Location Privacy** — 4 角色权限矩阵,Witness 仅自看 `raw_location`
+- **数据导入管道** — `validateCity` 已实现,Phase 3 stub(`normalizeCity` / `findDuplicates` / `ingestBatch`)
+
+**关键边界**:
+- ✅ 零业务文件侵入(`src/data/cities.ts` / `liveMoments.ts` / `CityPage.tsx` / `moments.ts` 全部未触动)
+- ✅ 零新依赖
+- ⏳ Phase 1 启动需 4 项 Gate 拍板(Lisbon Yellow Layer / 4-screen → V2 Mapping / Context source policy / Khartoum mockup LOCKED)
+
+**详细报告**:见 `05-项目现状/d6-global-coverage-data-architecture.md`
+**字段交叉验证**:见 `05-项目现状/d6-phase-1-prep-cross-validation.md`
+**Phase 1 过渡**:见 `05-项目现状/d6-phase-1-prep-transition.md`
 
 ---
 
@@ -104,26 +136,33 @@ npm run dev          # http://localhost:5173
 npm run build        # 类型检查 + 生产打包到 dist/
 npm run preview      # 预览构建产物
 npm run typecheck    # 仅跑 tsc --noEmit
+npm run test         # 跑 Node 22 原生 test runner(Phase 0+: src/lib/*.test.ts)
+npm run lighthouse   # 本地 Lighthouse 回归(v1.3+ 起)
 ```
 
-构建产物 (M0):
+构建产物(v1.6 Phase 0):
 
 ```
 dist/index.html                   0.58 kB │ gzip:  0.42 kB
 dist/assets/index-*.css          15.08 kB │ gzip:  4.22 kB
-dist/assets/index-*.js          151.96 kB │ gzip: 50.69 kB
+dist/assets/index-*.js          229.00 kB │ gzip: 82.00 kB
 ```
 
 ---
 
-## 下一步 (M1)
+## 下一步(v1.6 Phase 1)
 
-- [ ] 替换程序绘制的地球为真实 equirectangular 地图瓦片
-- [ ] 时间轴数据迁移到 `/public/data/earth-events.json`
-- [ ] 接入 ScrollTrigger,把时间轴与地球视差绑定
-- [ ] 加入详情页路由 + 节点详情展开视图
-- [ ] 引入真实经纬度标记 (替换扁平 9 节点)
-- [ ] i18n (中文 / English)
+> **当前阻塞**:4 项设计 Gate 拍板后立即启动。详见 `05-项目现状/d6-phase-1-prep-transition.md`。
+
+- [ ] **Gate 1** Lisbon Yellow Layer LOCKED → 启动 CityPage v2 设计
+- [ ] **Gate 2** 4-screen → V2 City Model Mapping 拍板 → 启动 `CityPage.tsx` 重构
+- [ ] **Gate 3** Context source policy 拍板 → 启动 Context 运行时获取
+- [ ] **Gate 4** Khartoum mockup LOCKED → 启动 Khartoum 接入 `cities.ts`
+- [ ] **无 Gate 阻塞** `validateCity` 加 `source_url` warn(T1)
+- [ ] **无 Gate 阻塞** `ContextSource` 接口 + stub(T2)
+- [ ] **无 Gate 阻塞** `city.page_state` 渲染 state-machine 接口(T3)
+- [ ] **无 Gate 阻塞** 加 CI(`.github/workflows/test.yml`)(T8)
+- [ ] **独立 PR** `liveMoments.ts:411-422` 旧 Khartoum 文案清理(方案 A 删除)
 
 ---
 
