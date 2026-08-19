@@ -1,12 +1,15 @@
 /* ============================================================
-   看见地球 · v1.6 · PROMPT 36 Phase 0 · Moment 类型
+   看见地球 · v1.6.1 · PROMPT 36 Phase 0 + PROMPT 39 v1 · Moment 类型
    ------------------------------------------------------------
    - 对齐 04-路线图/global-city-coverage-system-v1.0.md §5
-   - §5.2 Required Fields 14 字段全部定义
+   - §5.2 Required Fields 17 字段全部定义
    - §5.3 captured_at 唯一决定时间桶
    - §5.4 raw_location 标注"后台 only"
    - §19 Provenance / Moderation / Rights 状态枚举
+   - PROMPT 39 v1 A.4 sources / A.5 captions / A.7 editorial 扩展
    ============================================================ */
+
+import type { MomentEditorial } from './momentEditorial';
 
 /* ---------- 时间桶 ---------- */
 
@@ -129,9 +132,9 @@ export interface Moment {
   sources?: ReadonlyArray<MomentSource>;
   /** v1.6.1 · i18n 双语文案（PROMPT 39 A.5）— 替换 legacy textZh + textEn 双字段 */
   captions?: MomentCaptions;
+  /** v1.6.1 · 视觉/编辑层（PROMPT 39 A.7）— 独立 MomentEditorial,保留 legacy 6 category */
+  editorial?: MomentEditorial;
 }
-
-/* ---------- Source Type（PROMPT 39 A.4）---------- */
 
 /* ---------- Source Type（PROMPT 39 A.4）---------- */
 
