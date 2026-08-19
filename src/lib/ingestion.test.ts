@@ -159,6 +159,36 @@ test('validateCity · (0,0) 坐标 → warning（不阻塞）', () => {
   assert.ok(r.warnings.some((w) => w.includes('(0,0)')));
 });
 
+test('validateCity · source_url 缺失 → warning（不阻塞,Phase 0）', () => {
+  const data: NormalizedCity = {
+    ...GOOD,
+    source_url: undefined,
+  };
+  const r = validateCity(data);
+  assert.equal(r.valid, true, 'source_url 缺失不阻塞（Phase 0 行为）');
+  assert.ok(r.warnings.some((w) => w.includes('source_url')));
+});
+
+test('validateCity · source_url 空字符串 → warning（不阻塞）', () => {
+  const data: NormalizedCity = {
+    ...GOOD,
+    source_url: '   ',
+  };
+  const r = validateCity(data);
+  assert.equal(r.valid, true);
+  assert.ok(r.warnings.some((w) => w.includes('source_url')));
+});
+
+test('validateCity · source_url 填齐 → 无 source_url warning', () => {
+  const data: NormalizedCity = {
+    ...GOOD,
+    source_url: 'https://www.geonames.org/379252',
+  };
+  const r = validateCity(data);
+  assert.equal(r.valid, true);
+  assert.ok(!r.warnings.some((w) => w.includes('source_url')));
+});
+
 /* ---------- toCity ---------- */
 
 test('toCity · 默认 state_level=L0_mapped, page_state=E_empty', () => {

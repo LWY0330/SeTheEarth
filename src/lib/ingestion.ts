@@ -224,6 +224,11 @@ export function validateCity(city: NormalizedCity): ValidateResult {
   if (i.alternate_names?.length === 0) {
     warnings.push('alternate_names 为空数组');
   }
+  // spec §17 acceptance:数据源可追溯（source_url 必填）
+  // Phase 0 加非阻塞 warning:legacy / 手工录入的城市可能缺 source_url,Phase 1+ 接入 Editorial CMS 后转阻塞
+  if (!city.source_url || city.source_url.trim().length === 0) {
+    warnings.push('source_url 缺失（§17 数据源可追溯;Phase 0 非阻塞,Phase 1+ 接入 Editorial CMS 后转阻塞）');
+  }
 
   return {
     valid: errors.length === 0,
