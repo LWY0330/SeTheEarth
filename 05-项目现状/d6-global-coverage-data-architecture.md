@@ -1,7 +1,7 @@
 ---
 title: PROMPT 36 v1 · Global City Coverage 数据架构 (Phase 0) — 工程交付报告
 type: engineer-delivery-report
-version: v1.6
+version: v1.6.1
 date: 2026-08-19
 status: ✅ DELIVERED · 3 PR 准备就绪
 related_docs:
@@ -20,6 +20,10 @@ test_count: 77 (PR-1: 0 · PR-2: 41 · PR-3: 36)
 > **接收**: 2026-08-19 接管 PM Agent
 > **任务**: Phase 0 数据架构 · Universal City schema + Moment relation + State derivation + Privacy
 > **状态**: ✅ 3 个 commit 准备就绪，77/77 测试通过，typecheck + build 干净
+
+> **⚠️ 字段计数修正 disclaimer**（PROMPT 39 v1 · 2026-08-19 接管 PM Agent 决策 A.1）:
+> 本报告原文 "Identity 11 字段" / "Moment 14 字段" 为文档笔误。代码实测 Identity **12** 字段、Moment **17** 字段，均与 spec §4.1 / §5.2 字段级一致。笔误已在 2026-08-19 由 `d6-phase-1-prep-cross-validation.md` 捕获并修正。修正记录见 `d6-phase-1-decisions-implementation.md` §A.1。
+> **以代码为契约，本报告其余内容不变。**
 
 ---
 
@@ -72,7 +76,7 @@ test_count: 77 (PR-1: 0 · PR-2: 41 · PR-3: 36)
 | `src/types/moment.ts` | 128 | `Moment` (14) + `MomentMedia` + `MomentTimeBucket` + `RawLocation` + 3 个 status enum |
 | `src/types/index.ts` | 45 | 统一 barrel re-export |
 
-### 字段对照表（Identity 11 字段）
+### 字段对照表（Identity 12 字段）
 
 | spec §4.1 字段 | v1.6 实现 | 备注 |
 |---|---|---|
@@ -91,7 +95,7 @@ test_count: 77 (PR-1: 0 · PR-2: 41 · PR-3: 36)
 
 ### 自检（任务 A · City Schema）
 
-- [x] 11 个 Identity 字段全部定义
+- [x] 12 个 Identity 字段全部定义
 - [x] Dynamic 标记 "runtime derived，不存盘"（JSDoc 注明）
 - [x] Visual / Editorial Seed 7 字段
 - [x] CityStateLevel 5 个 L0-L4 枚举
@@ -441,8 +445,8 @@ M tsconfig.json          # 仅 allowImportingTsExtensions true
 
 PROMPT 36 v1 Phase 0 数据架构 **完整交付**：
 
-1. **City Schema v1**（4 类型文件）：Identity 11 字段 + Dynamic + Visual/Seed 7 字段 + State 双层枚举 + MomentStats
-2. **Moment Schema v1**（1 类型文件）：14 字段 + 4 media + raw_location 受限标注
+1. **City Schema v1**（4 类型文件）：Identity 12 字段 + Dynamic + Visual/Seed 7 字段 + State 双层枚举 + MomentStats
+2. **Moment Schema v1**（1 类型文件）：17 字段 + media + raw_location 受限标注
 3. **时间分桶**（1 逻辑 + 1 测试）：NOW (1h) / TODAY (本地日) / PAST，DST 跨夏令时保护
 4. **City State 推导**（1 逻辑 + 1 测试）：L0-L4 + A-E 5×5 矩阵
 5. **Location Privacy**（1 逻辑 + 1 测试）：4 角色权限矩阵 + Witness 仅自看
