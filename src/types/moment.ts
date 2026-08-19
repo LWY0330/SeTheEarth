@@ -125,4 +125,57 @@ export interface Moment {
   rights_status: RightsStatus;
   created_at: string;
   updated_at: string;
+  /** v1.6.1 · 多源追溯（PROMPT 39 A.4）— spec §17 数据源可追溯 */
+  sources?: ReadonlyArray<MomentSource>;
+}
+
+/* ---------- Source Type（PROMPT 39 A.4）---------- */
+
+/**
+ * MomentSource — 单条来源追溯。
+ *
+ * spec §17 acceptance:数据源可追溯(source_url 必填)。
+ * PM 决策 A.4:多源追溯放 Moment.sources[]（与 provenance_status 互补）。
+ *
+ * 字段:
+ * - name: 来源名(必填,例如 "Reuters" / "Wikimedia Commons" / "user-lwy")
+ * - url:  原始条目 URL(可选,但若 rights_status === 'unknown' 应填)
+ * - type: 标准化来源类型枚举(7 种)
+ */
+export interface MomentSource {
+  /** 来源名(必填) */
+  readonly name: string;
+  /** 原始条目 URL */
+  readonly url?: string;
+  /** 标准化来源类型 */
+  readonly type: MomentSourceType;
+}
+
+/**
+ * MomentSourceType — 标准化来源类型。
+ *
+ * 枚举 7 种:商业图库(2) + 新闻社(2) + 开源(2) + 手工(1)。
+ * Phase 1+ Editorial CMS 接入后可扩 type(加 stock-photo 服务等)。
+ */
+export type MomentSourceType =
+  | 'reuters'        // 路透社(新闻)
+  | 'ap'             // 美联社(新闻)
+  | 'adobe'          // Adobe Stock(图库)
+  | 'shutterstock'   // Shutterstock(图库)
+  | 'wikimedia'      // Wikimedia Commons(开源)
+  | 'unsplash'       // Unsplash(开源图库)
+  | 'manual';        // 手工录入(Editorial CMS)
+
+/**
+ * 所有支持的 source type(frozen tuple,Phase 2+ 可扩展)。
+ */
+export const MOMENT_SOURCE_TYPES: ReadonlyArray<MomentSourceType> = Object.freeze([
+  'reuters', 'ap', 'adobe', 'shutterstock', 'wikimedia', 'unsplash', 'manual',
+]);
+
+/**
+ * isMomentSourceType — 严格校验 source type 字面量。
+ */
+export function isMomentSourceType(value: string): value is MomentSourceType {
+  return (MOMENT_SOURCE_TYPES as ReadonlyArray<string>).includes(value);
 }
