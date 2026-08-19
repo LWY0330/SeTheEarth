@@ -127,7 +127,11 @@ export interface Moment {
   updated_at: string;
   /** v1.6.1 · 多源追溯（PROMPT 39 A.4）— spec §17 数据源可追溯 */
   sources?: ReadonlyArray<MomentSource>;
+  /** v1.6.1 · i18n 双语文案（PROMPT 39 A.5）— 替换 legacy textZh + textEn 双字段 */
+  captions?: MomentCaptions;
 }
+
+/* ---------- Source Type（PROMPT 39 A.4）---------- */
 
 /* ---------- Source Type（PROMPT 39 A.4）---------- */
 
@@ -178,4 +182,49 @@ export const MOMENT_SOURCE_TYPES: ReadonlyArray<MomentSourceType> = Object.freez
  */
 export function isMomentSourceType(value: string): value is MomentSourceType {
   return (MOMENT_SOURCE_TYPES as ReadonlyArray<string>).includes(value);
+}
+
+/* ---------- Captions（PROMPT 39 A.5）---------- */
+
+/**
+ * MomentCaptions — 多语言文案。
+ *
+ * PM 决策 A.5:captions?: { zh?: string; en?: string }
+ *
+ * 设计原则:
+ * - 全 optional(允许 partial data:仅 zh 或仅 en)
+ * - 字段命名 short(zh / en),不冗余 caption_zh / caption_en
+ * - Phase 2+ 可扩 ja / pt / es
+ *
+ * - 与 legacy caption 字段(单语)并存:caption 仍保留(向后兼容 Phase 0),
+ *   captions 用于多语言文案(Phase 1+ Editorial CMS 录入)
+ *
+ * 使用规则(Phase 2+ UI):
+ * - UI locale = 'zh' → captions?.zh ?? caption ?? fallback
+ * - UI locale = 'en' → captions?.en ?? caption ?? fallback
+ */
+export interface MomentCaptions {
+  /** 中文文案 */
+  readonly zh?: string;
+  /** 英文文案 */
+  readonly en?: string;
+}
+
+/**
+ * getMomentCaption — 多语言文案查找。
+ *
+ * 优先级:captions[locale] > caption (legacy) > undefined
+ *
+ * @returns 找到的文案;都不存在返回 undefined
+ */
+export function getMomentCaption(
+  moment: Pick<Moment, 'caption' | 'captions'>,
+  locale: 'zh' | 'en',
+): string | undefined {
+  if (moment.captions) {
+    const localized = moment.captions[locale];
+    if (localized && localized.length > 0) return localized;
+  }
+  if (moment.caption && moment.caption.length > 0) return moment.caption;
+  return undefined;
 }
