@@ -1,0 +1,78 @@
+/* SameSecond.module.css · v1.6.4 · PROMPT 46 v1 */
+
+.sameSecond {
+  font-family: var(--font-sans);
+  padding: 80px 32px;
+  background: var(--bg-page);
+}
+
+.header { margin-bottom: 48px; }
+
+.title {
+  font-family: var(--font-display);
+  font-size: 36px;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr 1px 1fr;
+  gap: 24px;
+  max-width: 1376px;
+  margin: 0 auto;
+}
+
+.grid--hairline {
+  border-left: 1px solid var(--border-hairline);
+}
+
+.col {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.col:hover { background: var(--bg-hero-mist); }
+
+.time {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 72px;
+  font-weight: 300;
+  line-height: 1.0;
+  color: var(--text-primary);
+}
+
+.cityCn {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.country {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.description {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.sameSecond--default { /* 默认 */ }
+.sameSecond--hover { background: var(--bg-hero-mist); }
+.sameSecond--focus { outline: 0; box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40); }
+.sameSecond--active { /* N/A */ }
+.sameSecond--disabled { opacity: 0.5; }
+.sameSecond--success { /* N/A */ }

@@ -1,0 +1,92 @@
+/* GlobalHeader.module.css · v1.6.4 · PROMPT 46 v1 */
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 72px;
+  padding: 0 32px;
+  background: rgba(244, 247, 250, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-hairline);
+  font-family: var(--font-sans);
+}
+
+.header--simplified {
+  background: transparent;
+  border-bottom: 0;
+  backdrop-filter: none;
+}
+
+.header--default { /* 默认无覆盖 */ }
+.header--hover { background: rgba(255, 255, 255, 0.95); }
+.header--focus { outline: 0; box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40); }
+.header--active { transform: scale(0.99); }
+.header--disabled { opacity: 0.5; cursor: not-allowed; }
+.header--success { /* Success 不适用 */ }
+
+.back {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.back:hover { color: var(--earth-blue); }
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logoCn {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.logoEn {
+  font-family: var(--font-sans);
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.nav { display: flex; gap: 32px; }
+
+.navLink {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: color 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.navLink:hover { color: var(--earth-blue); }
+.navLink:focus { outline: 0; box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40); }
+.navLink--active {
+  color: var(--earth-blue-deep);
+  border-bottom: 2px solid var(--earth-blue);
+  font-weight: 500;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--earth-blue);
+  animation: pulse 2.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}

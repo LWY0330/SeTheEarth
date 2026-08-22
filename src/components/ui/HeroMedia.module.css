@@ -1,0 +1,73 @@
+/* HeroMedia.module.css · v1.6.4 · PROMPT 46 v1 */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-page);
+}
+
+.hero--height-720px { height: 720px; }
+.hero--height-100vh { height: 100vh; }
+
+.hero--default { /* 默认无覆盖 */ }
+.hero--hover .image { transform: scale(1.02); transition: transform 700ms ease-out; }
+.hero--focus { outline: 0; box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40); }
+.hero--active { /* N/A */ }
+.hero--disabled { opacity: 0.5; cursor: not-allowed; }
+.hero--success { /* N/A */ }
+
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 700ms ease-out;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.overlay--top-bottom {
+  background:
+    linear-gradient(180deg, rgba(7, 14, 20, 0.30) 0%, transparent 40%),
+    linear-gradient(0deg, rgba(7, 14, 20, 0.50) 0%, transparent 30%);
+}
+
+.overlay--left {
+  background: linear-gradient(105deg, rgba(7, 14, 20, 0.45) 0%, transparent 55%);
+}
+
+.overlay--warm-bottom {
+  background: linear-gradient(0deg, rgba(40, 24, 16, 0.5) 0%, transparent 30%);
+}
+
+.overlay--none { display: none; }
+
+.safeArea {
+  position: absolute;
+  color: var(--text-inverse);
+}
+
+.safeArea--left {
+  top: 30%;
+  left: 32px;
+  max-width: 480px;
+}
+
+.safeArea--center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.safeArea--bottom {
+  bottom: 48px;
+  left: 32px;
+  right: 32px;
+}

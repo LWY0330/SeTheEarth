@@ -1,0 +1,63 @@
+/* TimeComparison.module.css · v1.6.4 · PROMPT 46 v1 */
+
+.compare {
+  font-family: var(--font-sans);
+  padding: 24px 32px;
+  background: var(--bg-page);
+}
+
+.grid {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  align-items: center;
+}
+
+.compare--vertical .grid { flex-direction: column; }
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border-bottom: 2px solid transparent;
+}
+
+.time {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--text-primary);
+}
+
+.city {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.delta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.deltaCenter {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  color: var(--earth-blue);
+  font-weight: 500;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.compare--default { /* 默认 */ }
+.compare--hover { background: var(--bg-hero-mist); }
+.compare--focus { outline: 0; box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40); }
+.compare--active { /* N/A */ }
+.compare--disabled { opacity: 0.5; }
+.compare--success { /* N/A */ }

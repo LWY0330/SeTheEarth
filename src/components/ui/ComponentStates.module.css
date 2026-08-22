@@ -1,0 +1,41 @@
+/* ============================================================
+   看见地球 · v1.6.4 · PROMPT 46 v1 · 共享 6 状态样式模板
+   ------------------------------------------------------------
+   - 默认全局规则:0 阴影 / 0 大圆角(≤ 2px)
+   - Earth Blue 焦点圈:0 0 0 2px rgba(26, 77, 126, 0.40)
+   - Mono 字体 tabular-nums
+   ============================================================ */
+
+:root {
+  --focus-ring: rgba(26, 77, 126, 0.40);
+}
+
+.state-default {
+  /* 默认状态无样式覆盖 */
+}
+
+.state-hover {
+  background: var(--bg-hero-mist);
+  transition: background 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.state-focus {
+  outline: 0;
+  box-shadow: 0 0 0 2px var(--focus-ring);
+  transition: box-shadow 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.state-active {
+  transform: scale(0.99);
+  transition: transform 120ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.state-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.state-success {
+  /* Success 颜色由具体组件通过 --success-green / --layer-red 控制 */
+}

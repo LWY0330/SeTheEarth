@@ -1,0 +1,42 @@
+/* CoordinateWindow.module.css · v1.6.4 · PROMPT 46 v1 */
+
+.coord {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 300;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  color: var(--earth-blue);
+}
+
+.coord--rough .lat,
+.coord--rough .lon {
+  font-size: 56px;
+}
+
+.coord--precise .lat,
+.coord--precise .lon {
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.lat, .lon {
+  display: block;
+  color: var(--earth-blue);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.coord--default { /* 默认 */ }
+.coord--hover { /* N/A */ }
+.coord--focus {
+  outline: 0;
+  box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40);
+  padding: 8px 12px;
+  border-radius: 2px;
+}
+.coord--active { /* N/A */ }
+.coord--disabled { opacity: 0.5; }
+.coord--success { color: var(--layer-red); }

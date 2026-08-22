@@ -1,0 +1,85 @@
+/* RevealMeta.module.css · v1.6.4 · PROMPT 46 v1 */
+
+.meta {
+  position: absolute;
+  bottom: 48px;
+  left: 32px;
+  right: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-family: var(--font-mono);
+  color: var(--text-inverse);
+  z-index: 5;
+}
+
+.header {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+.kicker { font-weight: 500; }
+.label { opacity: 0.7; }
+
+.utcLine {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-variant-numeric: tabular-nums;
+  font-size: 56px;
+  font-weight: 400;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.time { color: var(--text-inverse); }
+.coords { color: var(--earth-blue); }
+.coordsUnknown { color: var(--earth-blue); font-style: italic; }
+.qmark { opacity: 0.6; }
+
+.cityReveal {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: center;
+  margin: 0;
+  max-width: 640px;
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 32px;
+  padding: 12px 24px;
+  background: var(--earth-blue);
+  color: var(--text-inverse);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.cta:hover { background: var(--earth-blue-deep); }
+.cta:focus { outline: 0; box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40); }
+.cta:active { transform: scale(0.98); }
+.cta::after { content: '→'; font-size: 18px; }
+
+.meta--default { /* 默认 */ }
+.meta--hover { /* N/A (时间触发) */ }
+.meta--focus .cta { outline: 0; box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40); }
+.meta--active .cta { transform: scale(0.98); }
+.meta--disabled { opacity: 0.5; }
+.meta--success { /* Stage 5 完成态 */ }

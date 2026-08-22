@@ -1,0 +1,65 @@
+/* DistanceNavigation.module.css · v1.6.4 · PROMPT 46 v1 */
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-sans);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 2px;
+  transition: color 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.link:hover { color: var(--earth-blue); }
+.link:focus { outline: 0; box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40); }
+.link:active { transform: scale(0.98); }
+
+.link--disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+
+.arrow {
+  font-family: var(--font-mono);
+  font-size: 16px;
+}
+
+.cityName {
+  font-weight: 500;
+}
+
+.position {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+
+.currentCity {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  flex: 1;
+  text-align: center;
+}
+
+.nav--default { /* 默认 */ }
+.nav--hover { background: var(--bg-hero-mist); }
+.nav--focus { outline: 0; box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40); }
+.nav--active { transform: scale(0.98); }
+.nav--disabled { opacity: 0.5; cursor: not-allowed; }
+.nav--success { /* N/A */ }

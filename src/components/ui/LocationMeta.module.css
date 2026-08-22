@@ -1,0 +1,53 @@
+/* LocationMeta.module.css · v1.6.4 · PROMPT 46 v1 */
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-sans);
+}
+
+.line1 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.cityEn { color: var(--text-primary); }
+.sep { opacity: 0.4; }
+.countryEn { color: var(--text-secondary); }
+
+.coords {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.meta--default { /* 默认 */ }
+.meta--hover { /* N/A */ }
+.meta--focus { outline: 0; box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40); }
+.meta--active { /* N/A */ }
+.meta--disabled { opacity: 0.5; }
+.meta--success { /* N/A */ }

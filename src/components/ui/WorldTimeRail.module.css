@@ -1,0 +1,95 @@
+/* WorldTimeRail.module.css · v1.6.4 · PROMPT 46 v1 */
+
+.rail {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 32px;
+  background: var(--bg-hero-mist);
+  overflow-x: auto;
+  white-space: nowrap;
+  font-family: var(--font-sans);
+}
+
+.yourTime {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.yourDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.yourLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.scroll {
+  display: flex;
+  gap: 32px;
+  flex: 1;
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  min-width: 64px;
+  border-bottom: 2px solid transparent;
+  transition: background 220ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.cell:hover { background: var(--bg-hero-mist); }
+.cell:focus {
+  outline: 0;
+  box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40);
+}
+
+.cell[data-active="true"] {
+  border-bottom: 2px solid var(--earth-blue);
+}
+
+.time {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--text-primary);
+}
+
+.cell[data-active="true"] .time {
+  font-size: 64px;
+  font-weight: 400;
+  color: var(--earth-blue);
+}
+
+.name {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.offset {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+.rail--default { /* 默认 */ }
+.rail--hover { background: var(--bg-hero-mist); }
+.rail--focus { outline: 0; box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40); }
+.rail--active { /* N/A */ }
+.rail--disabled { opacity: 0.5; }
+.rail--success { /* N/A */ }

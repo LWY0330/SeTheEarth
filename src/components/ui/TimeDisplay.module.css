@@ -1,0 +1,22 @@
+/* TimeDisplay.module.css · v1.6.4 · PROMPT 46 v1 */
+
+.time {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-weight: 300;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.time--sm { font-size: 22px; }
+.time--md { font-size: 32px; }
+.time--lg { font-size: 64px; }
+.time--xl { font-size: 80px; font-weight: 400; }
+
+.time--default { /* 默认 */ }
+.time--hover { color: var(--earth-blue); }
+.time--focus { outline: 0; box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40); }
+.time--active { transform: scale(0.99); }
+.time--disabled { opacity: 0.5; cursor: not-allowed; }
+.time--success { color: var(--success-green); }

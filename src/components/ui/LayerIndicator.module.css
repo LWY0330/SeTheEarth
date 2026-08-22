@@ -1,0 +1,36 @@
+/* LayerIndicator.module.css · v1.6.4 · PROMPT 46 v1 */
+
+.indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.kicker {
+  white-space: nowrap;
+}
+
+.indicator--default { /* 默认 */ }
+.indicator--hover { color: var(--earth-blue); }
+.indicator--focus {
+  outline: 0;
+  box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40);
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+.indicator--active { transform: scale(0.99); }
+.indicator--disabled { opacity: 0.5; cursor: not-allowed; }
+.indicator--success { /* Success N/A */ }
