@@ -18,7 +18,9 @@ import CityIndex from '@/components/CityIndex';
 import MomentsTimeline from '@/components/MomentsTimeline';
 import EventDrawer from '@/components/EventDrawer';
 import CityPage from '@/components/CityPage';
+import UniversalCityPage from '@/components/UniversalCityPage';
 import UnknownCoordinate from '@/components/UnknownCoordinate';
+import { isUniversalCityPageEnabled } from '@/lib/featureFlags';
 import CityIndexPage from '@/components/CityIndexPage';
 import AboutPage from '@/components/AboutPage';
 import Meta from '@/components/Meta';
@@ -366,6 +368,12 @@ function AppRoutes() {
     return <main><AboutPage /></main>;
   }
   if (route.name === 'city') {
+    // v1.6.3 · PROMPT 44 v1:Router 双轨
+    // - VITE_USE_UNIVERSAL_CITYPAGE=true  → UniversalCityPage(Phase 2 收口组件)
+    // - VITE_USE_UNIVERSAL_CITYPAGE=false → 保留 legacy v1.4 CityPage(默认)
+    if (isUniversalCityPageEnabled()) {
+      return <main><UniversalCityPage /></main>;
+    }
     return <main><CityPage /></main>;
   }
   if (route.name === 'unknown') {
