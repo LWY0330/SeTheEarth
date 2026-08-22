@@ -1,16 +1,31 @@
 # 看见地球 · See Earth
 
-> 沿时间轴穿越地球四十六亿年历史的交互式应用 — **当前 v1.6.3**
+> 沿时间轴穿越地球四十六亿年历史的交互式应用 — **当前 v1.6.3(Phase 2 收口)**
 
 | 维度 | 状态 |
 |---|---|
-| **当前版本** | v1.6.3 ✅ delivered(2026-08-22) |
-| **下一里程碑** | Phase 2.5 收口 → Phase 3 Component Library 启动 |
-| **已合并** | M0 → v1.0 → v1.1 → v1.2 → v1.3 (PWA + a11y) → v1.4 (5 段 CityPage + 11 城市) → v1.5 (Lighthouse + hotkeys) → **v1.6 (Phase 0 数据架构 + Phase 1 决策点 + Phase 2 Universal CityPage scaffold + Phase 2.5 Unknown Coordinate)** |
+| **当前版本** | v1.6.3 ✅ Phase 2 收口(2026-08-22) |
+| **下一里程碑** | Phase 3 Component Library(等设计师 PROMPT 40 收口) |
+| **已合并** | M0 → v1.0 → v1.1 → v1.2 → v1.3 (PWA + a11y) → v1.4 (5 段 CityPage + 11 城市) → v1.5 (Lighthouse + hotkeys) → **v1.6 (Phase 0 数据架构 + Phase 1 决策点 + Phase 2 Universal CityPage 工程 + Phase 2.5 Unknown Coordinate)** |
 | **Branch** | `main` (latest merged) · `codex/v1.6-p36-data-arch` (v1.6 + v1.6.1 + v1.6.2 + v1.6.3 当前分支) |
-| **测试** | `npm run test` — **285 / 285 pass** |
+| **测试** | `npm run test` — **285 / 285 pass**(+ 90 component tests 待 Vitest 迁移) |
 | **类型** | `npm run typecheck` — 0 errors |
-| **Bundle** | 239.06 KB(gzip 85.13 KB,+9.22KB vs v1.5,Unknown Coordinate 组件合理开销)|
+| **Bundle** | 239.06 KB(gzip 85.13 KB,Phase 2 收口持平)|
+
+## 🚦 Feature Flag: Universal CityPage
+
+`/cities/:slug` 路由支持双轨(Phase 2 收口):
+
+| `VITE_USE_UNIVERSAL_CITYPAGE` | 行为 |
+|---|---|
+| `true` | 渲染 `<UniversalCityPage />`(Phase 2 收口组件)|
+| `false`(默认)| 保留 legacy v1.4 `<CityPage />` |
+
+**设置方法**:`.env` 加 `VITE_USE_UNIVERSAL_CITYPAGE=true`,Vite build 时静态替换。
+
+详见 `docs/universal-city-page.md` + `src/lib/featureFlags.ts`。
+
+---
 
 > M0 目标:搭建可运行的项目骨架,验证核心叙事组件 —— 一颗会自转的地球 + 一条
 > 9 节点的时间轴。后续 milestone 会逐步替换静态数据并接入真实地图瓦片。
