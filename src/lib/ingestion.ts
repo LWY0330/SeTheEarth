@@ -226,6 +226,18 @@ export function validateCity(city: NormalizedCity): ValidateResult {
   }
   // spec §17 acceptance:数据源可追溯（source_url 必填）
   // Phase 0 加非阻塞 warning:legacy / 手工录入的城市可能缺 source_url,Phase 1+ 接入 Editorial CMS 后转阻塞
+  //
+  // v1.6.1 升级路径标记（PROMPT 39 v1 PM 派发）:
+  // 当以下条件满足时,应把此 warning 提升为 errors.push('source_url 必填'):
+  //   1. Editorial CMS 接入并就绪（不再支持手工录入）
+  //   2. Phase 3 接入 GeoNames / Wikipedia 数据源
+  //   3. 所有现存 legacy 城市已补 source_url
+  // 升级步骤:
+  //   a) 修改 warnings.push 为 errors.push
+  //   b) 加 regression test:缺失 source_url 必须 fail validateCity
+  //   c) 更新 ingestion.test.ts 的 GOOD fixture（确保 source_url 必填）
+  //   d) 删除本注释段
+  // 详见:05-项目现状/d6-phase-1-decisions-implementation.md
   if (!city.source_url || city.source_url.trim().length === 0) {
     warnings.push('source_url 缺失（§17 数据源可追溯;Phase 0 非阻塞,Phase 1+ 接入 Editorial CMS 后转阻塞）');
   }
