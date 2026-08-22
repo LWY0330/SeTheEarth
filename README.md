@@ -1,16 +1,30 @@
 # 看见地球 · See Earth
 
-> 沿时间轴穿越地球四十六亿年历史的交互式应用 — **当前 v1.6.3(Phase 2 收口)**
+> 沿时间轴穿越地球四十六亿年历史的交互式应用 — **当前 v1.6.4(Phase 3 Component Library 收口)**
 
 | 维度 | 状态 |
 |---|---|
-| **当前版本** | v1.6.3 ✅ Phase 2 收口(2026-08-22) |
-| **下一里程碑** | Phase 3 Component Library(等设计师 PROMPT 40 收口) |
-| **已合并** | M0 → v1.0 → v1.1 → v1.2 → v1.3 (PWA + a11y) → v1.4 (5 段 CityPage + 11 城市) → v1.5 (Lighthouse + hotkeys) → **v1.6 (Phase 0 数据架构 + Phase 1 决策点 + Phase 2 Universal CityPage 工程 + Phase 2.5 Unknown Coordinate)** |
-| **Branch** | `main` (latest merged) · `codex/v1.6-p36-data-arch` (v1.6 + v1.6.1 + v1.6.2 + v1.6.3 当前分支) |
-| **测试** | `npm run test` — **285 / 285 pass**(+ 90 component tests 待 Vitest 迁移) |
+| **当前版本** | v1.6.4 ✅ Phase 3 Component Library 收口(2026-08-22) |
+| **下一里程碑** | Phase 4 Dark Mode / Direction A1(8/19 路线图下一站) |
+| **已合并** | M0 → v1.0 → v1.1 → v1.2 → v1.3 (PWA + a11y) → v1.4 (5 段 CityPage + 11 城市) → v1.5 (Lighthouse + hotkeys) → **v1.6 (Phase 0 数据架构 + Phase 1 决策点 + Phase 2 Universal CityPage 工程 + Phase 3 Component Library 14 组件)** |
+| **Branch** | `main` (latest merged) · `codex/v1.6-p36-data-arch` (v1.6 + v1.6.1 + v1.6.2 + v1.6.3 + v1.6.4 当前分支) |
+| **测试** | `npm run test` — **303 / 303 pass**(+ 90 component tests 待 Vitest 迁移) |
 | **类型** | `npm run typecheck` — 0 errors |
-| **Bundle** | 239.06 KB(gzip 85.13 KB,Phase 2 收口持平)|
+| **Bundle** | 253.57 KB(gzip 89.98 KB,+14.51KB vs v1.5)|
+
+## 🧩 Component Library(Phase 3 收口)
+
+**14 跨页面可复用 React 组件** 在 `src/components/ui/`:
+
+| 优先级 | 组件 | 复用范围 |
+|---|---|---|
+| P0(基础)| `GlobalHeader` / `HeroMedia` / `TimeDisplay` / `LayerIndicator` / `SameSecond` / `EchoInput` | 3 页面共享 |
+| P1(常用)| `SectionHeader` / `WorldTimeRail` / `TimeComparison` / `LocationMeta` / `OneScene` / `DistanceNavigation` | 跨页面 / City Detail |
+| P2(Unknown)| `CoordinateWindow` / `RevealMeta` | Unknown Coordinate |
+
+**6 状态**:`default` / `hover` / `focus`(Earth Blue 焦点圈) / `active` / `disabled` / `success`
+
+**12 类 token 体系** — 详见 `docs/css-tokens.md` + `docs/component-library.md` + `src/components/ui/README.md`
 
 ## 🚦 Feature Flag: Universal CityPage
 

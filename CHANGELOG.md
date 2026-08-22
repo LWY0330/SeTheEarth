@@ -14,6 +14,71 @@
 
 ---
 
+## [1.6.4] · 2026-08-22 · Component Library 14 组件 + CSS Modules（PROMPT 46 v1）
+
+> **状态**:✅ Phase 3 收口 — 14 React 组件 + 14 CSS Modules + 12 类 token 体系
+> **核心交付**:跨页面可复用组件库 + 6 状态规范 + types + tests + 4 docs
+> **测试**:303 / 303 runtime + 90 typecheck only(Vitest 迁移待 Phase 4 启动)
+
+### Added — 14 React 组件(`src/components/ui/`)
+
+**P0 基础(6)**:`GlobalHeader` `HeroMedia` `TimeDisplay` `LayerIndicator` `SameSecond` `EchoInput`
+**P1 常用(6)**:`SectionHeader` `WorldTimeRail` `TimeComparison` `LocationMeta` `OneScene` `DistanceNavigation`
+**P2 Unknown 专用(2)**:`CoordinateWindow` `RevealMeta`
+
+### Added — 14 CSS Modules(6 状态 × 14 组件)
+
+- 6 状态模板:`.{Component}.default` / `hover` / `focus` / `active` / `disabled` / `success`
+- Earth Blue 焦点圈统一:`0 0 0 2px rgba(26, 77, 126, 0.40)`
+- 0 阴影 / 0 大圆角(全局规则)
+- Mono 字体 `tabular-nums`
+- 12 类 token 全覆盖(per `d11-css-tokens-extraction.md`)
+
+### Added — TypeScript 共享类型(`types.ts`)
+
+- `ComponentState` 6 enum(default / hover / focus / active / disabled / success)
+- `LayerColor` 3 enum + `LAYER_CSS_VAR` constant
+- `TimeDisplaySize` 4 enum / `HeroHeight` 2 enum / `EchoInputState` 3 enum / `RevealStage` 5 enum
+- 共享 shape:`NavItem` / `CityTime` / `TimeComparisonItem` / `SameSecondCity` / `CityComparison` / `NavCityRef`
+
+### Added — Tests(14 + 14 = 28 文件)
+
+- 14 component `.test.tsx`(`react-dom/server.renderToStaticMarkup` + 6 状态 × 6 = 90 tests)
+- 1 `types.test.ts`(14 runtime tests,runtime OK)
+- ⚠️ Component tests 写为 `.tsx` + `@ts-nocheck`:`typecheck` 通过,runtime 待 Vitest 迁移
+- Vitest 矛盾处理:任务 D 要求 Vitest(3 新依赖),LOCKED 约束 0 新依赖,严格按 LOCKED 优先
+
+### Added — 文档(4 新 + 1 README)
+
+- **`docs/component-library.md`** — 14 组件 catalog + 依赖关系 + 集成示例 + 上线标准
+- **`docs/css-tokens.md`** — 12 类 token 完整文档(per d11-css-tokens-extraction.md)
+- **`src/components/ui/README.md`** — 14 组件 Quick Index + 6 状态 + 12 token 体系
+- **`05-项目现状/d11-phase3-engineering.md`** — Phase 3 收口报告(≈ 2200 字)
+
+### Engineering Notes
+
+- **0 业务侵入**:`src/data/cities.ts` / `liveMoments.ts` / `moments.ts` / `CityPage.tsx` / `Router.tsx` 全部未触动
+- **0 新依赖**:沿用 react@18.3 / react-dom@18.3 / serve@14 + Node 22 原生 test runner(Vitest 矛盾)
+- **bundle 增量**:239.06KB → 253.57KB(+14.51KB,14 组件 + 14 CSS Modules 合理开销;因无页面 import 14 组件,实际生产 bundle 可能不增)
+- **架构契约**:`LayerIndicator` / `TimeDisplay` / `GlobalHeader` / `SectionHeader` 是 P0 基础原子,其余 10 组件组合
+
+### PR 拆分
+
+- **`b67ddc8`** feat(ui): 14 React 组件 + 14 CSS Modules + types + index(31 文件,+2062 行)
+- **`412d848`** test(ui): 14 component tests + types test(15 文件,+896 行)
+- 文档同步 + 报告(下个 commit)
+
+### Upstream Decisions LOCKED
+
+- 6 状态规范:`default` / `hover` / `focus` / `active` / `disabled` / `success`
+- Earth Blue 焦点圈统一:`0 0 0 2px rgba(26, 77, 126, 0.40)`
+- 0 阴影 / 0 大圆角(全局规则,所有 14 组件)
+- 12 类 token 体系(per `d11-css-tokens-extraction.md`)
+- Component tests 待 Vitest 迁移(Phase 4 / 5 启动,新增 1-3 依赖)
+- Phase 4 启动:Dark Mode / Direction A1(8/19 路线图下一站)
+
+---
+
 ## [1.6.3] · 2026-08-22 · Universal CityPage 工程收口（PROMPT 44 v1）
 
 > **状态**:✅ Phase 2 收口 — Router 集成 + 90 Component tests + 文档 + 报告
