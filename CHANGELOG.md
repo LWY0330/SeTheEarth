@@ -14,6 +14,91 @@
 
 ---
 
+## [1.6.3] · 2026-08-22 · Unknown Coordinate 工程实施（PROMPT 43 v1）
+
+> **状态**:✅ 完整交付 — 5 tasks + 7 commits · 285 / 285 tests pass · 0 业务侵入 · 0 新依赖
+> **核心交付**:5 stage Reveal 引擎 + City Detail 整合 + 摄影管理 + 坐标反查 + React 组件 + /unknown 路由 + 15 SVG mockup
+> **测试**:285 / 285 pass(Phase 0:77 + Phase 1 prep:32 + PROMPT 39:74 + PROMPT 41:43 + PROMPT 43:59)
+
+### Added — 库(`src/lib/`)
+
+- **`unknownReveal.ts`** — 5 stage 状态机(createRevealController factory)
+  - start / pause / resume / reset / advance(stage) / getState / subscribe / destroy
+  - state 永远返回 frozen copy,Stage 4 → 5 仅用户点击触发
+- **`unknownReveal.config.ts`** — DEFAULT_REVEAL_CONFIG (5/8/12s + 800ms) + TEST_REVEAL_CONFIG (50/80/120ms)
+- **`cityFromCoordinates.ts`** — Haversine 公式 + 12 城 CITY_RECORDS
+  - findCityByCoordinates(lat, lon, options.maxDistanceKm=200):city_id | null
+  - §12 Disambiguation 规则:同名不同城市按距离 disambiguate
+- **`unknownToCity.ts`** — Reveal → City 完整对象映射
+  - revealCityFromCoordinates(coords, currentData?):双路径 lookup
+  - buildUnknownToCityHref(coords):'/cities/:slug' URL 生成
+  - MEXICO_CITY_COORDINATES:23.6345°N -102.5528°W(per spec d10 §2.1)
+- **`photoSource.ts`** — §2.8.9 Image Sourcing 实施
+  - getPhotoForUnknownStage(stage 1-5):PhotoAsset
+  - validatePhotoAsset:12 字段校验
+  - isEditorialSourceApproved:§2.8.8 Red Layer Image Ethics 审核
+  - comparePhotoSource:8 source 优先级排序(Editorial > Stock)
+
+### Added — 数据(`src/data/`)
+
+- **`photoAssets.ts`** — UNKNOWN_PHOTO_BY_STAGE 5 stage preset
+  - PhotoAsset interface 13 字段(per spec §2.8.9 Required Metadata 12 + role)
+  - PhotoSourceType 8 字面量(reuters/ap/adobe-editorial/shutterstock-editorial/wikimedia/unsplash/pexels/manual)
+  - PHOTO_SOURCE_PRIORITY 8 顺序:Editorial > Stock
+
+### Added — 组件(`src/components/`)
+
+- **`UnknownCoordinate.tsx`** — 5 stage Reveal React 组件(220 行)
+  - 集成 createRevealController + getPhotoForUnknownStage + revealCityFromCoordinates
+  - 5 状态机 body.stage-N(对应 React state)
+  - Stage 5 用户点击 → navigate.push('/cities/:slug')
+  - 5 manual 按钮(PM 评审用)
+
+### Added — 路由集成(`src/router/Router.tsx` + `src/App.tsx`)
+
+- **`/unknown` 路由** — Route union 加 'unknown' / matchRoutes 加 '/unknown' / AppRoutes 加分支
+- **Stage 5 → /cities/:slug redirect** — 用户点击"进入此刻"按钮
+
+### Added — Mockup(`outputs/v1.5-mockups/d10-unknown-coordinate/`)
+
+- **15 SVG mockup 文件**(5 stages × 3 breakpoints = 1440/1680/1920)
+- **SVG 替代 PNG** — 0 新依赖硬约束(Playwright/puppeteer 不可用)
+- **scripts/render-unknown-svg.sh** — bash 生成器(可重新生成)
+- **scripts/screenshot-unknown.js** — 可选 Playwright 脚本(用户安装后跑,生成 PNG)
+
+### Added — 文档
+
+- **`docs/unknown-coordinate.md`** — 架构 + 使用文档(Reveal 引擎 + City Detail 整合 + 摄影管理 + 路由集成)
+- **`05-项目现状/d10-phase2.5-engineering.md`** — 工程实现报告(≥ 1500 字)
+
+### Engineering Notes
+
+- **0 业务侵入**:`src/data/cities.ts` / `liveMoments.ts` / `moments.ts` / `CityPage.tsx` 全部未触动
+- **0 新依赖**:沿用 react@18.3 / react-dom@18.3 / serve@14 + Node 22 原生 test runner
+- **测试覆盖**:PROMPT 43 v1 新增 59 tests(unknownReveal 19 + cityFromCoordinates 12 + photoSource 16 + unknownToCity 12)
+- **bundle 增量**:229.84KB → 239.06KB(+9.22KB,Unknown Coordinate 组件合理开销)
+- **build 时间**:542ms,与 v1.5 持平
+
+### PR 拆分(per PM 任务)
+
+- **`28eb69c`** feat(lib): Unknown Coordinate Reveal engine (任务 A)
+- **`d148499`** feat(lib): cityFromCoordinates (任务 D)
+- **`d6cdc33`** feat(lib+data): photoSource + photoAssets (任务 C)
+- **`a4c2334`** feat(lib): unknownToCity (任务 B)
+- **`bb0e896`** feat(components+router): UnknownCoordinate React component + /unknown route (任务 A + 路由)
+- **`6e6788f`** feat(mockups): Unknown Coordinate 15 SVG mockups (任务 G)
+- 文档同步 + 报告(下个 commit)
+
+### Upstream Decisions LOCKED
+
+- 5 stage Reveal 节奏:5s / 8s / 12s + 800ms transition
+- 阶段 1-4 city_id 为 null(未 Reveal),Stage 5 = mexico-city
+- §2.8.8 Red Layer Ethics:editorial_only=true + usage_restriction 必填
+- §2.8.9 Image Sourcing:8 source 优先级排序(Editorial > Stock)
+- §12 Disambiguation:同名按坐标 disambiguate
+
+---
+
 ## [1.6.2] · 2026-08-22 · Universal CityPage first pass scaffold（PROMPT 41 v1）
 
 > **状态**:🟡 SCAFFOLD 完成 — 4 hooks + 5 components + feature flag 就绪,Router 集成 deferred

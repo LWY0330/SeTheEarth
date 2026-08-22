@@ -1,16 +1,16 @@
 # 看见地球 · See Earth
 
-> 沿时间轴穿越地球四十六亿年历史的交互式应用 — **当前 v1.6.2**
+> 沿时间轴穿越地球四十六亿年历史的交互式应用 — **当前 v1.6.3**
 
 | 维度 | 状态 |
 |---|---|
-| **当前版本** | v1.6.2 🟡 scaffold(2026-08-22) |
-| **下一里程碑** | Phase 2 — Router 集成 + component tests + mockup 视觉 |
-| **已合并** | M0 → v1.0 → v1.1 → v1.2 → v1.3 (PWA + a11y) → v1.4 (5 段 CityPage + 11 城市) → v1.5 (Lighthouse + hotkeys) → **v1.6 (Phase 0 数据架构 + Phase 1 决策点扩展 + Phase 2 Universal CityPage scaffold)** |
-| **Branch** | `main` (latest merged) · `codex/v1.6-p36-data-arch` (v1.6 + v1.6.1 + v1.6.2 当前分支) |
-| **测试** | `npm run test` — **226 / 226 pass** |
+| **当前版本** | v1.6.3 ✅ delivered(2026-08-22) |
+| **下一里程碑** | Phase 2.5 收口 → Phase 3 Component Library 启动 |
+| **已合并** | M0 → v1.0 → v1.1 → v1.2 → v1.3 (PWA + a11y) → v1.4 (5 段 CityPage + 11 城市) → v1.5 (Lighthouse + hotkeys) → **v1.6 (Phase 0 数据架构 + Phase 1 决策点 + Phase 2 Universal CityPage scaffold + Phase 2.5 Unknown Coordinate)** |
+| **Branch** | `main` (latest merged) · `codex/v1.6-p36-data-arch` (v1.6 + v1.6.1 + v1.6.2 + v1.6.3 当前分支) |
+| **测试** | `npm run test` — **285 / 285 pass** |
 | **类型** | `npm run typecheck` — 0 errors |
-| **Bundle** | 229.84 KB(gzip 82.32 KB,v1.5 持平)|
+| **Bundle** | 239.06 KB(gzip 85.13 KB,+9.22KB vs v1.5,Unknown Coordinate 组件合理开销)|
 
 > M0 目标:搭建可运行的项目骨架,验证核心叙事组件 —— 一颗会自转的地球 + 一条
 > 9 节点的时间轴。后续 milestone 会逐步替换静态数据并接入真实地图瓦片。
@@ -78,6 +78,33 @@
 
 **详细报告**:见 `05-项目现状/d9-universal-city-page-engineering.md`
 **架构文档**:见 `docs/universal-city-page.md`
+
+---
+
+## 📍 v1.6.3 · Unknown Coordinate 工程实施（PROMPT 43 v1）
+
+**核心交付**(6 commits,11 新文件 + 2 scripts + 15 SVG mockups,**+59 测试**):
+
+- **5 stage Reveal 引擎** — `unknownReveal.ts` 状态机(setTimeout 5/8/12s) + `unknownReveal.config.ts` 配置 + 19 tests
+- **City Detail 整合** — `unknownToCity.ts` 坐标反查 + `buildUnknownToCityHref` URL 生成 + 12 tests
+- **摄影管理** — `photoSource.ts` §2.8.9 优先级排序 + `photoAssets.ts` 5 stage preset + 16 tests
+- **坐标反查** — `cityFromCoordinates.ts` Haversine + 12 城 records + 12 tests
+- **React 组件** — `UnknownCoordinate.tsx` 5 stage UI + manual 按钮(PM 评审)
+- **路由集成** — `/unknown` 路径 + Stage 5 → `/cities/:slug` redirect
+- **15 SVG mockup** — 5 stages × 3 breakpoints,SVG 替代 PNG(0 新依赖硬约束)
+
+**关键边界**:
+- ✅ 零业务文件侵入(`cities.ts` / `liveMoments.ts` / `moments.ts` / `CityPage.tsx` 全部未触动)
+- ✅ 零新依赖(沿用 react@18.3 + react-dom + Node 22 原生 test runner)
+- ✅ §2.8.8 Red Layer Image Ethics 合规(`isEditorialSourceApproved` 校验)
+- ✅ §2.8.9 Image Sourcing 优先级(Editorial > Stock,8 source 字面量)
+- ✅ §12 Disambiguation 规则(同名不同城市按坐标 disambiguate)
+- 🟡 SVG mockup 替代 PNG(Playwright/puppeteer 受 0 新依赖约束;提供 `scripts/screenshot-unknown.js` 用户安装后跑)
+
+**详细报告**:见 `05-项目现状/d10-phase2.5-engineering.md`
+**架构文档**:见 `docs/unknown-coordinate.md`
+
+---
 
 **详细报告**:见 `05-项目现状/d6-global-coverage-data-architecture.md`
 **字段交叉验证**:见 `05-项目现状/d6-phase-1-prep-cross-validation.md`
