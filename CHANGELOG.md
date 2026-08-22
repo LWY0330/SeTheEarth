@@ -14,6 +14,67 @@
 
 ---
 
+## [1.6.2] · 2026-08-22 · Universal CityPage first pass scaffold（PROMPT 41 v1）
+
+> **状态**:🟡 SCAFFOLD 完成 — 4 hooks + 5 components + feature flag 就绪,Router 集成 deferred
+> **核心交付**:5 City States 数据接入层(hooks)+ 4 屏组件骨架 + VITE_USE_UNIVERSAL_CITYPAGE env flag
+> **测试**:226 / 226 pass(Phase 0:77 + Phase 1 prep:32 + PROMPT 39:74 + PROMPT 41 v1:43)
+
+### Added — Hooks(`src/hooks/`)
+
+- **`useCityData(slug)`** — 从 slug 取 Universal City,内部用 `legacyToUniversal` adapter 映射 legacy 12 城 → Universal City
+- **`useDynamicCity(city)`** — 运行时计算 `local_time`(HH:MM)+ `user_time_difference`(+9H / -4H 等),30s 自动 tick,Intl.DateTimeFormat DST 安全
+- **`useMomentsForCity(city_id)`** — 取关联 Moment[],内部用 `liveEventToUniversal`(27 字段 LiveEvent → 17 字段 Universal)+ `legacyMomentToUniversal`(10 字段静态 Moment → Universal)双 adapter
+- **`useLayerFromCity(city)`** — 推断 Layer (blue/yellow/red/unknown),基于 city_id 关键字(Phase 1 临时,Phase 2 editorial override)
+
+### Added — Components(`src/components/`)
+
+- **`UniversalCityPage`** — 主组件,接收 `city? / moments? / plan?`(可选外部传入,默认从 slug 取),调用 `planCityPageRender(city)` 决定 4 屏渲染
+- **`UniversalArrival`** — 屏 01 · Context Hero,城市名 + 双时区 + 坐标 + layer 标识
+- **`UniversalOneScene`** — 屏 02 · Now 屏,9/3 列骨架 + Empty CTA "Be the first to show here today."
+- **`UniversalSameSecond`** — 屏 03 · Now 横向对比,3 栏并置(排除当前城市)+ Intl.DateTimeFormat 各城市当前时间
+- **`UniversalEcho`** — 屏 04 · Echo,6 状态(default/hover/focus/typing/disabled/submitted)+ 隐私 microcopy + 0/80 字数 + 提交对勾
+
+### Added — Feature Flag(`src/lib/featureFlags.ts`)
+
+- **`VITE_USE_UNIVERSAL_CITYPAGE`** env var 解析(`true`/`1`/`yes` → true;默认 false)
+- **`loadFeatureFlags()`** — frozen FeatureFlags 对象(import.meta.env 优先 + Node 兜底)
+- **`isUniversalCityPageEnabled()`** — 便捷访问
+- **`DEFAULT_FLAGS`** — frozen 默认(SSR / 测试兜底)
+
+### Changed
+
+- **`package.json`** — test glob 扩展 `src/hooks/*.test.ts`(支持 hooks 测试发现)
+
+### Documentation
+
+- `docs/universal-city-page.md` — 架构 + 使用文档(组件 API + hooks API + feature flag + 5 States 文案 + 上线标准对照)
+- `05-项目现状/d9-universal-city-page-engineering.md` — 工程实现报告(≥ 1500 字)
+
+### Engineering Notes
+
+- **0 业务侵入**:`src/data/cities.ts` / `liveMoments.ts` / `moments.ts` / `CityPage.tsx` 全部未触动
+- **0 新依赖**:沿用 react@18.3 / react-dom@18.3 / serve@14 + Node 22 原生 test runner
+- **测试覆盖**:PROMPT 41 v1 新增 43 tests(useCityData 12 + useDynamicCity 12 + useMomentsForCity 8 + useLayerFromCity 6 + featureFlags 5)
+- **Router 集成 deferred**:任务 A.6(Router 切换)下 session 实施,本 session 仅组件骨架
+- **Component tests deferred**:任务 C 剩余 90 tests 下 session 实施(需 react-dom/server 渲染)
+- **CSS module files deferred**:5 个 `*.module.css` 下 session 实施(Phase 2 视觉)
+
+### PR 拆分(per PM 任务 B)
+
+- **PR-6 (本任务)**:Universal CityPage scaffold(2 commits)
+  - 82936d5 feat(hooks): 4 Universal CityPage hooks + 38 tests
+  - 1b6ede6 feat(components): Universal CityPage 5 components + feature flags
+
+### Deferred to Phase 2
+
+- ⏳ Router 集成(`src/router/Router.tsx` + `src/App.tsx` + feature flag 切换)
+- ⏳ Component tests(90 tests,需 react-dom/server 渲染)
+- ⏳ CSS module 文件(5 个 *.module.css)
+- ⏳ Designer mockup LOCKED 后视觉层精修
+
+---
+
 ## [1.6.1] · 2026-08-19 · Phase 1 决策点实施（PROMPT 39 v1）
 
 > **状态**:✅ 已交付 — 7 commits(PR-4 + PR-5.1-5.5 + ingestion marker)

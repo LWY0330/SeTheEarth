@@ -1,14 +1,14 @@
 # 看见地球 · See Earth
 
-> 沿时间轴穿越地球四十六亿年历史的交互式应用 — **当前 v1.6.1**
+> 沿时间轴穿越地球四十六亿年历史的交互式应用 — **当前 v1.6.2**
 
 | 维度 | 状态 |
 |---|---|
-| **当前版本** | v1.6.1 ✅ delivered(2026-08-19) |
-| **下一里程碑** | v1.6 Phase 1 业务接入(等 4 项设计 Gate) |
-| **已合并** | M0 → v1.0 → v1.1 → v1.2 → v1.3 (PWA + a11y) → v1.4 (5 段 CityPage + 11 城市) → v1.5 (Lighthouse + hotkeys) → **v1.6 (Phase 0 数据架构 + Phase 1 决策点扩展)** |
-| **Branch** | `main` (latest merged) · `codex/v1.6-p36-data-arch` (v1.6 + v1.6.1 当前分支) |
-| **测试** | `npm run test` — **183 / 183 pass** |
+| **当前版本** | v1.6.2 🟡 scaffold(2026-08-22) |
+| **下一里程碑** | Phase 2 — Router 集成 + component tests + mockup 视觉 |
+| **已合并** | M0 → v1.0 → v1.1 → v1.2 → v1.3 (PWA + a11y) → v1.4 (5 段 CityPage + 11 城市) → v1.5 (Lighthouse + hotkeys) → **v1.6 (Phase 0 数据架构 + Phase 1 决策点扩展 + Phase 2 Universal CityPage scaffold)** |
+| **Branch** | `main` (latest merged) · `codex/v1.6-p36-data-arch` (v1.6 + v1.6.1 + v1.6.2 当前分支) |
+| **测试** | `npm run test` — **226 / 226 pass** |
 | **类型** | `npm run typecheck` — 0 errors |
 | **Bundle** | 229.84 KB(gzip 82.32 KB,v1.5 持平)|
 
@@ -55,6 +55,29 @@
 
 **详细报告**:见 `05-项目现状/d6-phase-1-decisions-implementation.md`
 **决策追溯**:见 `05-项目现状/d6-phase-1-prep-cross-validation.md`
+
+---
+
+## 📍 v1.6.2 · Universal CityPage first pass scaffold（PROMPT 41 v1）
+
+**核心交付**(2 commits,10 新文件 + 1 配置微调,**+43 测试**):
+
+- **4 Hooks** — `useCityData` / `useDynamicCity` / `useMomentsForCity` / `useLayerFromCity`(数据接入层)
+- **5 Components** — `UniversalCityPage` 主组件 + `UniversalArrival` / `UniversalOneScene` / `UniversalSameSecond` / `UniversalEcho` 4 屏组件骨架
+- **Feature Flag** — `VITE_USE_UNIVERSAL_CITYPAGE` env var,`loadFeatureFlags()` / `isUniversalCityPageEnabled()` 解析
+- **3 Adapters** — `legacyToUniversal` (City) + `liveEventToUniversal` + `legacyMomentToUniversal` (Moment),Phase 0 类型与 legacy 数据桥接
+- **架构文档** — `docs/universal-city-page.md`(组件 API + hooks API + 5 States 文案 + feature flag)
+
+**关键边界**:
+- ✅ 零业务文件侵入(`cities.ts` / `liveMoments.ts` / `moments.ts` / `CityPage.tsx` / `Router.tsx` 全部未触动)
+- ✅ 零新依赖(沿用 react@18.3 + react-dom)
+- ✅ Phase 0 / Phase 1 类型与逻辑全部不动
+- 🟡 Scaffold 阶段:渲染结构稳定 + 占位文案,Phase 2+ 对接 designer mockup 视觉精修
+- 🟡 Router 集成 deferred 到 Phase 2(feature flag 已就绪,切换逻辑下 session 实施)
+- 🟡 Component tests (90 tests) deferred 到 Phase 2(需 react-dom/server 渲染)
+
+**详细报告**:见 `05-项目现状/d9-universal-city-page-engineering.md`
+**架构文档**:见 `docs/universal-city-page.md`
 
 **详细报告**:见 `05-项目现状/d6-global-coverage-data-architecture.md`
 **字段交叉验证**:见 `05-项目现状/d6-phase-1-prep-cross-validation.md`
