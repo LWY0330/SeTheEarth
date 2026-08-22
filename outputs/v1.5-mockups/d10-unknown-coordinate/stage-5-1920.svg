@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 900" width="1920" height="900" preserveAspectRatio="xMidYMid meet">
+  <!-- Background:深色 + Earth Blue 渐变(per spec §4.1) -->
+  <defs>
+    <linearGradient id="bg-1920" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1A2D40" />
+      <stop offset="60%" stop-color="#264A73" />
+      <stop offset="100%" stop-color="#0F1A28" />
+    </linearGradient>
+  </defs>
+
+  <!-- Page background -->
+  <rect width="1920" height="900" fill="url(#bg-1920)" />
+
+  <!-- Top nav:logo + dot(per spec §1.1) -->
+  <text x="32" y="36" font-family="Cormorant Garamond, serif" font-size="20" fill="#F7FAFC" opacity="0.9">看见地球</text>
+  <circle cx="1920-48" cy="28" r="4" fill="#4F8FE8" />
+
+  <!-- Stage meta header -->
+  <text x="32" y="300" font-family="JetBrains Mono, monospace" font-size="11" fill="#4F8FE8" letter-spacing="3.2" font-weight="500">
+    <tspan>●</tspan> UNKNOWN COORDINATE
+  </text>
+  <text x="32" y="324" font-family="JetBrains Mono, monospace" font-size="14" fill="#F7FAFC" opacity="0.5" letter-spacing="3">
+    SECOND 05 / 05
+  </text>
+
+  <!-- Quote(Stage 1-4) -->
+
+  <!-- Stage 5: 城市出现 -->
+  <text x="1920/2" y="380" text-anchor="middle" font-family="Cormorant Garamond, serif" font-size="56" fill="#11161B" font-weight="500">
+    MEXICO CITY
+  </text>
+  <text x="1920/2" y="420" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#7B8792" letter-spacing="3">
+    墨西哥城 · 07:42 · Tuesday
+  </text>
+
+  <!-- CTA 按钮 -->
+  <rect x="1920/2-90" y="450" width="180" height="48" fill="#4F8FE8" rx="2" />
+  <text x="1920/2" y="480" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="12" fill="#F7FAFC" letter-spacing="2" font-weight="500">
+    进入此刻 →
+  </text>
+
+  <!-- Footer label(SVG mockup 标识) -->
+  <text x="1920-32" y="1920" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9" fill="#F7FAFC" opacity="0.3">
+    PROMPT 43 v1 mockup · stage 5 · 1920px
+  </text>
+</svg>
