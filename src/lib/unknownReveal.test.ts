@@ -218,3 +218,102 @@ test('TEST_REVEAL_CONFIG · 测试用快速节奏', () => {
   assert.ok(TEST_REVEAL_CONFIG.stage1ToStage2Delay < 1000);
   assert.equal(Object.isFrozen(TEST_REVEAL_CONFIG), true);
 });
+
+// ─── 边缘 case 补全 ───
+
+test('start · 启动后 stage 从 1 自动推进(不阻塞)', async () => {
+  const c = createRevealController(TEST_REVEAL_CONFIG);
+  const stages: number[] = [];
+  c.subscribe((s) => stages.push(s.stage));
+  c.start();
+  await sleep(300); // 足够全部推进
+  assert.ok(stages.length >= 4, '订阅者收到 >= 4 次通知');
+  c.destroy();
+});
+
+test('pause · 暂停 0 次仍是 running=true', () => {
+  const c = createRevealController(TEST_REVEAL_CONFIG);
+  c.start();
+  assert.equal(c.getState().isPaused, false);
+  assert.equal(c.getState().isRunning, true);
+  c.destroy();
+});
+
+test('advance · 跳到 stage 1 重置位置(不变化)', () => {
+  const c = createRevealController(TEST_REVEAL_CONFIG);
+  c.start();
+  c.advance(3);
+  c.advance(1);
+  assert.equal(c.getState().stage, 1);
+  c.destroy();
+});
+
+test('advance · 跳到 stage 5 后 start 状态保留', () => {
+  const c = createRevealController(TEST_REVEAL_CONFIG);
+  c.start();
+  c.advance(5);
+  assert.equal(c.getState().stage, 5);
+  // 即使 running=true,stage 5 是终态,不再自动推进
+  assert.equal(c.getState().isRunning, true);
+  c.destroy();
+});
+
+test('reset · 不启动时 reset 不报错', () => {
+  const c = createRevealController(TEST_REVEAL_CONFIG);
+  c.reset(); // no-op
+  assert.equal(c.getState().stage, 1);
+  c.destroy();
+});
+
+test('subscribe · destroy 后订阅者不接收任何通知', () => {
+  const c = createRevealController(TEST_REVEAL_CONFIG);
+  let count = 0;
+  c.subscribe(() => count++);
+  c.destroy();
+  // destroy 后,不应有任何调用
+  assert.equal(count, 0);
+  c.destroy();
+});
+
+test('getState · 5 stage 全部返回 stage 字段正确', () => {
+  for (const s of [1, 2, 3, 4, 5] as const) {
+    const c = createRevealController(TEST_REVEAL_CONFIG);
+    c.start();
+    c.advance(s);
+    assert.equal(c.getState().stage, s, `advance(${s}) 应设置 stage=${s}`);
+    c.destroy();
+  }
+});
+
+test('delayForTransition · TEST_REVEAL_CONFIG 锁定 50/80/120ms', () => {
+  assert.equal(delayForTransition(TEST_REVEAL_CONFIG, 1), 50);
+  assert.equal(delayForTransition(TEST_REVEAL_CONFIG, 2), 80);
+  assert.equal(delayForTransition(TEST_REVEAL_CONFIG, 3), 120);
+});
+
+test('start · 启动后 subscribe 立即收到当前状态', () => {
+  const c = createRevealController(TEST_REVEAL_CONFIG);
+  const states: RevealState[] = [];
+  c.subscribe((s) => states.push({ ...s }));
+  c.start();
+  // start() 调用了 setState({ isRunning: true, ... })+ scheduleAdvance
+  // 至少 1 次通知
+  assert.ok(states.length >= 1, 'subscribe 应至少收到 1 次通知');
+  assert.equal(states[states.length - 1].isRunning, true);
+  c.destroy();
+});
+
+test('pause → resume → reset → start 完整生命周期', async () => {
+  const c = createRevealController(TEST_REVEAL_CONFIG);
+  c.start();
+  await sleep(30);
+  c.pause();
+  c.resume();
+  await sleep(20);
+  c.reset();
+  c.start();
+  await sleep(60);
+  // 重新从 stage 1 推进,至少到 stage 2
+  assert.equal(c.getState().stage, 2);
+  c.destroy();
+});

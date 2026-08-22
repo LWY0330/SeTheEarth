@@ -11,7 +11,7 @@
     "start": "serve -s dist -l 8080",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lighthouse": "bash scripts/lighthouse-ci.sh",
-    "test": "node --test --experimental-strip-types src/lib/*.test.ts src/types/*.test.ts src/hooks/*.test.ts",
+    "test": "node --test --experimental-strip-types src/lib/*.test.ts src/types/*.test.ts src/hooks/*.test.ts src/data/*.test.ts",
     "test:components": "echo '⚠️ Component tests require Vitest or tsx loader (Node 22 strip-types does not support JSX). See docs/universal-city-page.md for migration plan.'"
   },
   "dependencies": {
