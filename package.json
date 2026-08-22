@@ -11,7 +11,7 @@
     "start": "serve -s dist -l 8080",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lighthouse": "bash scripts/lighthouse-ci.sh",
-    "test": "node --test --experimental-strip-types src/lib/*.test.ts src/types/*.test.ts"
+    "test": "node --test --experimental-strip-types src/lib/*.test.ts src/types/*.test.ts src/hooks/*.test.ts"
   },
   "dependencies": {
     "react": "^18.3.1",
