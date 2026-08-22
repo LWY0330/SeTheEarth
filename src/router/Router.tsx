@@ -29,6 +29,7 @@ export type Route =
   | { name: 'home'; path: '/' }
   | { name: 'cities-index'; path: '/cities' }
   | { name: 'about'; path: '/about' }
+  | { name: 'unknown'; path: '/unknown' }
   | { name: 'city'; slug: string; path: string };
 
 export type RouteMatch = {
@@ -50,6 +51,10 @@ export function matchRoutes(path: string): RouteMatch {
   // /about → 关于本项目
   if (clean === '/about' || clean === '/about/') {
     return { name: 'about', params: {}, path: '/about' };
+  }
+  // /unknown → Unknown Coordinate Reveal(PROMPT 43 v1)
+  if (clean === '/unknown' || clean === '/unknown/') {
+    return { name: 'unknown', params: {}, path: '/unknown' };
   }
   // /cities/<slug> → 城市详情
   const cityMatch = clean.match(/^\/cities\/([a-z0-9-]+)\/?$/i);

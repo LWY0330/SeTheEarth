@@ -18,6 +18,7 @@ import CityIndex from '@/components/CityIndex';
 import MomentsTimeline from '@/components/MomentsTimeline';
 import EventDrawer from '@/components/EventDrawer';
 import CityPage from '@/components/CityPage';
+import UnknownCoordinate from '@/components/UnknownCoordinate';
 import CityIndexPage from '@/components/CityIndexPage';
 import AboutPage from '@/components/AboutPage';
 import Meta from '@/components/Meta';
@@ -366,6 +367,9 @@ function AppRoutes() {
   }
   if (route.name === 'city') {
     return <main><CityPage /></main>;
+  }
+  if (route.name === 'unknown') {
+    return <main><UnknownCoordinate /></main>;
   }
   return <HomeShell />;
 }

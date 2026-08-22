@@ -12,7 +12,7 @@ import type { City } from '@/types';
 import { legacyToUniversal } from '../hooks/useCityData.ts';
 import type { City as LegacyCity } from '../data/cities.ts';
 import { findCityByCoordinates } from './cityFromCoordinates.ts';
-import { cities, findCity } from '../data/cities.ts';
+import { findCity } from '../data/cities.ts';
 
 /**
  * CoordinatesInput · Reveal 完成时的输入坐标。
@@ -94,16 +94,6 @@ function findNearestInList(
   }
 
   return bestDistance <= 200 ? best : null; // 200km 阈值
-}
-
-/**
- * findCityFromList · 在给定数组中按 id 查找(测试用)。
- */
-function findCityFromList(
-  city_id: string,
-  list: readonly LegacyCity[],
-): LegacyCity | undefined {
-  return list.find((c) => c.id === city_id);
 }
 
 /**
