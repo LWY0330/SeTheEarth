@@ -14,6 +14,86 @@
 
 ---
 
+## [1.6.1] · 2026-08-19 · Phase 1 决策点实施（PROMPT 39 v1）
+
+> **状态**:✅ 已交付 — 7 commits(PR-4 + PR-5.1-5.5 + ingestion marker)
+> **核心交付**:PM 7 决策点的工程实现,Phase 0 接口之上扩展
+> **测试**:183 / 183 pass(Phase 0 77 + Phase 1 prep 32 + PROMPT 39 74)
+
+### Added — 类型扩展（`src/types/`）
+
+- **`CityContent`** — 5 字段 readonly(`description` / `momentZh` / `oneObservation` / `livingNote` / `cultureNote`),PM 决策 A.3
+- **`City.content?`** — City 类型加可选编辑文案层
+- **`MomentSource` / `MomentSourceType`** — 7 字面量(`reuters` / `ap` / `adobe` / `shutterstock` / `wikimedia` / `unsplash` / `manual`),PM 决策 A.4
+- **`Moment.sources?`** — Moment 加可选多源追溯数组
+- **`MomentCaptions`** — `{ zh?: string; en?: string }`,PM 决策 A.5
+- **`Moment.captions?`** — Moment 加可选 i18n 双语文案
+- **`MomentCategory`** — legacy 6 字面量(`finance` / `war` / `art` / `urban` / `nature` / `romance`),PM 决策 A.7
+- **`MomentEditorial`** — `{ category?: MomentCategory; editorialNote?: string }`,PM 决策 A.7
+- **`Moment.editorial?`** — Moment 加可选视觉/编辑层
+
+### Added — 库（`src/lib/`）
+
+- **`countryI18n.ts`** — 15 国家(11 现有 + 4 预留)× zh/en 双语,PM 决策 A.2
+- **`getCountryNameLocal(country_code, locale)`** — O(1) Map 查询
+- **`isValidCountryCode(code)`** — 严格 ISO 3166-1 alpha-2 校验
+- **`listSupportedCountryCodes()` / `listCountriesByLocale(locale)`** — 列出工具
+
+### Added — 辅助函数
+
+- **`hasCityContent(content)`** — CityContent 是否有任一字段
+- **`countCityContentFields(content)`** — CityContent 非空字段计数(0-5)
+- **`hasMomentEditorial(editorial)`** — MomentEditorial 是否有任一字段
+- **`isMomentCategory(value)`** — 严格 6 category 校验
+- **`isMomentSourceType(value)`** — 严格 7 source type 校验
+- **`getMomentCaption(moment, locale)`** — captions[locale] > caption (legacy) > undefined
+
+### Changed — 现有扩展
+
+- **`src/types/city.ts`** — City 加 `content?: CityContent`
+- **`src/types/moment.ts`** — Moment 加 `sources?` / `captions?` / `editorial?`(3 个独立 optional 字段)
+- **`src/types/index.ts`** — 不变(已 barrel re-export)
+- **`src/lib/ingestion.ts`** — source_url warning 加显式升级路径注释(Phase 1+ Editorial CMS 接入后提升为 error)
+- **`package.json`** — test glob 扩展 `src/types/*.test.ts`(基础设施,支持类型测试发现)
+
+### Documentation
+
+- `05-项目现状/d6-global-coverage-data-architecture.md` — 字段计数笔误修正(Identity 11→12, Moment 14→17)+ disclaimer,PM 决策 A.1
+- `05-项目现状/d6-phase-1-decisions-implementation.md` — 7 决策点实施报告(≥1200 字),PM 派发 PROMPT 39 v1
+- spec `global-city-coverage-system-v1.0.md` §5.2 — 加注 `witness_id(代码采用,单字段)`,PM 决策 A.6(写入 Obsidian vault)
+
+### Engineering Notes
+
+- **0 业务文件侵入**:`src/data/cities.ts` / `liveMoments.ts` / `moments.ts` / `CityPage.tsx` 全部未触动
+- **0 新依赖**:沿用 react@18.3 / react-dom@18.3 / serve@14 + Node 22 原生 test runner
+- **测试覆盖**:PROMPT 39 v1 新增 74 测试(countryI18n 19 + cityContent 14 + moment.sources 12 + moment.captions 15 + momentEditorial 14)
+- **向后兼容**:Phase 0 17 必填字段全部不动,所有新字段 optional
+- **数据/视觉分离**:editorial / captions / sources 独立类型,不污染 Phase 0 schema
+- **i18n 准备**:captions (zh/en) + countryI18n (zh/en) 双线就绪,Phase 2 UI locale-aware 渲染直接消费
+
+### Upstream Decisions LOCKED
+
+- A.1:报告笔误修正(选项 1)— 修改报告 + 加 disclaimer ✅
+- A.2:CountryZh(选项 B)— 独立 countryI18n 表 + 查表逻辑 ✅
+- A.3:编辑文案 5 字段(选项 B)— 独立 CityContent 类型 ✅
+- A.4:LiveEvent sources(选项 A)— 扩展 Moment.sources[] ✅
+- A.5:captions i18n(选项 A)— 扩展 Moment.captions { zh, en } ✅
+- A.6:author_id / witness_id — 保留 witness_id 单字段,author_id 同义 ✅
+- A.7:Moment category(选项 B)— 独立 MomentEditorial 类型 ✅
+
+### PR 拆分
+
+- **PR-4**:docs(report) — A.1 笔误修正(`cd65f09`)
+- **PR-5**:feat/fix — A.2-A.7 工程实现(6 sub-commit)
+  - A.2 countryI18n(`117a4a5`)
+  - A.3 CityContent(`b381ed0`)
+  - A.4 Moment.sources(`d5f2fa1`)
+  - A.5 Moment.captions(`58b3416`)
+  - A.7 MomentEditorial(`bbe64d4`)
+  - A.6 ingestion 升级路径注释(`9a0865f`)
+
+---
+
 ## [1.6.0] · 2026-08-19 · Phase 0 数据架构(interface-only)
 
 > **状态**:✅ 已交付 — `codex/v1.6-p36-data-arch` 分支 3 commits(70ec7d7 → 27ba7e7 → 8bcd242)

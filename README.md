@@ -1,16 +1,16 @@
 # 看见地球 · See Earth
 
-> 沿时间轴穿越地球四十六亿年历史的交互式应用 — **当前 v1.6 Phase 0**
+> 沿时间轴穿越地球四十六亿年历史的交互式应用 — **当前 v1.6.1**
 
 | 维度 | 状态 |
 |---|---|
-| **当前版本** | v1.6 Phase 0 ✅ delivered(2026-08-19) |
-| **下一里程碑** | v1.6 Phase 1 — Global City Coverage 数据架构接入(等 4 项设计 Gate) |
-| **已合并** | M0 → v1.0 → v1.1 → v1.2 → v1.3 (PWA + a11y) → v1.4 (5 段 CityPage + 11 城市) → v1.5 (Lighthouse + hotkeys) |
-| **Branch** | `main` (latest merged) · `codex/v1.6-p36-data-arch` (Phase 0 当前分支) |
-| **测试** | `npm run test` — 77 / 77 pass |
+| **当前版本** | v1.6.1 ✅ delivered(2026-08-19) |
+| **下一里程碑** | v1.6 Phase 1 业务接入(等 4 项设计 Gate) |
+| **已合并** | M0 → v1.0 → v1.1 → v1.2 → v1.3 (PWA + a11y) → v1.4 (5 段 CityPage + 11 城市) → v1.5 (Lighthouse + hotkeys) → **v1.6 (Phase 0 数据架构 + Phase 1 决策点扩展)** |
+| **Branch** | `main` (latest merged) · `codex/v1.6-p36-data-arch` (v1.6 + v1.6.1 当前分支) |
+| **测试** | `npm run test` — **183 / 183 pass** |
 | **类型** | `npm run typecheck` — 0 errors |
-| **Bundle** | 229 KB(gzip 82 KB,与 v1.5 持平)|
+| **Bundle** | 229.84 KB(gzip 82.32 KB,v1.5 持平)|
 
 > M0 目标:搭建可运行的项目骨架,验证核心叙事组件 —— 一颗会自转的地球 + 一条
 > 9 节点的时间轴。后续 milestone 会逐步替换静态数据并接入真实地图瓦片。
@@ -32,6 +32,29 @@
 - ✅ 零业务文件侵入(`src/data/cities.ts` / `liveMoments.ts` / `CityPage.tsx` / `moments.ts` 全部未触动)
 - ✅ 零新依赖
 - ⏳ Phase 1 启动需 4 项 Gate 拍板(Lisbon Yellow Layer / 4-screen → V2 Mapping / Context source policy / Khartoum mockup LOCKED)
+
+---
+
+## 📍 v1.6.1 · Phase 1 决策点扩展（PROMPT 39 v1）
+
+**核心交付**(7 commits,5 新文件 + 3 现有扩展 + 1 配置微调,**+74 测试**):
+
+- **`CityContent`** — 独立编辑文案层(5 字段 readonly),`City.content?` 可选挂载
+- **`countryI18n`** — 15 国家 × zh/en 双语,`getCountryNameLocal(country_code, locale)` O(1) 查询
+- **`Moment.sources?`** — 多源追溯数组,7 source type 字面量
+- **`Moment.captions?`** — i18n 双语文案 `{ zh?, en? }`,`getMomentCaption` locale-aware 查询
+- **`Moment.editorial?`** — 视觉/编辑层,保留 legacy 6 `MomentCategory`
+- **spec §5.2** — `witness_id` 单字段标注(写入 Obsidian vault,不在本地 git)
+- **ingestion.ts** — `source_url` warning 升级路径注释(Editorial CMS 接入后转 error)
+
+**关键边界**:
+- ✅ 零业务文件侵入(`cities.ts` / `liveMoments.ts` / `moments.ts` / `CityPage.tsx` 全部未触动)
+- ✅ 零新依赖
+- ✅ Phase 0 17 必填字段全部不动,所有新字段 `optional`
+- ✅ 数据/视觉分离(editorial / captions / sources 独立类型,不污染 Phase 0 schema)
+
+**详细报告**:见 `05-项目现状/d6-phase-1-decisions-implementation.md`
+**决策追溯**:见 `05-项目现状/d6-phase-1-prep-cross-validation.md`
 
 **详细报告**:见 `05-项目现状/d6-global-coverage-data-architecture.md`
 **字段交叉验证**:见 `05-项目现状/d6-phase-1-prep-cross-validation.md`
