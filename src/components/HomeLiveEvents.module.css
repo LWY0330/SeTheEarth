@@ -1,0 +1,261 @@
+/* ============================================================
+   看见地球 · v2-phase15 · HomeLiveEvents
+   - "地球上正在发生的事" 板块
+   - 副标题右上："不是新闻流。是此刻的时间切片。远方+你,同时发生。"
+   - 4 行 live event：时间（地球当地时刻）+ 城市 + 标题 + 分类标签 + 经纬度
+   - 数据源：src/data/liveMoments.ts
+   - A2 LOCK：冷白底 + Earth Blue 强调 + 0 大圆角 + 0 阴影
+   ============================================================ */
+
+.section {
+  background: var(--bg-page);
+  padding: 96px var(--page-padding-x) 96px;
+  border-top: 1px solid var(--border-hairline);
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.inner {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+}
+
+/* ── 顶部 Header：编号 + 标题 + 副标题 ── */
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-9);
+  margin-bottom: var(--s-11);
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  flex: 0 0 auto;
+  max-width: 65%;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-meta);
+  font-weight: var(--fw-medium);
+  color: var(--text-tertiary);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: var(--s-5);
+}
+
+.kickerNum {
+  color: var(--earth-blue);
+}
+
+.kickerSep {
+  display: inline-block;
+  margin: 0 var(--s-2);
+  color: var(--border-hairline);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-display-s);
+  font-weight: var(--fw-regular);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.sectionTitle em {
+  font-style: italic;
+  color: var(--earth-blue);
+  font-weight: var(--fw-regular);
+}
+
+.headerRight {
+  max-width: 320px;
+  padding-top: 36px;
+}
+
+.subtitleText {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── 列表 ── */
+.eventList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.eventRow {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--s-9);
+  align-items: flex-start;
+  padding: var(--s-7) 0;
+  border-top: 1px solid var(--border-hairline);
+}
+
+.eventRow:last-child {
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.timeColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding-top: 4px;
+}
+
+.bigTime {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-time-l);
+  font-weight: var(--fw-regular);
+  color: var(--earth-blue);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.bigTimeAlternate {
+  color: var(--layer-red);
+}
+
+.utcOffset {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.tzLine {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.contentColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.cityLine {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+}
+
+.eventNumber {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  color: var(--earth-blue);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.05em;
+}
+
+.cityNameZh {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: var(--fw-regular);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.cityNameEn {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.02em;
+}
+
+.title {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 0;
+  max-width: 720px;
+}
+
+.metaLine {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.metaCategory {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--earth-blue);
+}
+
+.metaCategory .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--earth-blue);
+  display: inline-block;
+}
+
+.metaCategory.alt .dot {
+  background: var(--layer-red);
+}
+
+.metaCategory.alt {
+  color: var(--layer-red);
+}
+
+.metaCoords {
+  color: var(--text-tertiary);
+}
+
+/* ════════════════════════════════════════════════════════════
+   响应式
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1279px) and (min-width: 768px) {
+  .section { padding: 72px var(--page-padding-x) 72px; }
+  .sectionTitle { font-size: 40px; }
+  .eventRow { grid-template-columns: 160px 1fr; gap: var(--s-7); }
+  .cityNameZh { font-size: 24px; }
+  .bigTime { font-size: 56px; }
+}
+
+@media (max-width: 767px) {
+  .section { padding: 56px var(--page-padding-x) 56px; }
+  .headerRow { flex-direction: column; gap: var(--s-5); margin-bottom: var(--s-9); }
+  .headerLeft { max-width: 100%; }
+  .headerRight { max-width: 100%; padding-top: 0; }
+  .sectionTitle { font-size: 32px; }
+  .eventRow {
+    grid-template-columns: 1fr;
+    gap: var(--s-4);
+    padding: var(--s-6) 0;
+  }
+  .bigTime { font-size: 44px; }
+  .cityNameZh { font-size: 22px; }
+  .title { font-size: 15px; }
+}

@@ -1,0 +1,267 @@
+/* ============================================================
+   看见地球 · v2-phase15 · HomeWorldsCollide
+   - Worlds Collide 板块：3 城同秒对比
+   - 标题："三座城市,同一秒。"（同一秒 Earth Blue 强调）
+   - 副标题（右上）："不评价,不叙述,不消化。只是把今天这一刻,并置在同一屏上。"
+   - 3 列布局：城市 + 当时刻 + 一句观察
+   - 选 3 城：Khartoum (红)/ Reykjavík (蓝)/ Lisbon (黄)
+   - A2 LOCK + 0 大圆角 + 0 阴影 + 三档响应式
+   ============================================================ */
+
+.section {
+  background: var(--bg-page);
+  padding: 96px var(--page-padding-x) 96px;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.inner {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+}
+
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-9);
+  margin-bottom: var(--s-11);
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  flex: 0 0 auto;
+  max-width: 60%;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-meta);
+  font-weight: var(--fw-medium);
+  color: var(--text-tertiary);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: var(--s-5);
+}
+
+.kickerNum {
+  color: var(--earth-blue);
+}
+
+.kickerSep {
+  display: inline-block;
+  margin: 0 var(--s-2);
+  color: var(--border-hairline);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: var(--fw-regular);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.sectionTitle em {
+  font-style: italic;
+  color: var(--earth-blue);
+}
+
+.headerRight {
+  max-width: 320px;
+  padding-top: 36px;
+}
+
+.subtitleText {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* ── 3 列 ── */
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-5);
+}
+
+.cityCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--cl-04);
+  overflow: hidden;
+  isolation: isolate;
+  min-height: 480px;
+}
+
+.cardImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 1;
+  filter: saturate(0.85) contrast(0.98);
+}
+
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(180deg, rgba(7,14,20,0.15) 0%, rgba(7,14,20,0.40) 70%, rgba(7,14,20,0.55) 100%);
+  pointer-events: none;
+}
+
+.cardDot {
+  position: absolute;
+  top: 28px;
+  left: 28px;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--r-pill);
+  z-index: 3;
+}
+
+.cardDot.red { background: var(--layer-red); }
+.cardDot.blue { background: var(--earth-blue); }
+.cardDot.yellow { background: var(--layer-yellow); }
+
+.cardBody {
+  position: relative;
+  z-index: 4;
+  margin-top: auto;
+  padding: var(--s-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  color: var(--text-inverse);
+}
+
+.bigTime {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 80px;
+  font-weight: var(--fw-regular);
+  color: var(--text-inverse);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin: 0;
+}
+
+.cityNameZh {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: var(--fw-regular);
+  color: var(--text-inverse);
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.cityNameEn {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text-inverse);
+  opacity: 0.85;
+  margin: 0;
+  display: block;
+  margin-top: 2px;
+}
+
+.observation {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-inverse);
+  opacity: 0.95;
+  margin: 0;
+}
+
+.cardMeta {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-inverse);
+  opacity: 0.85;
+  padding-top: var(--s-4);
+  border-top: 1px solid rgba(247, 250, 252, 0.18);
+  display: flex;
+  gap: var(--s-5);
+  flex-wrap: wrap;
+}
+
+.cardMetaLayer {
+  font-family: var(--font-sans);
+  font-style: italic;
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+  font-size: 11px;
+}
+
+.cardMetaLayer.red { color: var(--layer-red); font-weight: var(--fw-medium); }
+.cardMetaLayer.blue { color: var(--earth-blue); font-weight: var(--fw-medium); }
+.cardMetaLayer.yellow { color: var(--layer-yellow); font-weight: var(--fw-medium); }
+
+/* Khartoum 占位 */
+.cardPlaceholder {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #d8c0a0 0%, #c4a387 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.cardPlaceholderLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  text-align: center;
+  line-height: 1.5;
+  padding: var(--s-5);
+  opacity: 0.7;
+}
+
+/* ════════════════════════════════════════════════════════════
+   响应式
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1279px) and (min-width: 768px) {
+  .section { padding: 72px var(--page-padding-x); }
+  .sectionTitle { font-size: 44px; }
+  .bigTime { font-size: 64px; }
+  .cityCard { min-height: 400px; }
+  .row { gap: var(--s-4); }
+  .cardBody { padding: var(--s-6); }
+}
+
+@media (max-width: 767px) {
+  .section { padding: 56px var(--page-padding-x); }
+  .headerRow { flex-direction: column; gap: var(--s-5); margin-bottom: var(--s-9); }
+  .headerLeft, .headerRight { max-width: 100%; padding-top: 0; }
+  .sectionTitle { font-size: 32px; }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: var(--s-4);
+  }
+
+  .cityCard { min-height: 320px; }
+  .bigTime { font-size: 56px; }
+  .cardBody { padding: var(--s-6); }
+}

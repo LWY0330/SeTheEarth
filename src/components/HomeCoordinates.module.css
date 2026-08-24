@@ -1,0 +1,393 @@
+/* ============================================================
+   看见地球 · v2-phase15 · HomeCoordinates
+   - 12 Coordinates 板块：11 城（+ Khartoum 占位）
+   - 左大：第 1 个城市（默认 Kyoto，作为主视觉）
+   - 右小：剩余 11 城网格 3 列
+   - 真实街景图（Unsplash URL）
+   - A2 LOCK + 0 大圆角 + 0 阴影 + 三档响应式
+   ============================================================ */
+
+.section {
+  background: var(--bg-page);
+  padding: 96px var(--page-padding-x) 96px;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.inner {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+}
+
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-9);
+  margin-bottom: var(--s-11);
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  flex: 0 0 auto;
+  max-width: 70%;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-meta);
+  font-weight: var(--fw-medium);
+  color: var(--text-tertiary);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: var(--s-5);
+}
+
+.kickerNum {
+  color: var(--earth-blue);
+}
+
+.kickerSep {
+  display: inline-block;
+  margin: 0 var(--s-2);
+  color: var(--border-hairline);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: var(--fw-regular);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.sectionTitle em {
+  font-style: italic;
+  color: var(--earth-blue);
+}
+
+.headerRight {
+  max-width: 320px;
+  padding-top: 36px;
+}
+
+.subtitleText {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.subtitleText em {
+  font-style: normal;
+  color: var(--text-secondary);
+}
+
+/* ── 主+网格布局 ── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-5);
+  align-items: stretch;
+}
+
+/* 左大：Kyoto */
+.featured {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+  background: var(--cl-04);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--text-inverse);
+  isolation: isolate;
+}
+
+.featuredImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 1;
+  filter: saturate(0.85) contrast(0.98);
+  transition:
+    filter var(--motion-slow) var(--ease-out),
+    transform var(--motion-slow) var(--ease-out);
+}
+
+.featured:hover .featuredImage {
+  filter: saturate(0.95) contrast(1);
+  transform: scale(1.02);
+}
+
+.featuredOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(180deg, rgba(7,14,20,0) 50%, rgba(7,14,20,0.6) 100%),
+    linear-gradient(135deg, rgba(26,77,126,0.06) 0%, rgba(7,14,20,0.10) 100%);
+  pointer-events: none;
+}
+
+.featuredMeta {
+  position: absolute;
+  top: 28px;
+  left: 28px;
+  right: 28px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-inverse);
+}
+
+.featuredMetaNum {
+  opacity: 0.85;
+}
+
+.featuredMetaRegion {
+  opacity: 0.85;
+}
+
+.featuredNameWrap {
+  position: absolute;
+  bottom: 28px;
+  left: 28px;
+  right: 28px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.featuredName {
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: var(--fw-regular);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  color: var(--text-inverse);
+  margin: 0;
+}
+
+.featuredTagline {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 16px;
+  color: var(--text-inverse);
+  opacity: 0.85;
+  margin: 0;
+}
+
+.featuredTimeBlock {
+  position: absolute;
+  bottom: 28px;
+  left: 28px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.featuredTime {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 32px;
+  font-weight: var(--fw-regular);
+  color: var(--text-inverse);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.featuredTz {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--atmosphere-blue);
+}
+
+.featuredWeather {
+  font-family: var(--font-mono);
+  font-size: var(--fs-meta);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-inverse);
+  opacity: 0.85;
+}
+
+/* 右网格：3 列 4 行 */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: var(--s-3);
+  height: 100%;
+  min-height: 0;
+}
+
+.tile {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+  background: var(--cl-04);
+  overflow: hidden;
+  text-decoration: none;
+  isolation: isolate;
+}
+
+.tileImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 1;
+  filter: saturate(0.85) contrast(0.98);
+  transition:
+    filter var(--motion-slow) var(--ease-out),
+    transform var(--motion-slow) var(--ease-out);
+}
+
+.tile:hover .tileImage {
+  filter: saturate(0.95) contrast(1);
+  transform: scale(1.04);
+}
+
+.tileOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(180deg, rgba(7,14,20,0.05) 50%, rgba(7,14,20,0.55) 100%);
+  pointer-events: none;
+}
+
+.tileMeta {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  right: 12px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-inverse);
+  opacity: 0.9;
+}
+
+.tileMetaNum {
+  font-weight: var(--fw-medium);
+}
+
+.tileInfo {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tileCityZh {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: var(--fw-regular);
+  color: var(--text-inverse);
+  letter-spacing: -0.01em;
+  line-height: 1.0;
+}
+
+.tileTimeRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.tileTime {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 14px;
+  color: var(--text-inverse);
+  opacity: 0.95;
+  line-height: 1;
+}
+
+/* 缺图占位（Khartoum） */
+.tilePlaceholder {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, var(--cl-03) 0%, var(--cl-04) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.tilePlaceholderLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  text-align: center;
+  line-height: 1.4;
+  padding: var(--s-3);
+}
+
+/* ════════════════════════════════════════════════════════════
+   响应式
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1279px) and (min-width: 768px) {
+  .section { padding: 72px var(--page-padding-x); }
+  .sectionTitle { font-size: 44px; }
+  .featuredName { font-size: 48px; }
+  .tileCityZh { font-size: 18px; }
+  .layout { gap: var(--s-4); }
+  .grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(4, 1fr); gap: var(--s-3); }
+}
+
+@media (max-width: 767px) {
+  .section { padding: 56px var(--page-padding-x); }
+  .headerRow { flex-direction: column; gap: var(--s-5); margin-bottom: var(--s-9); }
+  .headerLeft, .headerRight { max-width: 100%; padding-top: 0; }
+  .sectionTitle { font-size: 32px; }
+
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: var(--s-4);
+  }
+
+  .featured { aspect-ratio: 4 / 3; }
+  .featuredName { font-size: 40px; }
+  .featuredTime { font-size: 26px; }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, auto);
+    gap: var(--s-3);
+  }
+}

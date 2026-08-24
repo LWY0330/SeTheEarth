@@ -1,0 +1,316 @@
+/* ============================================================
+   看见地球 · v2-phase15 · HomeHero
+   - 全屏真实地球图（earth-hero-original.png）背景
+   - 顶部中央日期元信息（17 AUG 2026 · 12 COORDINATES · EARTH DAY）
+   - 中央主标题（世界此刻,同时发生 · 同时发生 Earth Blue 强调）
+   - 副标题 + 英文标
+   - 4 角城市时间（Tokyo/Lisbon/Reykjavík/Cape Town）
+   - A2 LOCK:冷白底 + Earth Blue + 0 大圆角 + 0 阴影 + 三档响应式
+   ============================================================ */
+
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 720px;
+  background: var(--bg-hero-mist);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* ── 真实地球图背景 ── */
+.earthImage {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1900px;
+  max-width: none;
+  height: 720px;
+  background-image: url('/images/home/earth-hero-original.png');
+  background-size: cover;
+  background-position: center 35%;
+  background-repeat: no-repeat;
+  mask-image: linear-gradient(180deg, transparent 0%, black 18%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, black 18%);
+  animation: earthBreathe 18s var(--ease-in-out) infinite alternate;
+  z-index: 1;
+}
+
+@keyframes earthBreathe {
+  0% { transform: translateX(-50%) scale(1.00) translateY(0); }
+  100% { transform: translateX(-50%) scale(1.015) translateY(-8px); }
+}
+
+/* 顶部白色 fade（让顶部导航和元信息漂浮在 mist 上） */
+.topFade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 480px;
+  background: linear-gradient(180deg,
+    var(--bg-hero-mist) 0%,
+    rgba(247, 249, 251, 0.85) 40%,
+    rgba(247, 249, 251, 0.3) 70%,
+    transparent 100%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* 右下角 atmospheric glow（极弱 Earth Blue 光晕） */
+.atmosphere {
+  position: absolute;
+  bottom: 200px;
+  right: -100px;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(143, 187, 239, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ── 顶部导航 + Hero 内容 三栏 grid ── */
+.heroInner {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 220px 1fr 220px;
+  padding: 100px var(--page-padding-x) 80px;
+  gap: var(--s-9);
+  align-items: start;
+}
+
+/* 左列 / 右列 4 角时间 */
+.cornerColumn {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-9);
+  padding-top: var(--s-9);
+}
+
+.cornerColumn.right {
+  align-items: flex-end;
+}
+
+.cornerColumn.right .worldClockLabel {
+  flex-direction: row-reverse;
+}
+
+/* 单个 world clock block */
+.worldClock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.worldClockLabel {
+  display: flex;
+  gap: var(--s-3);
+  align-items: center;
+}
+
+.clockDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--earth-blue);
+  flex-shrink: 0;
+}
+
+.worldClockCity {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-weight: var(--fw-medium);
+}
+
+.worldClockTime {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-time-l);
+  font-weight: var(--fw-regular);
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.worldClockMeta {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  font-weight: var(--fw-medium);
+}
+
+.clockTz {
+  color: var(--earth-blue);
+  font-weight: var(--fw-medium);
+}
+
+/* 中央列：编辑元信息 + 主标题 + 副标题 */
+.heroCenter {
+  text-align: center;
+  padding: 0 var(--s-5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.editorialMeta {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-meta);
+  font-weight: var(--fw-medium);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: var(--s-7);
+}
+
+.editorialMetaSep {
+  display: inline-block;
+  margin: 0 var(--s-2);
+  color: var(--border-hairline);
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: var(--fs-display-xl);
+  font-weight: var(--fw-regular);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin: 0 0 var(--s-5);
+}
+
+.heroTitle em {
+  font-style: italic;
+  color: var(--earth-blue);
+  font-weight: var(--fw-regular);
+}
+
+.heroSubtitle {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 19px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 0 auto var(--s-4);
+  max-width: 460px;
+}
+
+.heroSubEn {
+  font-family: var(--font-sans);
+  font-size: var(--fs-meta);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+/* 滚动提示 */
+.scrollHint {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  animation: scrollHintBob 2.4s var(--ease-in-out) infinite;
+}
+
+.scrollHint .arrow {
+  font-size: 14px;
+}
+
+@keyframes scrollHintBob {
+  0%, 100% { transform: translate(-50%, 0); }
+  50%      { transform: translate(-50%, 4px); }
+}
+
+/* ════════════════════════════════════════════════════════════
+   响应式 · D-P0-01 三档（Desktop ≥1280 / Tablet 768-1279 / Mobile <768）
+   ════════════════════════════════════════════════════════════ */
+
+/* Tablet 768-1279:三栏收紧，元信息 + 时间更紧凑 */
+@media (max-width: 1279px) and (min-width: 768px) {
+  .heroInner {
+    grid-template-columns: 180px 1fr 180px;
+    padding: 88px var(--page-padding-x) 80px;
+    gap: var(--s-5);
+  }
+  .heroTitle { font-size: 72px; }
+  .heroSubtitle { font-size: 16px; max-width: 360px; }
+  .worldClockTime { font-size: 44px; }
+  .earthImage { width: 1500px; }
+  .cornerColumn { padding-top: var(--s-5); }
+  .heroCenter { padding-top: var(--s-7); }
+}
+
+/* Mobile <768:4 角时间堆叠在中央顶部，标题紧凑 */
+@media (max-width: 767px) {
+  .hero {
+    height: auto;
+    min-height: 720px;
+  }
+
+  .heroInner {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    padding: 96px var(--page-padding-x) 100px;
+    gap: var(--s-7);
+    align-items: center;
+  }
+
+  .cornerColumn {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--s-5) var(--s-7);
+    padding-top: 0;
+  }
+
+  .cornerColumn.right {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .worldClock {
+    min-width: 140px;
+  }
+
+  .right .worldClockLabel {
+    flex-direction: row;
+  }
+
+  .worldClockTime { font-size: 32px; }
+
+  .heroCenter {
+    order: 3;
+    padding: 0;
+  }
+
+  .heroTitle { font-size: 48px; }
+  .heroSubtitle { font-size: 14px; max-width: 320px; }
+
+  .earthImage {
+    width: 1300px;
+    height: 520px;
+    background-position: center 30%;
+  }
+
+  .topFade { height: 320px; }
+}
