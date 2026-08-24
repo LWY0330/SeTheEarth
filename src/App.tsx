@@ -51,7 +51,11 @@ function HomeShell() {
           canonicalPath="/"
         />
 
-        {/* ── 顶部透明导航（覆盖在 Hero 上） ── */}
+        {/* ── 顶部导航（覆盖在 Hero 上 · 7 项 + About active） ──
+            NOTE: 不要加 `simplified` —— simplified 模式下 GlobalHeader
+            会整段不渲染 <nav>，导致 7 项导航完全看不到。
+            不简化即可让 <nav> 渲染，header 自身有半透明 backdrop-filter 背景
+            与底部细线，对 Hero 上方区域足够对比度。 */}
         <div className={styles.headerWrap}>
           <DesignSystemHeader
             logo={{ cn: '看见地球', en: 'SEE EARTH' }}
@@ -60,7 +64,6 @@ function HomeShell() {
               href: item.href,
               active: 'active' in item ? item.active : false,
             }))}
-            simplified
           />
         </div>
 

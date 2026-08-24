@@ -68,6 +68,10 @@ export function HomeCoordinates() {
 
   return (
     <section className={styles.section} id="coordinates" aria-label="12 Coordinates · 12 个同时运转的远方">
+      {/* Anchor alias · 同时被顶部导航 #cities / #my-coordinates 引用。
+          HTML 不支持一个元素多 id，所以用空 anchor 元素补齐缺失的 id。 */}
+      <span id="cities" aria-hidden="true" />
+      <span id="my-coordinates" aria-hidden="true" />
       <div className={styles.inner}>
         <header className={styles.headerRow}>
           <div className={styles.headerLeft}>

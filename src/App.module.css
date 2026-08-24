@@ -11,11 +11,17 @@
   min-height: 100vh;
 }
 
-/* GlobalHeader 顶导（透明覆盖在 Hero 上） */
+/* GlobalHeader 顶导（透明覆盖在 Hero 上 · 7 项导航）
+   - position: fixed 跨 Hero + 其他 sections 始终钉在顶部
+   - z-index: 100 高于 Hero 自身所有 z-index（heroInner=10 / topFade=5）
+   - 显式 width: 100% 让 headerWrap 不被 absolute 收缩到 shrink-to-fit
+   - pointer-events: auto 让 nav 链接始终可点击 */
 .headerWrap {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 50;
+  width: 100%;
+  z-index: 100;
+  pointer-events: auto;
 }
