@@ -1,0 +1,402 @@
+/* ============================================================
+   看见地球 · v2-phase15 · HomeEarthArchive
+   - 板块 5：地球档案（46 亿年弧线）
+   - 标题：「一条 46 亿年的弧线」（"46 亿年" Earth Blue 斜体）
+   - 副标题（右上）："9 个关键节点,沿对数时间轴慢慢看去。地球不是凭空出现的,你的存在是其中一格。"
+   - 双大字体区:4.6B + 1/77,000,000
+   - 9 节点时间轴（含 progress 条 + 节点圆点 + 节点年份）
+   - A2 LOCK + 0 大圆角 + 0 阴影 + 三档响应式
+   ============================================================ */
+
+.section {
+  background: var(--bg-page);
+  padding: 96px var(--page-padding-x) 96px;
+  border-bottom: 1px solid var(--border-hairline);
+}
+
+.inner {
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+}
+
+/* ── Header ── */
+.headerRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-9);
+  margin-bottom: var(--s-11);
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  flex: 0 0 auto;
+  max-width: 60%;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-meta);
+  font-weight: var(--fw-medium);
+  color: var(--text-tertiary);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: var(--s-5);
+}
+
+.kickerNum {
+  color: var(--earth-blue);
+}
+
+.kickerSep {
+  display: inline-block;
+  margin: 0 var(--s-2);
+  color: var(--border-hairline);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-weight: var(--fw-regular);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.sectionTitle em {
+  font-style: italic;
+  color: var(--earth-blue);
+}
+
+.headerRight {
+  max-width: 360px;
+  padding-top: 36px;
+}
+
+.subtitleText {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+  text-align: right;
+}
+
+/* ── 双大字体区 ── */
+.megaNumbers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-9);
+  margin-bottom: var(--s-11);
+  align-items: end;
+}
+
+.megaLabel {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-meta);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  font-weight: var(--fw-medium);
+  display: block;
+  margin-bottom: var(--s-3);
+}
+
+/* 第一大: 4.6B YEARS */
+.bigNumber {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 220px;
+  font-weight: var(--fw-regular);
+  color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  display: block;
+}
+
+.bigNumberUnit {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.06em;
+  font-weight: var(--fw-medium);
+  display: block;
+  margin-top: var(--s-2);
+}
+
+/* 第二大: YOU × 1 / 77,000,000 (蓝色) */
+.megaNum2Prefix {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 64px;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  display: block;
+  margin-bottom: var(--s-3);
+}
+
+.bigNumberBlue {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 96px;
+  font-weight: var(--fw-regular);
+  color: var(--earth-blue);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  display: block;
+}
+
+.megaSub {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-top: var(--s-3);
+  display: block;
+  max-width: 480px;
+}
+
+/* ── Timeline Stage ── */
+.archiveStage {
+  position: relative;
+  padding: var(--s-7) 0 var(--s-5);
+}
+
+.archiveRail {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: var(--s-5) 0 var(--s-7);
+}
+
+.archiveTrack {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(17, 22, 27, 0.08) 0%,
+    rgba(17, 22, 27, 0.30) 50%,
+    rgba(17, 22, 27, 0.08) 100%
+  );
+  transform: translateY(-50%);
+}
+
+.archiveProgress {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--earth-blue), var(--layer-yellow));
+  transform: translateY(-50%);
+  /* width 通过 inline style 注入 */
+  pointer-events: none;
+}
+
+/* 9 节点 flex 权重（对数尺度感） */
+.archNode {
+  position: relative;
+  z-index: 5;
+  background: none;
+  border: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.archNode:nth-child(3) { flex: 0.4 1 0; } /* 13.8B */
+.archNode:nth-child(4) { flex: 1.2 1 0; } /* 4.6B */
+.archNode:nth-child(5) { flex: 1.4 1 0; } /* 4.4B */
+.archNode:nth-child(6) { flex: 1.6 1 0; } /* 3.8B */
+.archNode:nth-child(7) { flex: 1.7 1 0; } /* 2.4B */
+.archNode:nth-child(8) { flex: 1.9 1 0; } /* 540M */
+.archNode:nth-child(9) { flex: 2.2 1 0; } /* 66M */
+.archNode:nth-child(10) { flex: 2.4 1 0; } /* 300K */
+.archNode:nth-child(11) { flex: 2.8 1 0; } /* NOW */
+
+.archNodeYear {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-meta);
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+  margin-bottom: var(--s-2);
+}
+
+.archNodeDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg-page);
+  border: 1.5px solid rgba(17, 22, 27, 0.35);
+  transition: transform var(--motion-base) var(--ease-out),
+              border-color var(--motion-base) var(--ease-out),
+              background var(--motion-base) var(--ease-out);
+}
+
+/* 节点高亮（active state · 智人出现） */
+.archNode--active .archNodeDot {
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+  transform: scale(1.5);
+  box-shadow: 0 0 0 6px rgba(17, 22, 27, 0.08), 0 0 16px rgba(17, 22, 27, 0.25);
+}
+
+.archNode--active .archNodeYear {
+  color: var(--earth-blue);
+  font-weight: var(--fw-medium);
+}
+
+/* 不同 accent 在 hover 时的微调 */
+.accent-life.archNode--active .archNodeDot {
+  background: var(--layer-yellow);
+  border-color: var(--layer-yellow);
+  box-shadow: 0 0 0 6px rgba(211, 172, 84, 0.18), 0 0 16px rgba(211, 172, 84, 0.50);
+}
+
+.accent-warm.archNode--active .archNodeDot {
+  background: var(--earth-blue);
+  border-color: var(--earth-blue);
+  box-shadow: 0 0 0 6px rgba(79, 143, 224, 0.22), 0 0 16px rgba(79, 143, 224, 0.55);
+}
+
+/* ── Active Node Meta ── */
+.nodeMeta {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-top: var(--s-3);
+  gap: var(--s-7);
+}
+
+.nodeMetaLeft {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  max-width: 640px;
+}
+
+.nodeMetaLabel {
+  font-size: var(--fs-meta);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  font-weight: var(--fw-medium);
+  font-family: var(--font-mono);
+}
+
+.nodeMetaName {
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  color: var(--text-primary);
+  font-weight: var(--fw-regular);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.nodeMetaName em {
+  font-style: italic;
+  color: var(--text-tertiary);
+  font-size: 0.85em;
+  font-weight: var(--fw-regular);
+}
+
+.nodeMetaDesc {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: var(--fs-body-s);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: var(--s-2) 0 0 0;
+  max-width: 540px;
+}
+
+.nodeMetaRight {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.nodeMetaTime {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-h4);
+  color: var(--text-primary);
+  font-weight: var(--fw-medium);
+}
+
+.nodeMetaCoords {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  letter-spacing: 0.06em;
+}
+
+/* ════════════════════════════════════════════════════════════
+   响应式 · 三档
+   ════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1279px) and (min-width: 768px) {
+  .section { padding: 72px var(--page-padding-x); }
+  .sectionTitle { font-size: 44px; }
+  .bigNumber { font-size: 160px; }
+  .bigNumberBlue { font-size: 72px; }
+  .megaNum2Prefix { font-size: 48px; }
+  .headerRight { max-width: 280px; }
+  .subtitleText { font-size: 16px; }
+  .nodeMetaName { font-size: 20px; }
+}
+
+@media (max-width: 767px) {
+  .section { padding: 56px var(--page-padding-x); }
+  .headerRow {
+    flex-direction: column;
+    gap: var(--s-5);
+    margin-bottom: var(--s-9);
+  }
+  .headerLeft,
+  .headerRight {
+    max-width: 100%;
+    padding-top: 0;
+  }
+  .subtitleText { text-align: left; font-size: 15px; }
+  .sectionTitle { font-size: 32px; }
+
+  .megaNumbers {
+    grid-template-columns: 1fr;
+    gap: var(--s-8);
+    margin-bottom: var(--s-9);
+  }
+  .bigNumber { font-size: 96px; }
+  .bigNumberBlue { font-size: 56px; }
+  .megaNum2Prefix { font-size: 36px; }
+
+  .archiveRail {
+    overflow-x: auto;
+    padding: var(--s-3) 0;
+    scrollbar-width: thin;
+  }
+  .archNode { flex: 0 0 64px; }
+  .archNode:nth-child(n) { flex: 0 0 64px; }
+
+  .nodeMeta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s-4);
+  }
+  .nodeMetaRight { text-align: left; }
+  .nodeMetaName { font-size: 18px; }
+}

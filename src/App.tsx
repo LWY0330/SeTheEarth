@@ -23,6 +23,7 @@ import HomeHero from '@/components/HomeHero';
 import HomeLiveEvents from '@/components/HomeLiveEvents';
 import HomeCoordinates from '@/components/HomeCoordinates';
 import HomeWorldsCollide from '@/components/HomeWorldsCollide';
+import HomeEarthArchive from '@/components/HomeEarthArchive';
 
 import styles from './App.module.css';
 
@@ -74,6 +75,9 @@ function HomeShell() {
 
         {/* ── 板块 4：三座城市 · 同一秒（同秒对比） ── */}
         <HomeWorldsCollide />
+
+        {/* ── 板块 5：地球档案 · 一条 46 亿年的弧线（时间尺度叙事） ── */}
+        <HomeEarthArchive />
       </main>
     </div>
   );

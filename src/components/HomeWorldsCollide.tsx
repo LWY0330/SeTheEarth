@@ -38,7 +38,7 @@ const COLLIDE_DATA: CollideRow[] = [
     time: '02:41',
     offset: 'UTC+2',
     imageUrl: '',
-    observation: '南郊 30 公里,一处军事据点在午后遭到第二轮炮击。当地志愿者正在转移伤员。',
+    observation: '街道的灯光在傍晚亮起,广场上有孩子经过。',
     timezone: 'Africa/Khartoum',
     latitude: '15°35′N',
     longitude: '32°33′E',
