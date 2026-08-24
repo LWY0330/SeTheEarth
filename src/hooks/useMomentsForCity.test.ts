@@ -22,7 +22,7 @@ test('liveEventToUniversal · basic fields 映射', () => {
     countryEn: 'Japan',
     category: 'urban' as const,
     categoryLabelZh: '都市',
-    contentType: 'urban' as const,
+    contentType: 'daily-life' as const,
     contentTypeZh: '都市',
     scale: 'local' as const,
     title: '涩谷路口',
