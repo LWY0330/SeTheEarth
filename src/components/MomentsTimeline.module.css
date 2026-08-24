@@ -1,10 +1,11 @@
 /* ============================================================
-   MomentsTimeline · v2.22.0 统一 Full-screen Scene
-   - 左 50%：世界此刻（无大背景框）
-   - 中间 1px 细线
-   - 右 50%：事件列表（编辑式信息流，无圆角背景）
-   - 顶部状态：WORLD SNAPSHOT — DEVELOPING（developing 语气，无 LIVE 字样 / 无脉冲）
-   - 底部：换一组按钮 + 可选 What's coming 提示（v2.22 · 由 status 驱动）
+   MomentsTimeline · v1.7.0 · D-P0-01 Phase 1 · A2 Visual Foundation v1.2
+   ------------------------------------------------------------
+   - 冷白底 + Earth Blue 主色(替代 v2.32.0 暖米白)
+   - 0 大圆角 · 0 阴影 · hairline 细线(A2 LOCK)
+   - Earth Blue 焦点圈 + statusDot 静态化
+   - 3 档响应式:Desktop ≥1280 / Tablet 768-1279 / Mobile <768
+   - 顶部状态:WORLD SNAPSHOT — DEVELOPING(developing 语气,无 LIVE 字样)
    ============================================================ */
 
 .layout {
@@ -191,7 +192,7 @@
 
 /* 兼容保留：.momentsNotice 现归 App.module.css 全权负责，组件不再渲染 */
 
-/* 日夜色带 */
+/* 日夜色带 · A2 LOCK Cold Light */
 .dayNightWrap {
   display: flex;
   flex-direction: column;
@@ -203,15 +204,15 @@
   height: 8px;
   border-radius: var(--r-pill);
   background: linear-gradient(90deg,
-    #1a1f3a 0%,
-    #3d3060 12%,
-    #d97a55 25%,
-    #f4c08e 38%,
-    #fff5e8 50%,
-    #f4c08e 62%,
-    #d97a55 75%,
-    #3d3060 88%,
-    #1a1f3a 100%);
+    var(--cl-11) 0%,
+    var(--cl-10) 12%,
+    var(--layer-yellow) 25%,
+    #e8d9b9 38%,
+    var(--bg-hero-mist) 50%,
+    #e8d9b9 62%,
+    var(--layer-yellow) 75%,
+    var(--cl-10) 88%,
+    var(--cl-11) 100%);
   overflow: hidden;
 }
 
@@ -220,18 +221,18 @@
   top: -3px;
   bottom: -3px;
   width: 2px;
-  background: var(--color-accent-500);
+  background: var(--earth-blue);
   transform: translateX(-50%);
-  box-shadow: 0 0 0 2px var(--color-canvas), 0 0 8px var(--color-accent-500);
-  transition: left 320ms var(--ease-emphatic);
+  box-shadow: 0 0 0 2px var(--bg-page), 0 0 8px var(--earth-blue);
+  transition: left var(--motion-base) var(--ease-out);
 }
 
 .dayNightLabels {
   display: flex;
   justify-content: space-between;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 8px;
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
   letter-spacing: 0.05em;
   font-variant-numeric: tabular-nums;
   padding: 0 2px;
@@ -248,15 +249,15 @@
   flex-direction: column;
   gap: 8px;
   padding-top: 12px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  border-top: 1px solid var(--border-hairline);
 }
 
 .subTitle {
   margin: 0;
   font-family: var(--font-sans);
   font-size: 9px;
-  font-weight: 500;
-  color: var(--color-ink-500);
+  font-weight: var(--fw-medium);
+  color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.2em;
 }
@@ -281,14 +282,14 @@
 }
 
 .periodName {
-  color: var(--color-ink-700);
+  color: var(--text-secondary);
   letter-spacing: 0.02em;
 }
 
 .periodBar {
   display: block;
   height: 3px;
-  background: rgba(0, 0, 0, 0.06);
+  background: var(--cl-04);
   border-radius: var(--r-pill);
   overflow: hidden;
 }
@@ -296,13 +297,13 @@
 .periodBarFill {
   display: block;
   height: 100%;
-  background: var(--color-accent-500);
-  opacity: 0.4;
-  transition: width 320ms var(--ease-emphatic);
+  background: var(--earth-blue);
+  opacity: 0.5;
+  transition: width var(--motion-base) var(--ease-out);
 }
 
 .periodCount {
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
   font-variant-numeric: tabular-nums;
   font-size: 10px;
   white-space: nowrap;
@@ -325,24 +326,24 @@
 }
 
 .overviewCityName {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 16px;
-  font-weight: var(--fw-semibold);
-  color: var(--color-ink-900);
+  font-weight: var(--fw-medium);
+  color: var(--text-primary);
   letter-spacing: -0.01em;
 }
 
 .overviewCityEn {
-  font-family: var(--font-serif);
+  font-family: var(--font-editorial);
   font-size: 11px;
   font-style: italic;
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
 }
 
 .overviewTime {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
   font-variant-numeric: tabular-nums;
   margin-left: auto;
 }
@@ -393,17 +394,13 @@
   text-overflow: ellipsis;
 }
 
-/* v2.22 · What's coming 提示（取代 v2.19 的 .dataSource）
-   - 故意不写 "live" / 非实时 / "curated, not live"
-   - developing 时显示 "Live mode coming soon. 实时数据源接入中。"
-   - editorial 时显示 "Curated by editors. 编辑精选 · 持续更新中。"
-   - 不绘制边框、不引用强调色，避开警告/错误感 */
+/* v2.22 · What's coming 提示(取代 v2.19 的 .dataSource) */
 .whatsComing {
   margin: 0;
   font-family: var(--font-sans);
   font-size: 10px;
   font-style: italic;
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
   line-height: 1.55;
   letter-spacing: 0.01em;
   display: flex;
@@ -412,19 +409,19 @@
 }
 
 .whatsComingZh {
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
   font-style: normal;
   font-size: 10px;
   letter-spacing: 0.02em;
 }
 
-/* v2.22 · 旧的 .dataSource 仅作为兼容保留，TSX 已不再渲染 */
+/* v2.22 · 旧的 .dataSource 仅作为兼容保留,TSX 已不再渲染 */
 .dataSource,
 .dataSource strong,
 .dataSourceSub { display: none; }
 
 
-/* 换一组按钮 */
+/* 换一组按钮 · A2 LOCK 焦点圈 + Earth Blue hover */
 .reshuffle {
   display: inline-flex;
   align-items: center;
@@ -433,22 +430,27 @@
   padding: 5px 11px;
   align-self: flex-start;
   background: transparent;
-  color: var(--color-ink-700);
-  border: 1px solid color-mix(in srgb, var(--color-ink-900) 15%, transparent);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--r-pill);
   font-family: var(--font-sans);
   font-size: 9px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   text-transform: uppercase;
   letter-spacing: 0.15em;
   cursor: pointer;
-  transition: all var(--dur-fast) var(--ease-out);
+  transition: all var(--motion-base) var(--ease-out);
 }
 
 .reshuffle:hover {
-  border-color: var(--color-ink-900);
-  color: var(--color-ink-900);
-  background: rgba(0, 0, 0, 0.03);
+  border-color: var(--earth-blue);
+  color: var(--earth-blue);
+  background: var(--bg-hero-mist);
+}
+
+.reshuffle:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .reshuffle:active { transform: scale(0.97); }
@@ -457,23 +459,23 @@
   display: inline-block;
   font-size: 11px;
   line-height: 1;
-  transition: transform 400ms var(--ease-emphatic);
+  transition: transform var(--motion-slow) var(--ease-out);
 }
 
 .reshuffle:hover .reshuffleIcon { transform: rotate(180deg); }
 
 /* ════════════════════════════════════════════════
-   中间 1px 细线分隔
+   中间 1px 细线分隔 · A2 LOCK hairline
    ════════════════════════════════════════════════ */
 
 .divider {
   width: 1px;
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--border-hairline);
   align-self: stretch;
 }
 
 /* ════════════════════════════════════════════════
-   右侧 50% — 编辑式信息流（无圆角背景）
+   右侧 50% — 编辑式信息流(无圆角背景)
    ════════════════════════════════════════════════ */
 
 .rightCol {
@@ -486,17 +488,16 @@
   overflow-y: auto;
 }
 
-/* 事件行（无背景框 · 细线分隔 · hover 淡背景 · 选中 2px 暖橘竖线） */
+/* 事件行(无背景框 · 细线分隔 · hover 淡背景 · 选中 2px Earth Blue 竖线) */
 .event {
   display: grid;
   grid-template-columns: 20px 48px 1fr;
   align-items: center;
   gap: 10px;
   padding: 8px 4px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--border-hairline);
   background: transparent;
-  border-radius: 0;
-  transition: background var(--dur-fast) var(--ease-out);
+  transition: background var(--motion-base) var(--ease-out);
   cursor: pointer;
   flex: none;
   min-height: 76px;
@@ -506,13 +507,18 @@
 
 .event:last-child { border-bottom: none; }
 
-.eventClickable:hover {
-  background: rgba(0, 0, 0, 0.03);
+.event:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
-/* 选中态：左侧 2px 强调竖线 + 极淡暖色背景 */
+.eventClickable:hover {
+  background: var(--bg-hero-mist);
+}
+
+/* 选中态:左侧 2px Earth Blue 竖线 + 极淡冷蓝背景 */
 .eventActive {
-  background: color-mix(in srgb, var(--color-accent-500) 4%, transparent);
+  background: rgba(79, 143, 224, 0.04);
 }
 
 .eventActive::before {
@@ -522,28 +528,27 @@
   top: 8px;
   bottom: 8px;
   width: 2px;
-  background: var(--color-accent-500);
+  background: var(--earth-blue);
 }
 
-.eventActive .eventIndex { color: var(--color-accent-500); font-weight: 600; }
+.eventActive .eventIndex { color: var(--earth-blue); font-weight: var(--fw-semibold); }
 
 /* 编号 */
 .eventIndex {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
-  font-weight: 500;
-  color: var(--color-ink-500);
+  font-weight: var(--fw-medium);
+  color: var(--text-tertiary);
   font-variant-numeric: tabular-nums;
   padding-top: 2px;
 }
 
-/* 48x48 现场小图 */
+/* 48x48 现场小图 · A2 LOCK 0 大圆角(2px) */
 .eventThumb {
   width: 48px;
   height: 48px;
-  border-radius: var(--r-md);
   overflow: hidden;
-  background: color-mix(in srgb, var(--color-ink-900) 5%, transparent);
+  background: var(--cl-03);
   flex-shrink: 0;
   position: relative;
 }
@@ -553,7 +558,7 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: saturate(0.7) contrast(0.95) brightness(1.02);
+  filter: saturate(0.85) contrast(0.98) brightness(1.0);
 }
 
 .eventThumb::after {
@@ -561,8 +566,8 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg,
-    rgba(217, 119, 87, 0.06) 0%,
-    rgba(60, 50, 40, 0.08) 100%);
+    rgba(79, 143, 224, 0.04) 0%,
+    rgba(7, 14, 20, 0.05) 100%);
   mix-blend-mode: multiply;
   pointer-events: none;
 }
@@ -584,24 +589,24 @@
 }
 
 .eventCityName {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 13px;
-  font-weight: var(--fw-semibold);
-  color: var(--color-ink-900);
+  font-weight: var(--fw-medium);
+  color: var(--text-primary);
   letter-spacing: -0.01em;
 }
 
 .eventCityEn {
-  font-family: var(--font-serif);
+  font-family: var(--font-editorial);
   font-size: 10px;
   font-style: italic;
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
 }
 
 .eventTime {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
   font-variant-numeric: tabular-nums;
   margin-left: auto;
 }
@@ -618,17 +623,17 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--color-ink-900) 15%, transparent);
+  background: var(--cl-04);
   margin-right: 6px;
   flex-shrink: 0;
 }
 
 .eventTitle {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 13px;
-  font-weight: var(--font-semibold);
-  color: var(--color-ink-900);
+  font-weight: var(--fw-medium);
+  color: var(--text-primary);
   line-height: 1.3;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -639,10 +644,10 @@
 
 .eventDesc {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-editorial);
   font-size: 11px;
   font-style: italic;
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -662,40 +667,53 @@
 .eventSource {
   font-family: var(--font-sans);
   font-size: 9px;
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .eventDot {
-  color: var(--color-ink-300);
+  color: var(--text-tertiary);
   font-size: 9px;
 }
 
 .eventUpdated {
   font-family: var(--font-sans);
   font-size: 9px;
-  color: var(--color-ink-300);
+  color: var(--text-tertiary);
   font-style: italic;
 }
 
 .eventType {
   font-family: var(--font-sans);
   font-size: 8px;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   text-transform: uppercase;
   letter-spacing: 0.15em;
   padding: 2px 6px;
   border: 1px solid;
   border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--event-accent, var(--color-ink-500)) 8%, transparent);
+  background: rgba(79, 143, 224, 0.08);
   margin-left: auto;
   white-space: nowrap;
 }
 
-/* ── 移动端 ── */
-@media (max-width: 900px) {
+/* ════════════════════════════════════════════════════════════
+   响应式 · D-P0-01 三档(per responsive-rules-v1.md)
+   ════════════════════════════════════════════════════════════ */
+
+/* Tablet 768-1279 */
+@media (max-width: 1279px) and (min-width: 768px) {
+  .utcNumber { font-size: 40px; }
+  .leftCol { padding: 8px 20px 8px 8px; }
+  .rightCol { padding: 8px 8px 8px 20px; }
+  .tagline { font-size: 15px; }
+  .event { padding: 9px 4px; min-height: 72px; max-height: 84px; }
+}
+
+/* Mobile <768 · 单列纵向 + 触摸目标 ≥ 44px */
+@media (max-width: 767px) {
   .layout {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto 1fr;
@@ -707,29 +725,24 @@
   }
   .leftCol {
     padding: 8px 16px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid var(--border-hairline);
   }
   .rightCol {
     padding: 8px 16px;
   }
-  .utcNumber { font-size: 36px; }
-  .tagline { font-size: 14px; }
-  .event { padding: 10px 4px; }
-  .reshuffle { display: none; }
-}
-
-@media (max-width: 640px) {
   .utcNumber { font-size: 28px; }
-/* 移动端：状态行不超 2 行；
-   日期 + 状态 badge 同行；副文案另起一行（已在 .statusSubtitle 中由 flex 处理） */
-@media (max-width: 640px) {
+  .tagline { font-size: 13px; }
+  .event {
+    padding: 12px 4px;
+    min-height: 80px;
+    max-height: none;
+  }
+  .reshuffle { display: none; }
+  /* 状态行不超 2 行 */
   .statusRow { flex-wrap: nowrap; }
   .date { font-size: 9px; letter-spacing: 0.15em; }
   .statusBadge { font-size: 9px; letter-spacing: 0.15em; gap: 5px; }
   .statusLabel { white-space: nowrap; }
-}
-
-  .tagline { font-size: 13px; }
   .eventThumb { width: 48px; height: 48px; }
   .eventCityName { font-size: 13px; }
   .eventTitle { font-size: 12px; }

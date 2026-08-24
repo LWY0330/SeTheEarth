@@ -1,148 +1,329 @@
 /* ============================================================
-   看见地球 · See Earth — Design Tokens (v2)
-   现代版旅行手册 · 液态玻璃 UI · 极致克制
+   看见地球 · See Earth — Design Tokens (VF 1.2 · D-P0-01 LOCKED)
+   ------------------------------------------------------------
+   - Direction A2 · Visual Foundation v1.2 + v1.3 Layer Complete
+   - Cold Light 12 档灰 + Earth Blue 9 档 + Layer 三色
+   - 4 套 Typography (Display / Editorial / Sans / Mono)
+   - 4px Base Grid · 4 档 Motion · 0 阴影 / 0 大圆角
+   - 兼容 v2.32.0 token(--color-canvas / --color-ink-* / --color-accent-*)
+     旧组件仍可用,新 LOCKED 组件优先用 --bg-page / --text-* / --earth-blue
+   - 引用规范:所有视觉常量必须通过 var(--xxx) 引用,严禁硬编码 HEX
 
-   设计原则：
-   1. 奶白底 + 墨黑字 + 暖橘强调（参考 Fitzcarraldo Editions + 旅行手册）
-   2. 衬线大标题（Fraunces）+ Sans 副标题（Inter）
-   3. 液态玻璃 UI（参考 Linear + Apple Vision Pro）
-   4. 所有视觉常量集中在此，组件只引用 --tokens
+   Locked source:
+   - 07-.../前端设计规则/Direction A2—— Visual Foundation v1.0.md
+   - 05-项目现状/d11-css-tokens-extraction.md (Component Library first pass)
+   - 07-.../SEE_EARTH_DESIGN_SYSTEM_v1.3_Complete_Spec.md §2.1.9 Layer Palette
    ============================================================ */
 
 :root {
-  /* ---------- Color · Surface (页面分层) ---------- */
-  --color-canvas:        #F5F1EA;   /* 奶白底，温暖手感纸 */
-  --color-canvas-soft:   #EFE9DC;   /* 浅一档，分割/背景层 */
-  --color-canvas-deep:   #E8E2D5;   /* 深一档，hover/分割线 */
-  --color-overlay:       rgba(245, 241, 234, 0.72);  /* 玻璃面板底色 */
+  /* ════════════════════════════════════════════════════════════
+     SECTION 1 · COLOR · Cold Light 12 档灰 + Earth Blue + Layer
+     ════════════════════════════════════════════════════════════ */
 
-  /* ---------- Color · Ink (墨色文字) ---------- */
-  --color-ink-900:       #1A1A1A;   /* 主文字 */
-  --color-ink-700:       #3A3833;   /* 次文字 */
-  --color-ink-500:       #6B6862;   /* 辅助文字 */
-  --color-ink-300:       #5E5950;   /* v1.3.x PR #16: WCAG AA (≥4.5:1 on #F5F1EA) */   /* 弱化文字 / placeholder */
-  --color-ink-inverse:   #F5F1EA;   /* 反色，玻璃面板上的深色文字用这个 */
+  /* ---------- A2 LOCK · Foundation(冷白底) ---------- */
+  --bg-page:           #F4F7FA;   /* 全站底色 · Cold Light 0 档 */
+  --bg-hero-mist:      #F8FBFD;   /* Hero 区域微亮 · Cold Light 0.5 档 */
+  --surface-base:      #FAFAFA;   /* Card / Section base · Cold Light 1 档 */
+  --surface-overlay:   rgba(7, 14, 20, 0.X);  /* Hero 暗 gradient overlay(具体值在 overlay section) */
 
-  /* ---------- Color · Accent (暖橘强调) ---------- */
-  --color-accent-500:    #B25E40;   /* v1.3.x PR #16: WCAG AA (≈4.7:1 on #F5F1EA, 替代 #D97757) */   /* 暖橘，强调色，CTA / focus ring */
-  --color-accent-400:    #E59072;   /* hover */
-  --color-accent-600:    #B85F40;   /* active */
-  --color-accent-100:    #F5DCD0;   /* 极弱背景 */
+  /* ---------- A2 LOCK · Cold Light 12 档灰阶 ---------- */
+  /* Cold Light = 冷白底 + 极弱冷蓝色调;12 档从 0 到 11 */
+  --cl-00:             #FFFFFF;   /* 11.5 · 纯白(高亮按钮 / 强焦点) */
+  --cl-01:             #F8FBFD;   /* 11 · 极淡冷(hero mist) */
+  --cl-02:             #F4F7FA;   /* 10 · 冷白(page) */
+  --cl-03:             #EBF0F5;   /* 9 · 微冷(dividers) */
+  --cl-04:             #DBE3EB;   /* 8 · 弱冷(borders subtle) */
+  --cl-05:             #BAC4D0;   /* 7 · 中弱冷(secondary muted) */
+  --cl-06:             #95A2B0;   /* 6 · 中冷(tertiary) */
+  --cl-07:             #6E7C8C;   /* 5 · 中强冷(meta) */
+  --cl-08:             #4D5A66;   /* 4 · 强冷(secondary text) */
+  --cl-09:             #2E3946;   /* 3 · 极强冷(strong text) */
+  --cl-10:             #1A222B;   /* 2 · 接近黑(heading text) */
+  --cl-11:             #070E14;   /* 1 · 冷黑(contrast text) */
 
-  /* ---------- Color · Status (语义色) ---------- */
-  --color-success:       #6B8E5A;
-  --color-warning:       #C8924A;
-  --color-error:         #B85450;
-  --color-info:          var(--color-accent-500);
+  /* ---------- A2 LOCK · Text 5 层语义 ---------- */
+  --text-primary:      #11161B;   /* 主文字 / 标题(深,几近纯黑) */
+  --text-secondary:    #4D5A66;   /* 副文字 / 描述 */
+  --text-tertiary:     #7B8792;   /* Meta / Hint / 弱信息 */
+  --text-inverse:      #F7FAFC;   /* Hero 上的白文字 */
+  --text-quaternary:   rgba(17, 22, 27, 0.5);  /* 占位 / 弱化 */
 
-  /* ---------- Liquid Glass (液态玻璃) ---------- */
+  /* ---------- A2 LOCK · Layer Palette ---------- */
+  --earth-blue:        #4F8FE0;   /* 主蓝 · Earth Blue · 冷光 + 地球蓝(Kyoto 基准) */
+  --earth-blue-deep:   #1A4D7E;   /* 深蓝 · hover / focus / 焦点圈 */
+  --earth-blue-deeper: #264A73;   /* 极深蓝 · active */
+  --earth-blue-subtle: #DCECFB;   /* 浅蓝 · focus bg */
+  --earth-blue-mist:   #EAF3FC;   /* 极淡蓝 · placeholder */
+  --atmosphere-blue:   #8EBBEF;   /* 用户时区 marker(World Time Rail "Your Time" dot) */
+  --layer-blue:        #5A91D9;   /* Blue Layer 信息色(Kyoto · 同 --earth-blue 系,但单独 token) */
+  --layer-yellow:      #D3AC54;   /* Yellow Layer 信息色(Lisbon) */
+  --layer-red:         #D66C61;   /* Red Layer 信息色(Khartoum) */
+  --success-green:     #4A8A4A;   /* Success 状态对勾(默认) */
+  --warning:           #C8924A;   /* Warning 状态 */
+
+  /* ---------- A2 LOCK · Border(5 层) ---------- */
+  --border-hairline:   rgba(17, 22, 27, 0.08);   /* 全局细线 */
+  --border-subtle:     rgba(0, 0, 0, 0.12);      /* 中等细线 */
+  --border-strong:     rgba(0, 0, 0, 0.20);      /* 强调细线 */
+  --border-accent:     var(--earth-blue);          /* 强调边框 */
+  --border-inverse:    rgba(247, 250, 252, 0.20); /* 暗背景上的细线 */
+
+  /* ---------- A2 LOCK · Focus Ring(Earth Blue 2px 焦点圈) ---------- */
+  --focus-ring:        0 0 0 2px rgba(26, 77, 126, 0.40);
+  --focus-ring-bold:   0 0 0 2px var(--earth-blue-deep);
+
+  /* ---------- A2 LOCK · Overlay(Hero 暗 gradient) ---------- */
+  --overlay-hero-top:    linear-gradient(180deg, rgba(7,14,20,0.30), transparent);
+  --overlay-hero-bottom: linear-gradient(0deg, rgba(7,14,20,0.50), transparent);
+  --overlay-hero-left:   linear-gradient(105deg, rgba(7,14,20,0.45), transparent);
+  --overlay-hero-warm-bottom: linear-gradient(0deg, rgba(40,24,16,0.5), transparent);  /* Khartoum 暖暗棕 */
+
+  /* ---------- LEGACY · 兼容 v2.32.0 旧组件(已部署 alpha 上的非 LOCKED 组件) ---------- */
+  --color-canvas:        var(--bg-page);    /* 兼容映射:奶白 → 冷白 */
+  --color-canvas-soft:   var(--cl-03);      /* 兼容映射 */
+  --color-canvas-deep:   var(--cl-04);      /* 兼容映射 */
+  --color-overlay:       rgba(244, 247, 250, 0.72);
+  --color-ink-900:       var(--text-primary);
+  --color-ink-700:       var(--cl-08);
+  --color-ink-500:       var(--cl-07);
+  --color-ink-300:       var(--cl-06);
+  --color-ink-inverse:   var(--text-inverse);
+  /* v2.32.0 的暖橘保留作为 LEGACY token,但新组件不要用 */
+  --color-accent-500:    var(--earth-blue);  /* 兼容映射:暖橘 → 冷蓝 */
+  --color-accent-400:    var(--earth-blue-mist);
+  --color-accent-600:    var(--earth-blue-deep);
+  --color-accent-100:    var(--earth-blue-subtle);
+  --color-success:       var(--success-green);
+  --color-error:         var(--layer-red);
+  --color-info:          var(--earth-blue);
+
+  /* ---------- Legacy Liquid Glass(保留兼容,新组件不用) ---------- */
   --glass-bg:            rgba(255, 255, 255, 0.42);
   --glass-bg-hover:      rgba(255, 255, 255, 0.52);
   --glass-bg-active:     rgba(255, 255, 255, 0.62);
   --glass-border:        rgba(255, 255, 255, 0.65);
   --glass-border-strong: rgba(255, 255, 255, 0.85);
-  --glass-highlight-top: rgba(255, 255, 255, 0.85);  /* 顶部高光 */
-  --glass-highlight-bot: rgba(255, 255, 255, 0.20);  /* 底部微亮 */
-  --glass-shadow-near:   0 2px 8px rgba(60, 50, 40, 0.06);
-  --glass-shadow-far:    0 12px 40px rgba(60, 50, 40, 0.10);
-  --glass-shadow:        var(--glass-shadow-near), var(--glass-shadow-far);
+  --glass-highlight-top: rgba(255, 255, 255, 0.85);
+  --glass-highlight-bot: rgba(255, 255, 255, 0.20);
 
-  /* ---------- Typography ---------- */
-  --font-serif:  "Fraunces", "Cormorant Garamond", "Source Han Serif SC",
-                 "Songti SC", "STSong", serif;
-  --font-sans:   "Inter", "PingFang SC", "Microsoft YaHei",
-                 -apple-system, BlinkMacSystemFont, "Segoe UI",
-                 Roboto, Helvetica, Arial, sans-serif;
-  --font-mono:   "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  /* ════════════════════════════════════════════════════════════
+     SECTION 2 · TYPOGRAPHY · 4 套字体 + 完整字号阶梯
+     ════════════════════════════════════════════════════════════ */
 
-  /* 字号阶梯（1.25 倍率） */
-  --fs-display:  clamp(3rem, 6vw + 1rem, 5.5rem);   /* 主愿景文案 */
-  --fs-h1:       clamp(2rem, 3vw + 1rem, 3rem);
-  --fs-h2:       clamp(1.5rem, 2vw + 0.75rem, 2rem);
-  --fs-h3:       1.25rem;
-  --fs-body:     1rem;
-  --fs-small:    0.875rem;
-  --fs-micro:    0.75rem;
+  /* ---------- Font Family · 4 套 fallback 链 ---------- */
+  --font-display:    "Cormorant Garamond", "Fraunces", "Songti SC", "STSong", serif;
+  --font-editorial:  "Fraunces", "Source Han Serif SC", "Songti SC", serif;
+  --font-serif:      var(--font-display);   /* 兼容映射(原 v2.32.0 用的 --font-serif) */
+  --font-sans:       "Inter", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:       "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
 
-  --fw-regular:  400;
-  --fw-medium:   500;
-  --fw-semibold: 600;
-  --fw-bold:     700;
+  /* ---------- Font Size · Display 阶梯(120 / 72 / 64 / 48) ---------- */
+  --fs-display-xl:   120px;     /* 主城市名 / 大屏主标 */
+  --fs-display-l:    72px;      /* Section 主标题 */
+  --fs-display-m:    64px;      /* Echo 提问 / Hero 主标 */
+  --fs-display-s:    48px;      /* 章节主标 / 大数字 */
+  --fs-display-xs:   40px;      /* 中等章节主标 */
 
-  --lh-tight:    1.1;
-  --lh-snug:     1.3;
-  --lh-base:     1.55;
-  --lh-loose:    1.8;
+  /* ---------- Heading / Body / Meta / Time 阶梯 ---------- */
+  --fs-h2:           36px;      /* 章节副标 */
+  --fs-h3:           28px;      /* 城市英文名 / 章节副标 */
+  --fs-h4:           22px;      /* 描述块 / Echo Success */
+  --fs-body-l:       18px;      /* 大正文 */
+  --fs-body:         17px;      /* 全站默认正文 */
+  --fs-body-s:       14px;      /* NavLink / 列表项 */
+  --fs-meta:         12px;      /* Meta uppercase */
+  --fs-caption:      11px;      /* Caption uppercase */
+  --fs-micro:        9px;       /* 微信息 */
+  --fs-time-xl:      80px;      /* 时间数字大(选中原) */
+  --fs-time-l:       64px;      /* 时间数字大 */
+  --fs-time-m:       32px;      /* 时间数字中 */
+  --fs-time-s:       16px;      /* 时间数字小 */
+  --fs-time-xs:      14px;      /* 时间数字极小 */
 
-  --letter-tight:   -0.02em;
-  --letter-normal:  0;
-  --letter-wide:    0.04em;
-  --letter-display: -0.03em;   /* 大标题专用 */
+  /* ---------- 旧版 clamp 字号(保留兼容) ---------- */
+  --fs-display-clamp: clamp(3rem, 6vw + 1rem, 5.5rem);
+  --fs-h1-clamp:      clamp(2rem, 3vw + 1rem, 3rem);
+  --fs-h2-clamp:      clamp(1.5rem, 2vw + 0.75rem, 2rem);
 
-  /* ---------- Spacing (8 倍数) ---------- */
-  --sp-1:   4px;
-  --sp-2:   8px;
-  --sp-3:   12px;
-  --sp-4:   16px;
-  --sp-5:   24px;
-  --sp-6:   32px;
-  --sp-7:   48px;
-  --sp-8:   64px;
-  --sp-9:   96px;
-  --sp-10:  128px;
+  /* ---------- Font Weight ---------- */
+  --fw-light:       300;
+  --fw-regular:     400;
+  --fw-medium:      500;
+  --fw-semibold:    600;
+  --fw-bold:        700;
+
+  /* ---------- Line Height ---------- */
+  --lh-tight:       1.0;
+  --lh-snug:        1.05;
+  --lh-base:        1.55;
+  --lh-normal:      1.5;
+  --lh-relaxed:     1.65;
+  --lh-loose:       1.85;
+
+  /* ---------- Letter Spacing ---------- */
+  --ls-tight:       -0.02em;
+  --ls-snug:        -0.01em;
+  --ls-normal:      0;
+  --ls-meta:        0.16em;
+  --ls-wide:        0.18em;
+  --ls-xwide:       0.28em;
+  --letter-tight:   var(--ls-tight);
+  --letter-normal:  var(--ls-normal);
+  --letter-wide:    var(--ls-meta);
+  --letter-display: -0.03em;
+
+  /* ════════════════════════════════════════════════════════════
+     SECTION 3 · SPACING · 4px Base Grid
+     ════════════════════════════════════════════════════════════ */
+
+  --s-0:    0;
+  --s-1:    4px;
+  --s-2:    8px;
+  --s-3:    12px;
+  --s-4:    16px;
+  --s-5:    20px;
+  --s-6:    24px;
+  --s-7:    32px;
+  --s-8:    40px;
+  --s-9:    48px;
+  --s-10:   64px;
+  --s-11:   80px;
+  --s-12:   128px;
+  --s-13:   160px;
+
+  /* ---------- Legacy 8 倍数(保留兼容) ---------- */
+  --sp-1:   var(--s-1);
+  --sp-2:   var(--s-2);
+  --sp-3:   var(--s-3);
+  --sp-4:   var(--s-4);
+  --sp-5:   var(--s-6);
+  --sp-6:   var(--s-7);
+  --sp-7:   var(--s-9);
+  --sp-8:   var(--s-10);
+  --sp-9:   var(--s-12);
+  --sp-10:  var(--s-12);
   --sp-11:  192px;
 
-  /* ---------- Radius ---------- */
-  --r-xs:    4px;
-  --r-sm:    8px;
-  --r-md:    12px;
-  --r-lg:    20px;
-  --r-xl:    32px;
-  --r-2xl:   48px;
-  --r-pill:  999px;
+  /* ════════════════════════════════════════════════════════════
+     SECTION 4 · RADIUS · A2 LOCK ≤ 2px · 0 大圆角全局规则
+     ════════════════════════════════════════════════════════════ */
 
-  /* ---------- Shadow (墨色阴影，不用黑色) ---------- */
-  --shadow-1: 0 1px 2px rgba(60, 50, 40, 0.04);
-  --shadow-2: 0 4px 12px rgba(60, 50, 40, 0.06);
-  --shadow-3: 0 12px 32px rgba(60, 50, 40, 0.10);
-  --shadow-4: 0 24px 64px rgba(60, 50, 40, 0.14);
+  --r-0:     0;
+  --r-1:     2px;     /* A2 LOCK 默认 */
+  --r-xs:    var(--r-1);  /* 兼容映射:4px → 2px */
+  --r-sm:    var(--r-1);  /* 兼容映射:8px → 2px */
+  --r-md:    var(--r-1);  /* 兼容映射:12px → 2px */
+  --r-lg:    var(--r-1);  /* 兼容映射:20px → 2px */
+  --r-xl:    var(--r-1);  /* 兼容映射:32px → 2px */
+  --r-2xl:   var(--r-1);  /* 兼容映射:48px → 2px */
+  --r-pill:  999px;   /* 保留 pill(用于圆点 / 状态) */
 
-  /* ---------- Motion (慢节奏 ≥ 300ms) ---------- */
+  /* ════════════════════════════════════════════════════════════
+     SECTION 5 · SHADOW · A2 LOCK 0 阴影
+     ════════════════════════════════════════════════════════════ */
+
+  --shadow-none:  none;
+  --shadow-1:     none;   /* A2 LOCK · 全局无阴影 */
+  --shadow-2:     none;
+  --shadow-3:     none;
+  --shadow-4:     none;
+  --shadow-glass-near: none;
+  --shadow-glass-far:  none;
+  --shadow-glass:      none;
+
+  /* ════════════════════════════════════════════════════════════
+     SECTION 6 · MOTION · 3 档(per responsive-rules + d11 §6)
+     ════════════════════════════════════════════════════════════ */
+
+  --motion-fast:    120ms;   /* Active 状态 scale 0.99 */
+  --motion-base:    220ms;   /* Hover / Focus / State 过渡 */
+  --motion-slow:    700ms;   /* Hero scale / Reveal */
+  --motion-reveal:  800ms;   /* Unknown Reveal 坐标过渡 */
+
+  /* ---------- 旧版 v2.32.0 6 档(保留兼容) ---------- */
   --dur-instant:  100ms;
-  --dur-fast:     200ms;
+  --dur-fast:     var(--motion-base);
   --dur-base:     320ms;
-  --dur-slow:     500ms;
+  --dur-slow:     var(--motion-slow);
   --dur-cinema:   800ms;
   --dur-glacial:  1200ms;
 
-  --ease-out:      cubic-bezier(0.22, 1, 0.36, 1);      /* 减速 */
-  --ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-emphatic: cubic-bezier(0.16, 1, 0.3, 1);      /* 强减速，更柔 */
-  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);  /* 弹性 */
-  --ease-linear:   linear;
+  /* ---------- Easing ---------- */
+  --ease-out:       cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out:    cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-emphatic:  cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-linear:    linear;
 
-  /* ---------- Layout ---------- */
-  --layout-max:    1280px;
-  --layout-gutter: clamp(24px, 5vw, 64px);
-  --search-max-w:  640px;
+  /* ════════════════════════════════════════════════════════════
+     SECTION 7 · LAYOUT · 容器 / 断点 / Header
+     ════════════════════════════════════════════════════════════ */
 
-  /* ---------- Z-Index ---------- */
-  --z-bg:        0;
+  --content-max-width-1440:  1376px;
+  --content-max-width-1680:  1616px;
+  --content-max-width-1920:  1856px;
+  --content-max-width:       var(--content-max-width-1440);
+  --page-padding-x:          32px;
+  --header-height:           72px;
+  --hero-height-detail:      720px;
+  --hero-height-unknown:     100vh;
+
+  /* ---------- 旧版(保留兼容) ---------- */
+  --layout-max:        1280px;
+  --layout-gutter:     clamp(24px, 5vw, 64px);
+  --search-max-w:      640px;
+
+  /* ════════════════════════════════════════════════════════════
+     SECTION 8 · STATE · 6 状态(D-P0-01 §5 LOCKED)
+     ════════════════════════════════════════════════════════════ */
+
+  --state-default-bg:        transparent;
+  --state-hover-bg:          var(--bg-hero-mist);
+  --state-focus-ring:        0 0 0 2px var(--focus-ring);
+  --state-active-scale:      scale(0.99);
+  --state-disabled-opacity:  0.5;
+  --state-success-color:     var(--success-green);
+
+  /* ---------- Cursor ---------- */
+  --cursor-pointer:      pointer;
+  --cursor-text:         text;
+  --cursor-not-allowed:  not-allowed;
+
+  /* ════════════════════════════════════════════════════════════
+     SECTION 9 · Z-INDEX
+     ════════════════════════════════════════════════════════════ */
+
+  --z-base:      1;
   --z-cards:     5;
   --z-content:   10;
   --z-search:    20;
   --z-overlay:   30;
   --z-tooltip:   40;
+  --z-sticky:    100;
+  --z-modal:     500;
+  --z-full:      1000;
+
+  /* ════════════════════════════════════════════════════════════
+     SECTION 10 · 3 BREAKPOINTS · D-P0-01 LOCKED
+     ════════════════════════════════════════════════════════════ */
+  /* 仅文档化;实际断点在各组件 @media 中显式写 */
+  --bp-desktop:   1280px;
+  --bp-tablet:    768px;
+  --bp-mobile:    0px;
 }
 
-/* ---------- prefers-reduced-motion ---------- */
+/* ---------- prefers-reduced-motion · 全 motion 关闭 ---------- */
 @media (prefers-reduced-motion: reduce) {
   :root {
-    --dur-instant: 1ms;
-    --dur-fast:    1ms;
-    --dur-base:    1ms;
-    --dur-slow:    1ms;
-    --dur-cinema:  1ms;
-    --dur-glacial: 1ms;
+    --motion-fast:    1ms;
+    --motion-base:    1ms;
+    --motion-slow:    1ms;
+    --motion-reveal:  1ms;
+    --dur-instant:    1ms;
+    --dur-fast:       1ms;
+    --dur-base:       1ms;
+    --dur-slow:       1ms;
+    --dur-cinema:     1ms;
+    --dur-glacial:    1ms;
   }
 }

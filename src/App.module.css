@@ -1,27 +1,32 @@
 /* ============================================================
-   App · v2.11.0
-   - 板块 2：左主视觉 62% + 右 10 城市索引 38%
-   - 板块 3：横向 24h 时间轴 + 6 事件行（与板块 2 不同结构）
+   App · v1.7.0 · D-P0-01 Phase 1 实施 · A2 Visual Foundation v1.2
+   ------------------------------------------------------------
+   - 移除 v2.32.0 黄色杂志风格(暖米白 + 暖橘 + 大圆角)
+   - 应用 A2 LOCK:冷白底 + Earth Blue 主色 + 12 档灰 + 0 大圆角
+   - 4 套 Typography(Display Cormorant + Editorial Fraunces + Sans Inter + Mono JetBrains)
+   - 3 档响应式:Desktop ≥1280 / Tablet 768-1279 / Mobile <768
+   - 0 阴影 · 焦点圈 Earth Blue 2px
    ============================================================ */
 
 .app {
-  background: var(--color-canvas);
-  color: var(--color-ink-900);
+  background: var(--bg-page);
+  color: var(--text-primary);
+  min-height: 100vh;
 }
 
 /* ════════════════════════════════════════════════════════════
-   首屏 · 100svh 极简
+   首屏 · Hero · 冷白底 + Earth Blue 主色
    ════════════════════════════════════════════════════════════ */
 
 .hero {
   position: relative;
   min-height: 100svh;
   height: 100svh;
-  background: var(--color-canvas);
+  background: var(--bg-page);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24px var(--layout-gutter) 32px;
+  padding: 24px var(--page-padding-x) 32px;
 }
 
 .header {
@@ -29,7 +34,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  max-width: var(--layout-max);
+  max-width: var(--content-max-width);
   margin: 0 auto;
   flex-shrink: 0;
 }
@@ -39,31 +44,33 @@
   align-items: center;
   gap: 10px;
   text-decoration: none;
-  color: var(--color-ink-900);
-  transition: opacity var(--dur-fast) var(--ease-out);
+  color: var(--text-primary);
+  transition: opacity var(--motion-base) var(--ease-out);
 }
 
 .logo:hover { opacity: 0.6; }
 
+/* A2 LOCK · Logo dot = Earth Blue(Kyoto 基准 cold light) */
 .logoDot {
   width: 7px;
   height: 7px;
   border-radius: var(--r-pill);
-  background: var(--color-accent-500);
-  box-shadow: 0 0 6px rgba(217, 119, 87, 0.4);
+  background: var(--earth-blue);
+  box-shadow: 0 0 6px rgba(79, 143, 224, 0.4);
 }
 
 .logoCn {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 17px;
-  font-weight: var(--fw-semibold);
+  font-weight: var(--fw-medium);
+  letter-spacing: -0.005em;
 }
 
 .logoEn {
-  font-family: var(--font-serif);
+  font-family: var(--font-editorial);
   font-size: 13px;
   font-style: italic;
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
 }
 
 .nav {
@@ -75,22 +82,23 @@
 }
 
 .nav a {
-  color: var(--color-ink-500);
+  color: var(--text-secondary);
   text-decoration: none;
-  transition: color var(--dur-fast) var(--ease-out);
+  transition: color var(--motion-base) var(--ease-out);
   cursor: pointer;
 }
 
 .navLink {
-  color: var(--color-ink-500);
+  color: var(--text-secondary);
   text-decoration: none;
-  transition: color var(--dur-fast) var(--ease-out);
+  transition: color var(--motion-base) var(--ease-out);
   cursor: pointer;
 }
 
-.navLink:hover { color: var(--color-ink-900); }
+/* A2 LOCK · Hover 颜色 = Earth Blue */
+.navLink:hover { color: var(--earth-blue); }
 
-@media (max-width: 640px) { .nav { display: none; } }
+@media (max-width: 768px) { .nav { display: none; } }
 
 .heroContent {
   flex: 1;
@@ -106,23 +114,26 @@
 
 .title {
   margin: 0;
-  font-family: var(--font-serif);
-  font-size: clamp(2.25rem, 4.5vw + 0.5rem, 3.75rem);
-  font-weight: var(--fw-bold);
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 4.5vw + 0.5rem, 4.5rem);
+  font-weight: var(--fw-medium);
   letter-spacing: -0.025em;
   line-height: 1.05;
   max-width: 14ch;
+  color: var(--text-primary);
 }
 
+/* A2 LOCK · titleEm = Earth Blue underline(替代 v2.32.0 暖橘) */
 .titleEm {
+  font-family: var(--font-editorial);
   font-style: italic;
-  color: var(--color-accent-500);
-  font-weight: var(--fw-bold);
+  color: var(--earth-blue-deep);
+  font-weight: var(--fw-medium);
   display: inline-block;
   background: linear-gradient(
     transparent 65%,
-    rgba(217, 119, 87, 0.25) 65%,
-    rgba(217, 119, 87, 0.25) 90%,
+    rgba(79, 143, 224, 0.20) 65%,
+    rgba(79, 143, 224, 0.20) 90%,
     transparent 90%
   );
   padding: 0 0.1em;
@@ -130,11 +141,11 @@
 
 .subtitle {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-editorial);
   font-size: 15px;
   font-style: italic;
   font-weight: var(--fw-regular);
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -144,7 +155,7 @@
 
 .subtitleEn {
   font-style: italic;
-  color: var(--color-ink-300);
+  color: var(--text-tertiary);
   font-size: 13px;
 }
 
@@ -158,7 +169,7 @@
   margin: 0;
   font-family: var(--font-sans);
   font-size: 11px;
-  color: var(--color-ink-300);
+  color: var(--text-tertiary);
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -171,13 +182,12 @@
 }
 
 /* ════════════════════════════════════════════════════════════
-   板块 2：10 城市（主+索引 · 城市档案）
+   板块 2 · 6 城市（主+索引 · 城市档案）
    ════════════════════════════════════════════════════════════ */
 
 .citiesSection {
-  /* v2.30.0 · 容纳 hero 图 + CITY NOW 卡 + 标题区 + 12 城市列表于 100svh */
-  background: var(--color-canvas);
-  padding: 20px var(--layout-gutter) 20px;
+  background: var(--bg-page);
+  padding: 20px var(--page-padding-x) 20px;
   max-width: 1280px;
   margin: 0 auto;
   min-height: 100svh;
@@ -193,15 +203,15 @@
   gap: 16px;
   margin-bottom: 8px;
   padding-bottom: 10px;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-ink-900) 10%, transparent);
+  border-bottom: 1px solid var(--border-hairline);
   flex-shrink: 0;
 }
 
 .sectionNumber {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
-  font-weight: 500;
-  color: var(--color-ink-500);
+  font-weight: var(--fw-medium);
+  color: var(--text-tertiary);
   letter-spacing: 0.15em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -217,20 +227,21 @@
 
 .sectionTitle {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 20px;
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-medium);
   letter-spacing: -0.02em;
   line-height: 1.15;
   white-space: nowrap;
+  color: var(--text-primary);
 }
 
 .sectionSubtitle {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-editorial);
   font-size: 12px;
   font-style: italic;
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
 }
 
 .citiesLayout {
@@ -253,13 +264,13 @@
 }
 
 /* ════════════════════════════════════════════════════════════
-   板块 3：全球实时时间轴（与板块 2 完全不同的结构）
+   板块 3 · 实时时间轴（MomentsTimeline）
    ════════════════════════════════════════════════════════════ */
 
 .moments {
-  background: var(--color-canvas);
-  padding: 28px var(--layout-gutter);
-  border-top: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  background: var(--bg-page);
+  padding: 28px var(--page-padding-x);
+  border-top: 1px solid var(--border-hairline);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -269,15 +280,15 @@
   text-align: center;
   margin-bottom: 24px;
   padding-bottom: 14px;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  border-bottom: 1px solid var(--border-hairline);
   flex-shrink: 0;
 }
 
 .momentsNumber {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
-  font-weight: 500;
-  color: var(--color-ink-500);
+  font-weight: var(--fw-medium);
+  color: var(--text-tertiary);
   letter-spacing: 0.15em;
   text-transform: uppercase;
   display: block;
@@ -286,20 +297,21 @@
 
 .momentsTitle {
   margin: 0 0 4px;
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 20px;
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-medium);
   letter-spacing: -0.02em;
   line-height: 1.15;
+  color: var(--text-primary);
 }
 
 .momentsSubtitle {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-editorial);
   font-size: 12px;
   font-style: italic;
   font-weight: var(--fw-regular);
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
 }
 
 .momentsNotice {
@@ -308,7 +320,7 @@
   font-family: var(--font-sans);
   font-size: 10px;
   font-style: italic;
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
   letter-spacing: 0.05em;
   flex-shrink: 0;
 }
@@ -319,46 +331,15 @@
 }
 
 /* ════════════════════════════════════════════════════════════
-   响应式
+   价值主张 + 搜索建议 + 为什么看见地球
    ════════════════════════════════════════════════════════════ */
-
-@media (max-width: 900px) {
-  .citiesLayout {
-    grid-template-columns: 1fr;
-    grid-template-rows: minmax(280px, 45%) 1fr;
-    gap: 14px;
-  }
-  .citiesSection { height: auto; min-height: 100svh; padding: 16px var(--layout-gutter) 20px; }
-  .sectionTitleBlock { flex-direction: column; align-items: flex-start; gap: 4px; margin: 0 8px; }
-  .sectionTitle { font-size: 18px; }
-  .sectionSubtitle { font-size: 11px; }
-  .momentsTitle { font-size: 18px; }
-  .momentsSubtitle { font-size: 11px; }
-}
-
-@media (max-width: 640px) {
-  .citiesLayout {
-    grid-template-rows: minmax(280px, 45%) auto;
-    gap: 12px;
-  }
-  .hero { padding: 16px var(--layout-gutter) 24px; }
-  .citiesSection { padding: 20px var(--layout-gutter); }
-  .moments { padding: 20px var(--layout-gutter); }
-  .title { font-size: clamp(1.75rem, 8vw, 2.5rem); }
-  .subtitle { font-size: 14px; }
-  .sectionHeader { flex-direction: column; align-items: flex-start; gap: 6px; }
-  .sectionTitleBlock { margin: 0; }
-}
-
-
-/* ── v2.20 Prompt D 价值主张 + 搜索建议 + 为什么看见地球 ── */
 
 .valueProp {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-editorial);
   font-size: 18px;
-  font-weight: 400;
-  color: var(--color-ink-700);
+  font-weight: var(--fw-regular);
+  color: var(--text-secondary);
   line-height: 1.4;
   letter-spacing: -0.005em;
   text-align: center;
@@ -367,15 +348,14 @@
 
 .valuePropEn {
   margin: 0;
-  font-family: var(--font-serif);
+  font-family: var(--font-editorial);
   font-size: 13px;
   font-style: italic;
-  color: var(--color-ink-300);
+  color: var(--text-tertiary);
   letter-spacing: 0.02em;
   text-align: center;
 }
 
-/* 搜索建议 */
 .suggestions {
   display: flex;
   flex-wrap: wrap;
@@ -385,29 +365,28 @@
   max-width: 600px;
 }
 
+/* A2 LOCK · suggestion 边框 = hairline + hover = Earth Blue */
 .suggestion {
   display: inline-flex;
   align-items: center;
   padding: 5px 14px;
-  background: rgba(255, 255, 255, 0.5);
-  border: 1px solid color-mix(in srgb, var(--color-ink-900) 12%, transparent);
-  border-radius: 100px;
-  font-family: var(--font-serif);
+  background: var(--state-default-bg);
+  border: 1px solid var(--border-hairline);
+  font-family: var(--font-editorial);
   font-size: 12px;
-  color: var(--color-ink-500);
+  color: var(--text-secondary);
   cursor: pointer;
-  transition: all var(--dur-fast) var(--ease-out);
+  transition: all var(--motion-base) var(--ease-out);
   letter-spacing: -0.005em;
   white-space: nowrap;
 }
 
 .suggestion:hover {
-  color: var(--color-ink-900);
-  border-color: var(--color-ink-900);
-  background: rgba(255, 255, 255, 0.85);
+  color: var(--earth-blue);
+  border-color: var(--earth-blue);
+  background: var(--bg-hero-mist);
 }
 
-/* 为什么看见地球 */
 .why {
   margin-top: 4px;
   max-width: 540px;
@@ -420,28 +399,27 @@
   align-items: center;
   gap: 6px;
   padding: 6px 14px;
-  font-family: var(--font-serif);
+  font-family: var(--font-editorial);
   font-size: 12px;
-  color: var(--color-ink-500);
+  color: var(--text-secondary);
   cursor: pointer;
   list-style: none;
   user-select: none;
   outline: none;
-  border-radius: 100px;
-  transition: color var(--dur-fast) var(--ease-out);
+  transition: color var(--motion-base) var(--ease-out);
 }
 
 .whySummary::-webkit-details-marker { display: none; }
 
 .whySummaryEn {
   font-style: italic;
-  color: var(--color-ink-300);
+  color: var(--text-tertiary);
   font-size: 11px;
 }
 
 .whyArrow {
   font-size: 10px;
-  color: var(--color-ink-300);
+  color: var(--text-tertiary);
   transition: transform 200ms var(--ease-out);
 }
 
@@ -450,27 +428,26 @@
 }
 
 .whySummary:hover {
-  color: var(--color-ink-900);
+  color: var(--earth-blue);
 }
 
 .whyContent {
   margin-top: 10px;
   padding: 12px 16px;
-  background: color-mix(in srgb, var(--color-canvas) 60%, transparent);
-  border: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
-  border-radius: 12px;
-  font-family: var(--font-serif);
+  background: var(--bg-hero-mist);
+  border: 1px solid var(--border-hairline);
+  font-family: var(--font-editorial);
   font-size: 12px;
   font-style: italic;
-  color: var(--color-ink-500);
+  color: var(--text-secondary);
   line-height: 1.6;
   text-align: center;
 }
 
 /* v2.20 板块 3 单组件全宽 */
 .momentsSection {
-  background: var(--color-canvas);
-  padding: 32px var(--layout-gutter);
+  background: var(--bg-page);
+  padding: 32px var(--page-padding-x);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
@@ -481,8 +458,61 @@
   min-height: 0;
 }
 
-/* v2.20 移动端 */
-@media (max-width: 640px) {
+/* ════════════════════════════════════════════════════════════
+   响应式 · D-P0-01 三档(Desktop ≥1280 / Tablet 768-1279 / Mobile <768)
+   ════════════════════════════════════════════════════════════ */
+
+/* Tablet 768-1279:信息重排,内容不变 */
+@media (max-width: 1279px) and (min-width: 768px) {
+  .citiesLayout {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(360px, 55%) 1fr;
+    gap: 14px;
+  }
+  .citiesSection {
+    height: auto;
+    min-height: 100svh;
+    padding: 16px var(--page-padding-x) 20px;
+  }
+  .sectionTitleBlock {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin: 0 8px;
+  }
+  .sectionTitle { font-size: 22px; }
+  .sectionSubtitle { font-size: 13px; }
+  .momentsTitle { font-size: 22px; }
+  .momentsSubtitle { font-size: 13px; }
+  .title { font-size: clamp(2rem, 5vw + 0.5rem, 3.5rem); }
+}
+
+/* Mobile <768:留白增加,核心优先 */
+@media (max-width: 767px) {
+  .citiesLayout {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(280px, 45%) auto;
+    gap: 12px;
+  }
+  .hero {
+    padding: 16px var(--page-padding-x) 24px;
+  }
+  .citiesSection {
+    padding: 20px var(--page-padding-x);
+  }
+  .moments {
+    padding: 20px var(--page-padding-x);
+  }
+  .title {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+  }
+  .subtitle { font-size: 14px; }
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .sectionTitleBlock { margin: 0; }
   .valueProp { font-size: 16px; }
   .valuePropEn { font-size: 12px; }
   .suggestions { gap: 6px; }

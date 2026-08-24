@@ -1,7 +1,14 @@
 /* ============================================================
-   CityFeatured · v2.40.0 主视觉
-   - 时段配图：每 60s 重新计算，picked.url 变化时走 cityImageIn fade-in
-   - 6 时段色调微差：periodOverlay + per-period modifier
+   CityFeatured · v1.7.0 · D-P0-01 Phase 1 · A2 Visual Foundation v1.2
+   ------------------------------------------------------------
+   - 冷白底 + Earth Blue 主色(替代 v2.32.0 暖米白)
+   - 0 大圆角(全局 A2 LOCK 强约束,r-xl=32px → r-1=2px)
+   - 0 阴影(A2 LOCK)
+   - 焦点圈 = Earth Blue 2px
+   - 3 套 Layer 主题:Kyoto=Blue · Lisbon=Yellow · Khartoum=Red
+     · 仅作信息标记,不改底色,不改主图色调
+     · 作用:kicker dot / kicker label 颜色 / VIEW CITY 下划线
+   - 3 档响应式:Desktop ≥1280 / Tablet 768-1279 / Mobile <768
    ============================================================ */
 
 @keyframes cityImageIn {
@@ -27,24 +34,27 @@
   }
 }
 
+/* A2 LOCK · 0 大圆角 + 0 阴影 · 用 hairline border 替代 */
 .featured {
   position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
-  border-radius: var(--r-xl);
+  border-radius: var(--r-1);
   overflow: hidden;
-  background: var(--color-canvas);
-  box-shadow: var(--shadow-2);
-  transition: box-shadow var(--dur-slow) var(--ease-emphatic);
+  background: var(--bg-page);
+  border: 1px solid var(--border-hairline);
+  transition: border-color var(--motion-base) var(--ease-out);
 }
 
-.featured:hover { box-shadow: var(--shadow-3); }
+.featured:hover {
+  border-color: var(--border-subtle);
+}
 
 .featured:focus-visible {
-  outline: 2px solid var(--color-accent-500);
-  outline-offset: 4px;
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .imageWrap {
@@ -52,15 +62,15 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
-  background: var(--color-canvas-deep);
+  background: var(--cl-03);
 }
 
-/* 内置 CityNow（卡片） */
+/* 内置 CityNow */
 .cityNow {
   flex: 0 0 auto;
   padding: 12px 18px 16px;
-  background: var(--color-canvas);
-  border-top: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  background: var(--bg-page);
+  border-top: 1px solid var(--border-hairline);
 }
 
 .image {
@@ -68,91 +78,92 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: saturate(0.75) contrast(0.95) brightness(1.02);
-  transition: filter var(--dur-slow) var(--ease-emphatic),
-              transform var(--dur-glacial) var(--ease-emphatic);
-  animation: cityImageIn 320ms var(--ease-emphatic) both;
+  /* A2 LOCK · 图片冷色调 + 略降饱和 */
+  filter: saturate(0.85) contrast(0.98) brightness(1.0);
+  transition: filter var(--motion-slow) var(--ease-out),
+              transform var(--motion-slow) var(--ease-out);
+  animation: cityImageIn var(--motion-base) var(--ease-out) both;
 }
 
 .featured:hover .image {
-  filter: saturate(0.9) contrast(1) brightness(1.02);
-  transform: scale(1.03);
+  filter: saturate(0.95) contrast(1) brightness(1.0);
+  transform: scale(1.02);
 }
 
+/* A2 LOCK · Cold overlay 替代 v2.32.0 暖色 warmFilter
+   (TSX 仍引用 .warmFilter class name,保留兼容) */
 .warmFilter {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(60, 50, 40, 0) 50%, rgba(26, 26, 26, 0.5) 100%),
-    linear-gradient(135deg, rgba(217, 119, 87, 0.04) 0%, rgba(60, 50, 40, 0.08) 100%),
-    rgba(245, 241, 234, 0.05);
+    linear-gradient(180deg, rgba(7, 14, 20, 0) 50%, rgba(7, 14, 20, 0.55) 100%),
+    linear-gradient(135deg, rgba(26, 77, 126, 0.04) 0%, rgba(7, 14, 20, 0.06) 100%);
   mix-blend-mode: multiply;
   pointer-events: none;
 }
 
-/* ── 时段色调蒙版 ────────────────────────────────────────
-   真实拍摄的 photos 可能不带时段感，所以这里再叠一层：
-     dawn     · 微冷暖（晨光初升）
+/* ── 时段色调蒙版(A2 LOCK · Cold Light 系) ──
+   真实拍摄的 photos 可能不带时段感,这里再叠一层冷调 overlay:
+     dawn     · 极淡冷紫
      morning  · 几乎透明
-     afternoon · 极淡暖
-     evening  · 暖橘偏紫
-     night    · 深蓝灰
-     deepNight· 更深 + 暖色光斑
-   mix-blend-mode: multiply 让蒙版和图像融合而非覆盖。 */
+     afternoon · 极淡冷蓝
+     evening  · 冷蓝偏灰
+     night    · 冷蓝灰
+     deepNight · 极深 + atmosphere-blue 光斑
+   mix-blend-mode: multiply 让蒙版和图像融合而非覆盖 */
 .periodOverlay {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  transition: background var(--dur-base) var(--ease-out);
+  transition: background var(--motion-base) var(--ease-out);
 }
 
 .period_dawn {
   background: linear-gradient(180deg,
-    rgba(245, 230, 200, 0.18) 0%,
-    rgba(217, 119, 87, 0.10) 60%,
-    rgba(60, 50, 40, 0.18) 100%);
+    rgba(180, 200, 220, 0.15) 0%,
+    rgba(79, 143, 224, 0.08) 60%,
+    rgba(26, 77, 126, 0.15) 100%);
   mix-blend-mode: multiply;
 }
 
 .period_morning {
   background: linear-gradient(180deg,
-    rgba(255, 248, 230, 0.06) 0%,
-    rgba(217, 119, 87, 0.04) 100%);
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(79, 143, 224, 0.03) 100%);
   mix-blend-mode: multiply;
 }
 
 .period_afternoon {
   background: linear-gradient(180deg,
-    rgba(245, 200, 150, 0.10) 0%,
-    rgba(217, 119, 87, 0.06) 100%);
+    rgba(142, 187, 239, 0.08) 0%,
+    rgba(79, 143, 224, 0.05) 100%);
   mix-blend-mode: multiply;
 }
 
 .period_evening {
   background: linear-gradient(180deg,
-    rgba(217, 119, 87, 0.18) 0%,
-    rgba(118, 70, 90, 0.22) 60%,
-    rgba(60, 40, 50, 0.30) 100%);
+    rgba(79, 143, 224, 0.15) 0%,
+    rgba(46, 57, 70, 0.20) 60%,
+    rgba(7, 14, 20, 0.25) 100%);
   mix-blend-mode: multiply;
 }
 
 .period_night {
   background: linear-gradient(180deg,
-    rgba(40, 50, 80, 0.32) 0%,
-    rgba(20, 30, 55, 0.45) 60%,
-    rgba(15, 20, 40, 0.55) 100%);
+    rgba(7, 14, 20, 0.35) 0%,
+    rgba(7, 14, 20, 0.45) 60%,
+    rgba(7, 14, 20, 0.55) 100%);
   mix-blend-mode: multiply;
 }
 
-/* deepNight 内嵌一点暖色光斑（避免纯黑），呼应 spec */
 .period_deepNight {
   background:
-    radial-gradient(ellipse 60% 30% at 30% 70%, rgba(217, 119, 87, 0.10) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 25% at 80% 85%, rgba(245, 200, 150, 0.08) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 30% at 30% 70%, rgba(142, 187, 239, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 25% at 80% 85%, rgba(79, 143, 224, 0.06) 0%, transparent 65%),
     linear-gradient(180deg,
-      rgba(20, 25, 50, 0.50) 0%,
-      rgba(10, 15, 35, 0.65) 60%,
-      rgba(8, 12, 28, 0.75) 100%);
+      rgba(7, 14, 20, 0.55) 0%,
+      rgba(7, 14, 20, 0.70) 60%,
+      rgba(7, 14, 20, 0.80) 100%);
   mix-blend-mode: multiply;
 }
 
@@ -167,12 +178,12 @@
   bottom: 0;
   height: 55%;
   background: linear-gradient(180deg,
-    rgba(26, 26, 26, 0) 0%,
-    rgba(26, 26, 26, 0.55) 100%);
+    rgba(7, 14, 20, 0) 0%,
+    rgba(7, 14, 20, 0.55) 100%);
   pointer-events: none;
 }
 
-/* 翻页按钮（仅浏览，不跳转） */
+/* 翻页按钮(仅浏览,不跳转) */
 .navArrow {
   position: absolute;
   top: 50%;
@@ -181,22 +192,22 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--r-pill);
-  border: none;
-  background: color-mix(in srgb, var(--color-canvas) 80%, transparent);
+  border: 1px solid var(--border-inverse);
+  background: rgba(7, 14, 20, 0.20);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  color: var(--color-ink-900);
-  font-family: var(--font-serif);
+  color: var(--text-inverse);
+  font-family: var(--font-display);
   font-size: 22px;
   line-height: 1;
   cursor: pointer;
   opacity: 0;
-  transition: opacity var(--dur-base) var(--ease-out),
-              background var(--dur-base) var(--ease-out),
-              transform var(--dur-base) var(--ease-emphatic);
+  transition: opacity var(--motion-base) var(--ease-out),
+              background var(--motion-base) var(--ease-out),
+              transform var(--motion-base) var(--ease-out);
 }
 
 .navArrowLeft { left: 14px; }
@@ -206,7 +217,7 @@
 .featured:focus-within .navArrow { opacity: 1; }
 
 .navArrow:hover {
-  background: var(--color-canvas);
+  background: rgba(7, 14, 20, 0.40);
   transform: translateY(-50%) scale(1.05);
 }
 .navArrowLeft:hover { transform: translateY(-50%) translateX(-2px) scale(1.05); }
@@ -214,8 +225,8 @@
 .navArrow:active { transform: translateY(-50%) scale(0.95); }
 
 .navArrow:focus-visible {
-  outline: 2px solid var(--color-accent-500);
-  outline-offset: 3px;
+  outline: none;
+  box-shadow: 0 0 0 2px var(--text-inverse);
 }
 
 .content {
@@ -230,25 +241,24 @@
   height: 100%;
   pointer-events: none;
   padding: 28px 36px 28px;
-  color: var(--color-canvas);
+  color: var(--text-inverse);
 }
 
 .content > * { pointer-events: auto; }
-
 
 .meta {
   display: flex;
   align-items: center;
   gap: 16px;
   margin-bottom: 14px;
-  animation: cityTextIn 320ms var(--ease-emphatic) both;
+  animation: cityTextIn var(--motion-base) var(--ease-out) both;
 }
 
 .number {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 500;
-  color: var(--color-canvas);
+  font-weight: var(--fw-medium);
+  color: var(--text-inverse);
   letter-spacing: 0.15em;
   opacity: 0.95;
 }
@@ -261,8 +271,8 @@
 .region {
   font-family: var(--font-sans);
   font-size: 9px;
-  font-weight: 500;
-  color: var(--color-canvas);
+  font-weight: var(--fw-medium);
+  color: var(--text-inverse);
   text-transform: uppercase;
   letter-spacing: 0.3em;
   opacity: 0.7;
@@ -273,20 +283,21 @@
   align-items: baseline;
   gap: 14px;
   margin: 0 0 12px;
-  font-family: var(--font-serif);
-  font-weight: var(--fw-bold);
-  color: var(--color-canvas);
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  color: var(--text-inverse);
   letter-spacing: -0.025em;
-  animation: cityTextIn 320ms var(--ease-emphatic) 60ms both;
+  animation: cityTextIn var(--motion-base) var(--ease-out) 60ms both;
 }
 
-.nameCn {
-  font-size: clamp(32px, 3.5vw + 0.5rem, 48px);
+.nameZh {
+  font-size: clamp(32px, 3.5vw + 0.5rem, 56px);
   line-height: 1.05;
 }
 
 .nameEn {
   font-size: clamp(16px, 1vw + 0.5rem, 22px);
+  font-family: var(--font-editorial);
   font-style: italic;
   font-weight: var(--fw-regular);
   opacity: 0.9;
@@ -294,22 +305,22 @@
 
 .description {
   margin: 0 0 22px;
-  font-family: var(--font-serif);
+  font-family: var(--font-editorial);
   font-size: clamp(14px, 0.8vw + 0.5rem, 17px);
   font-style: italic;
   font-weight: var(--fw-regular);
-  color: var(--color-canvas);
+  color: var(--text-inverse);
   opacity: 0.92;
   line-height: 1.5;
   max-width: 36ch;
-  animation: cityTextInDelay 380ms var(--ease-emphatic) 100ms both;
-  /* 文字高度稳定（不同描述换行后不撑高布局） */
+  animation: cityTextInDelay var(--motion-base) var(--ease-out) 100ms both;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
+/* A2 LOCK · VIEW CITY 下划线 = Layer 信息色(由 data-layer 驱动) */
 .viewCity {
   display: inline-flex;
   align-items: center;
@@ -317,24 +328,98 @@
   padding: 0 0 4px;
   font-family: var(--font-sans);
   font-size: 11px;
-  font-weight: 500;
-  color: var(--color-canvas);
+  font-weight: var(--fw-medium);
+  color: var(--text-inverse);
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  border-bottom: 1px solid rgba(245, 241, 234, 0.5);
+  border-bottom: 1px solid rgba(247, 250, 252, 0.5);
   text-decoration: none;
-  transition: gap var(--dur-base) var(--ease-emphatic),
-              border-color var(--dur-base) var(--ease-out);
-  animation: cityTextIn 320ms var(--ease-emphatic) 140ms both;
+  transition: gap var(--motion-base) var(--ease-out),
+              border-color var(--motion-base) var(--ease-out);
+  animation: cityTextIn var(--motion-base) var(--ease-out) 140ms both;
 }
 
-.viewCity span { transition: transform var(--dur-base) var(--ease-emphatic); }
+.viewCity span { transition: transform var(--motion-base) var(--ease-out); }
 
-.featured:hover .viewCity { gap: 12px; border-color: var(--color-canvas); }
+.featured:hover .viewCity { gap: 12px; border-color: var(--text-inverse); }
 .featured:hover .viewCity span { transform: translateX(2px); }
 .featured:focus-within .viewCity,
 .viewCity:focus-visible {
-  outline: 2px solid var(--color-canvas);
-  outline-offset: 6px;
-  border-radius: var(--r-xs);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--text-inverse);
+  border-radius: var(--r-1);
+}
+
+/* ════════════════════════════════════════════════════════════
+   Layer 主题 · 仅作信息标记(≤ 5% viewport,不改底色)
+   - 作用:kicker dot (region 旁的 marker) + VIEW CITY 下划线
+   ════════════════════════════════════════════════════════════ */
+
+/* meta row 增加一个 dot before .number */
+.featured[data-layer]::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--earth-blue);  /* 默认 blue */
+  flex-shrink: 0;
+}
+
+/* 把 meta 改为带 dot 模式 */
+.featured[data-layer] .meta {
+  position: relative;
+}
+
+/* Blue Layer · Kyoto 基准 */
+.featured[data-layer="blue"]::before {
+  background: var(--earth-blue);
+  box-shadow: 0 0 0 3px rgba(79, 143, 224, 0.15);
+}
+.featured[data-layer="blue"] .viewCity {
+  border-bottom-color: var(--earth-blue);
+}
+
+/* Yellow Layer · Lisbon 基准 */
+.featured[data-layer="yellow"]::before {
+  background: var(--layer-yellow);
+  box-shadow: 0 0 0 3px rgba(211, 172, 84, 0.15);
+}
+.featured[data-layer="yellow"] .viewCity {
+  border-bottom-color: var(--layer-yellow);
+}
+
+/* Red Layer · Khartoum 基准 */
+.featured[data-layer="red"]::before {
+  background: var(--layer-red);
+  box-shadow: 0 0 0 3px rgba(214, 108, 97, 0.15);
+}
+.featured[data-layer="red"] .viewCity {
+  border-bottom-color: var(--layer-red);
+}
+
+/* ════════════════════════════════════════════════════════════
+   响应式 · D-P0-01 三档(per responsive-rules-v1.md §3.2)
+   ════════════════════════════════════════════════════════════ */
+
+/* Tablet 768-1279:hero 缩为 80vh */
+@media (max-width: 1279px) and (min-width: 768px) {
+  .nameZh { font-size: clamp(32px, 4vw + 0.5rem, 56px); }
+  .content { padding: 24px 28px 24px; }
+  .description { font-size: clamp(13px, 0.8vw + 0.4rem, 16px); }
+}
+
+/* Mobile <768:hero 60vh,字号下降 */
+@media (max-width: 767px) {
+  .nameZh { font-size: clamp(28px, 8vw, 40px); }
+  .nameEn { font-size: 14px; }
+  .content { padding: 18px 20px 20px; }
+  .description { font-size: 13px; max-width: 100%; -webkit-line-clamp: 3; }
+  .meta { gap: 10px; margin-bottom: 10px; }
+  .number { font-size: 10px; }
+  .region { font-size: 8px; letter-spacing: 0.25em; }
+  .navArrow { width: 40px; height: 40px; font-size: 18px; }
+  .navArrowLeft { left: 8px; }
+  .navArrowRight { right: 8px; }
+  .cityNow { padding: 10px 14px 12px; }
 }

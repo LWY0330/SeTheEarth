@@ -24,6 +24,18 @@ export type CityFeaturedProps = {
   onNext?: () => void;
 };
 
+/**
+ * v1.7.0 · D-P0-01 Phase 1 · Layer 主题映射
+ * LOCKED(Kyoto=Blue, Lisbon=Yellow, Khartoum=Red)
+ * - 三套 Layer 全站统一 · 仅做信息标记(≤ 5% viewport)
+ * - 不引入新数据,基于 city.id 硬编码
+ */
+const CITY_LAYER: Readonly<Record<string, 'blue' | 'yellow' | 'red' | 'neutral'>> = Object.freeze({
+  kyoto: 'blue',
+  lisbon: 'yellow',
+  khartoum: 'red',
+});
+
 export function CityFeatured({ city, index, total, onPrev, onNext }: CityFeaturedProps) {
   // 主图的"现在时段"每分钟检查一次（24 hours wrap 时段变化）
   // 当 picked 不变时（同一时段）—— 不需要重渲染。
@@ -35,6 +47,7 @@ export function CityFeatured({ city, index, total, onPrev, onNext }: CityFeature
 
   const period = getCurrentPeriod(city.timezone);
   const picked = pickImage(city, period);
+  const layer = CITY_LAYER[city.id] ?? 'neutral';
 
   return (
     <article
@@ -42,6 +55,7 @@ export function CityFeatured({ city, index, total, onPrev, onNext }: CityFeature
       className={styles.featured}
       data-slug={city.slug}
       data-period={period}
+      data-layer={layer}
       aria-label={`${city.nameZh} 主视觉区 · 当前时段 ${period}`}
     >
       <div className={styles.imageWrap} data-period={period}>

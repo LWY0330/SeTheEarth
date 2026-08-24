@@ -1,10 +1,13 @@
 /* ============================================================
-   看见地球 · See Earth — Globals (v2)
-   奶白底 + 墨黑字 + 暖橘强调
+   看见地球 · See Earth — Globals (VF 1.2 · D-P0-01 LOCKED)
+   ------------------------------------------------------------
+   - Direction A2:冷白底 + Earth Blue 主色 + 12 档灰
+   - 字体:Cormorant Garamond (Display) + Fraunces (Editorial) + Inter (Sans) + JetBrains Mono (Mono)
+   - 焦点圈:Earth Blue 2px
    ============================================================ */
 
 @import "./tokens.css";
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 
 *,
 *::before,
@@ -28,33 +31,33 @@ body {
   font-family: var(--font-sans);
   font-size: var(--fs-body);
   line-height: var(--lh-base);
-  color: var(--color-ink-900);
-  background: var(--color-canvas);
+  color: var(--text-primary);
+  background: var(--bg-page);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
-  /* 全局纸面纹理（极淡，温暖手感） */
+  /* A2 LOCK · Cold Light 微调:页面背景极淡冷蓝渐变(替代 v2.32.0 暖橘渐变) */
   background-image:
     radial-gradient(ellipse 60% 40% at 80% 0%,
-      rgba(217, 119, 87, 0.04), transparent 60%),
+      rgba(142, 187, 239, 0.05), transparent 60%),
     radial-gradient(ellipse 50% 35% at 20% 100%,
-      rgba(60, 50, 40, 0.03), transparent 60%);
+      rgba(26, 77, 126, 0.04), transparent 60%);
   background-attachment: fixed;
 }
 
 ::selection {
-  background: var(--color-accent-500);
-  color: var(--color-canvas);
+  background: var(--earth-blue-subtle);
+  color: var(--earth-blue-deep);
 }
 
 a {
-  color: var(--color-accent-500);
+  color: var(--earth-blue-deep);
   text-decoration: none;
-  transition: color var(--dur-fast) var(--ease-out);
+  transition: color var(--motion-base) var(--ease-out);
 }
 a:hover {
-  color: var(--color-accent-600);
+  color: var(--earth-blue-deeper);
 }
 
 button {
@@ -77,14 +80,15 @@ textarea {
   color: inherit;
 }
 
-/* ---- 焦点环（统一暖橘色，旅行手册感） ---- */
+/* ---- A2 LOCK · 焦点圈 · Earth Blue 2px(per d11-css-tokens §1.4) ---- */
 :focus-visible {
-  outline: 2px solid var(--color-accent-500);
-  outline-offset: 3px;
-  border-radius: var(--r-sm);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(26, 77, 126, 0.40);
+  border-radius: 2px;
 }
 :focus:not(:focus-visible) {
   outline: none;
+  box-shadow: none;
 }
 
 /* ---- prefers-reduced-motion ---- */

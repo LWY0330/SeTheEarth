@@ -1,42 +1,43 @@
 /* ============================================================
-   CityCard · v2.8.0 统一轻量卡
-   - 3:2 固定图片比例（图占 ~65%）
-   - 文字：编号 + 国家 + 城市名（极简）
-   - 高度由 grid 控制（统一等高）
+   CityCard · v1.7.0 · D-P0-01 Phase 1 · A2 Visual Foundation v1.2
+   ------------------------------------------------------------
+   - 冷白底 + Earth Blue focus ring(替代 v2.32.0 暖米白 + 暖橘)
+   - 0 大圆角 · 0 阴影(A2 LOCK)
+   - 3:2 图片比例保留(per responsive-rules §2.4)
+   - 3 档响应式(per responsive-rules-v1.md §2.1/§2.2)
    ============================================================ */
 
 .card {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: var(--color-canvas);
-  border-radius: var(--r-xl);
+  background: var(--bg-page);
+  border: 1px solid var(--border-hairline);
   overflow: hidden;
-  box-shadow: var(--shadow-2);
   cursor: pointer;
   transition:
-    transform var(--dur-slow) var(--ease-emphatic),
-    box-shadow var(--dur-slow) var(--ease-emphatic);
+    border-color var(--motion-base) var(--ease-out),
+    transform var(--motion-slow) var(--ease-out);
   height: 100%;
 }
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-3);
+  border-color: var(--border-subtle);
 }
 
 .card:focus-visible {
-  outline: 2px solid var(--color-accent-500);
-  outline-offset: 4px;
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
-/* ── 图片区（3:2 固定比例） ── */
+/* ── 图片区(3:2 固定比例) ── */
 .imageWrap {
   position: relative;
   width: 100%;
   aspect-ratio: 3 / 2;
   overflow: hidden;
-  background: var(--color-canvas-deep);
+  background: var(--cl-03);
   flex-shrink: 0;
 }
 
@@ -45,32 +46,33 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: saturate(0.7) contrast(0.95) brightness(1.02);
+  /* A2 LOCK · 冷色调 + 略降饱和 */
+  filter: saturate(0.85) contrast(0.98) brightness(1.0);
   transition:
-    filter var(--dur-slow) var(--ease-emphatic),
-    transform var(--dur-glacial) var(--ease-emphatic);
+    filter var(--motion-slow) var(--ease-out),
+    transform var(--motion-slow) var(--ease-out);
 }
 
 .card:hover .image {
-  filter: saturate(0.85) contrast(1) brightness(1.02);
+  filter: saturate(0.95) contrast(1) brightness(1.0);
   transform: scale(1.03);
 }
 
+/* A2 LOCK · Cold overlay 替代 v2.32.0 暖色 warmFilter */
 .warmFilter {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(60, 50, 40, 0) 60%, rgba(26, 26, 26, 0.2) 100%),
-    linear-gradient(135deg, rgba(217, 119, 87, 0.04) 0%, rgba(60, 50, 40, 0.08) 100%),
-    rgba(245, 241, 234, 0.05);
+    linear-gradient(180deg, rgba(7, 14, 20, 0) 60%, rgba(7, 14, 20, 0.25) 100%),
+    linear-gradient(135deg, rgba(26, 77, 126, 0.04) 0%, rgba(7, 14, 20, 0.06) 100%);
   mix-blend-mode: multiply;
   pointer-events: none;
 }
 
-/* ── 信息条（极简） ── */
+/* ── 信息条(极简) ── */
 .info {
   padding: 16px 20px 18px;
-  background: var(--color-canvas);
+  background: var(--bg-page);
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -82,22 +84,22 @@
   justify-content: space-between;
   margin-bottom: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid color-mix(in srgb, var(--color-ink-900) 8%, transparent);
+  border-bottom: 1px solid var(--border-hairline);
 }
 
 .number {
-  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 11px;
-  font-weight: 500;
-  color: var(--color-ink-500);
+  font-weight: var(--fw-medium);
+  color: var(--text-tertiary);
   letter-spacing: 0.05em;
 }
 
 .region {
   font-family: var(--font-sans);
   font-size: 9px;
-  font-weight: 500;
-  color: var(--color-ink-500);
+  font-weight: var(--fw-medium);
+  color: var(--text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.2em;
 }
@@ -107,26 +109,41 @@
   align-items: baseline;
   gap: 10px;
   margin: 0;
-  font-family: var(--font-serif);
-  font-weight: var(--fw-semibold);
-  color: var(--color-ink-900);
+  font-family: var(--font-display);
+  font-weight: var(--fw-medium);
+  color: var(--text-primary);
   letter-spacing: -0.01em;
 }
 
-.nameCn {
+.nameZh {
   font-size: 22px;
   line-height: 1.1;
 }
 
 .nameEn {
   font-size: 13px;
+  font-family: var(--font-editorial);
   font-style: italic;
   font-weight: var(--fw-regular);
-  color: var(--color-ink-500);
+  color: var(--text-tertiary);
 }
 
-@media (max-width: 640px) {
-  .info { padding: 12px 14px 14px; }
-  .nameCn { font-size: 18px; }
+/* ════════════════════════════════════════════════════════════
+   响应式 · D-P0-01 三档
+   ════════════════════════════════════════════════════════════ */
+
+/* Tablet 768-1279 */
+@media (max-width: 1279px) and (min-width: 768px) {
+  .info { padding: 14px 18px 16px; }
+  .nameZh { font-size: 20px; }
   .nameEn { font-size: 12px; }
+}
+
+/* Mobile <768 · 触摸目标 ≥ 44px */
+@media (max-width: 767px) {
+  .info { padding: 12px 14px 14px; }
+  .nameZh { font-size: 18px; }
+  .nameEn { font-size: 12px; }
+  /* Touch target:确保 card 整体 ≥ 44px 高度 */
+  .meta { padding-bottom: 8px; margin-bottom: 8px; }
 }
