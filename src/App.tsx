@@ -25,6 +25,8 @@ import CityIndexPage from '@/components/CityIndexPage';
 import AboutPage from '@/components/AboutPage';
 import Meta from '@/components/Meta';
 import HotkeyHelp from '@/components/HotkeyHelp';
+import EarthGlobe from '@/components/EarthGlobe';
+import WorldTimeRail from '@/components/WorldTimeRail';
 import { useHotkeys, type HotkeyActions } from '@/hooks/useHotkeys';
 import styles from './App.module.css';
 
@@ -199,6 +201,11 @@ function HomeShell() {
         </header>
 
         <div className={styles.heroContent}>
+          {/* ═══════ A2 LOCK · Hero · Earth Visual · sitemap §1.1 ═══════ */}
+          <div className={styles.heroEarthGlobe}>
+            <EarthGlobe label="自转的地球" />
+          </div>
+
           <h1 className={styles.title}>
             世界 · 不止<em className={styles.titleEm}>方寸</em>
           </h1>
@@ -270,6 +277,11 @@ function HomeShell() {
               </p>
             </div>
           </details>
+
+          {/* ═══════ A2 LOCK · Hero · World Time Rail · sitemap §1.1 ═══════ */}
+          <div className={styles.heroWorldTimeRail}>
+            <WorldTimeRail cities={cities} />
+          </div>
 
           <p className={styles.scrollHint}>
             <span aria-hidden="true">↓</span> 上滑探索

@@ -310,6 +310,22 @@
   --bp-desktop:   1280px;
   --bp-tablet:    768px;
   --bp-mobile:    0px;
+
+  /* ════════════════════════════════════════════════════════════
+     SECTION 11 · EarthGlobe Visuals · Hero 区域专用 token
+     ------------------------------------------------------------
+     - EarthGlobe.tsx SVG 内引用 fill="var(--land-mass)" 等
+     - A2 LOCK:冷白底 + Earth Blue 强调 + 0 阴影
+     - 替换 v2.32.0 旧暖色海陆配色
+     ════════════════════════════════════════════════════════════ */
+  --ocean-mid:    #5A91D9;   /* 海面亮区 · Layer Blue 系 */
+  --ocean-deep:   #1A4D7E;   /* 海面深区 · Earth Blue Deep */
+  --ocean-dark:   #264A73;   /* 海面极深 · Earth Blue Deeper */
+  --land-mass:    #7B96AE;   /* 大陆 · 冷绿蓝灰(冷白底协调) */
+  --ice-pale:     #EBF0F5;   /* 冰原/南极 · Cold Light 03 */
+  --space-deepest: #070E14;  /* 球体最深背景 · Cold Light 11 */
+  --globe-glow:   rgba(79, 143, 224, 0.18);   /* 大气晕 · Earth Blue 弱 */
+  --globe-shine:  rgba(233, 244, 255, 0.35);  /* 球体高光 · Cold Light 弱 */
 }
 
 /* ---------- prefers-reduced-motion · 全 motion 关闭 ---------- */

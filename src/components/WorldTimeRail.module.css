@@ -1,0 +1,240 @@
+/* ============================================================
+   WorldTimeRail · v2.50.1 · HomeShell Hero 专用
+   ------------------------------------------------------------
+   - A2 LOCK:冷白底 + Earth Blue 强调 + 0 大圆角 + 0 阴影
+   - 0 阴影(全站强约束)
+   - 三档响应式:
+     · Desktop ≥ 1280:12 城横排 grid
+     · Tablet 768-1279:6+6 网格
+     · Mobile < 768:横滑 + 右侧 fade-out 提示
+   - Active cell(user timezone)= Earth Blue 时间数字 + 浅蓝 underline
+   - 焦点圈 = Earth Blue 2px
+   ============================================================ */
+
+.rail {
+  width: 100%;
+  margin: 0 auto;
+  padding: 12px 16px;
+  background: var(--bg-hero-mist);
+  border-top: 1px solid var(--border-hairline);
+  border-bottom: 1px solid var(--border-hairline);
+  /* A2 LOCK · 0 大圆角 · 0 阴影 */
+  border-radius: 0;
+  box-shadow: none;
+  font-family: var(--font-sans);
+}
+
+/* ── Kicker · WORLD TIME 标签 ── */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.kickerDot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--earth-blue);
+  /* A2 LOCK · 6px glow(替代 v2.32.0 暖橘脉冲) */
+  box-shadow: 0 0 4px var(--earth-blue-subtle);
+}
+
+.kickerLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: var(--fw-medium);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ── Scroll wrapper · 容纳 grid 或 flex 横滑 ── */
+.scroll {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ── Grid · 12 列等分(Desktop 默认)· ── */
+.grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.cellLi {
+  list-style: none;
+}
+
+/* ── Cell · 链接样式 · A2 LOCK ── */
+.cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 6px;
+  min-width: 0;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  transition:
+    background var(--motion-base) var(--ease-out),
+    border-color var(--motion-base) var(--ease-out),
+    color var(--motion-base) var(--ease-out);
+}
+
+/* Hover · 冷白底 + Earth Blue border accent */
+.cell:hover {
+  background: var(--bg-page);
+  border-bottom-color: var(--earth-blue);
+  color: var(--text-primary);
+}
+
+/* Focus · Earth Blue 2px 焦点圈(全局规则) */
+.cell:focus,
+.cell:focus-visible {
+  outline: 0;
+  box-shadow: var(--focus-ring);
+}
+
+/* Active press */
+.cell:active {
+  transform: var(--state-active-scale);
+}
+
+/* ── Time · Mono 等宽数字 · A2 LOCK · Desktop 24px / 32px ── */
+.time {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: var(--fw-regular);
+  color: var(--text-primary);
+  letter-spacing: var(--ls-tight);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* ── City name · Sans 11px ── */
+.name {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: var(--fw-medium);
+  color: var(--text-secondary);
+  letter-spacing: 0;
+  line-height: 1.1;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* ── Offset · Mono 10px ── */
+.offset {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: var(--fw-regular);
+  color: var(--text-tertiary);
+  letter-spacing: 0;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+/* ── User city(active)· Earth Blue 时间 + 浅蓝 underline ── */
+.cellUser {
+  border-bottom-color: var(--earth-blue);
+}
+
+.cellUser .time {
+  color: var(--earth-blue);
+  font-weight: var(--fw-medium);
+}
+
+.cellUser .name {
+  color: var(--earth-blue-deep);
+  font-weight: var(--fw-medium);
+}
+
+.cellUser:hover {
+  border-bottom-color: var(--earth-blue-deep);
+}
+
+/* ════════════════════════════════════════════════════════════
+   三档响应式 · D-P0-01 responsive-rules-v1.md §3.1
+   ════════════════════════════════════════════════════════════ */
+
+/* Tablet 768-1279 · 6+6 网格 */
+@media (max-width: 1279px) and (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto auto;
+    gap: 6px;
+  }
+  .time { font-size: 22px; }
+  .cell {
+    padding: 10px 4px;
+  }
+}
+
+/* Mobile < 768 · 横滑 + fade-out 提示 */
+@media (max-width: 767px) {
+  .scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    /* 右侧 fade-out gradient(per responsive-rules-v1.md §3.1 ⚠️) */
+    mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 1) 0,
+      rgba(0, 0, 0, 1) calc(100% - 36px),
+      rgba(0, 0, 0, 0) 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 1) 0,
+      rgba(0, 0, 0, 1) calc(100% - 36px),
+      rgba(0, 0, 0, 0) 100%
+    );
+  }
+  .grid {
+    display: flex;
+    grid-template-columns: none;
+    gap: 4px;
+    width: max-content;
+    min-width: 100%;
+  }
+  .cellLi {
+    flex-shrink: 0;
+    width: 88px;
+  }
+  .cell {
+    padding: 8px 6px;
+  }
+  /* 移动端 time 下限 16px(per responsive-rules-v1.md §2.1 可读性) */
+  .time {
+    font-size: 18px;
+  }
+  .name {
+    font-size: 10px;
+  }
+  .offset {
+    font-size: 9px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .cell {
+    transition: none;
+  }
+  .cell:active {
+    transform: none;
+  }
+}
