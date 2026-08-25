@@ -1,0 +1,15 @@
+day,date,cron_status,api_ok,slots_count,filled_count,is_fallback,fallback_reason,is_complete,duration_ms,admin_ops,notes
+1,2026-08-25,success,true,12,12,false,,true,17,,
+2,2026-08-26,success,true,12,11,false,,true,0,,
+3,2026-08-27,success,true,12,12,false,,true,1,,
+4,2026-08-28,success,true,12,7,true,no_sufficient_candidates,true,0,,
+5,2026-08-29,success,true,12,12,false,,true,0,,
+6,2026-08-30,success,true,12,12,false,,true,0,,
+7,2026-08-31,success,true,12,12,false,,true,0,,
+8,2026-09-01,success,true,12,4,true,no_sufficient_candidates,true,1,,
+9,2026-09-02,success,true,12,12,false,,true,0,,
+10,2026-09-03,success,true,12,9,false,,true,0,,
+11,2026-09-04,success,true,12,12,false,,true,0,rollback→4a22c5b4,
+12,2026-09-05,success,true,12,12,false,,true,0,slot5→day12-replac,
+13,2026-09-06,failed,true,0,0,false,,false,0,,cron failure simulated; API returns last_known_good
+14,2026-09-07,success,true,12,12,false,,true,0,,stale (>= 24h)

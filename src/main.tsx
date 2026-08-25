@@ -4,7 +4,15 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import App from './App';
+import { initSentry } from './lib/analytics/sentry-client';
 import './styles/globals.css';
+
+// v1.1 · E-P0-10 Phase 1 · Sentry 客户端初始化（最小修改 · 1 行）
+// - DSN 缺失时 no-op
+// - production 环境 V1 暂不启用（V1.1 启用）
+if (import.meta.env.VITE_SENTRY_DSN) {
+  initSentry();
+}
 
 const container = document.getElementById('root');
 if (!container) {

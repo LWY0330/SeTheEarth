@@ -1,0 +1,19 @@
+{
+  "name": "see-earth-e-p0-06",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "SEE EARTH V1 · E-P0-06 · Daily 12 supply chain (migrations + cron scripts + admin CLIs + 14-day drill)",
+  "scripts": {
+    "cron:daily": "node --experimental-strip-types --loader=./loader-register-ts.mjs --no-warnings scripts/daily-build.ts",
+    "admin:status": "node --experimental-strip-types --loader=./loader-register-ts.mjs --no-warnings scripts/admin/cli-shared.ts",
+    "admin:publish": "node --experimental-strip-types --loader=./loader-register-ts.mjs --no-warnings scripts/admin/publish.ts",
+    "admin:rollback": "node --experimental-strip-types --loader=./loader-register-ts.mjs --no-warnings scripts/admin/rollback.ts",
+    "admin:patch-slot": "node --experimental-strip-types --loader=./loader-register-ts.mjs --no-warnings scripts/admin/patch-slot.ts",
+    "admin:preview": "node --experimental-strip-types --loader=./loader-register-ts.mjs --no-warnings scripts/admin/preview.ts",
+    "admin:build": "node --experimental-strip-types --loader=./loader-register-ts.mjs --no-warnings scripts/admin/edition-build.ts",
+    "monitoring": "node --experimental-strip-types --loader=./loader-register-ts.mjs --no-warnings scripts/monitoring-emit.ts",
+    "drill:14day": "node --experimental-strip-types --loader=./loader-register-ts.mjs --no-warnings tests/14-day-test.ts",
+    "drill:14day-strict": "node --experimental-strip-types --loader=./loader-register-ts.mjs --no-warnings tests/14-day-test.ts --exit-on-fail --verbose"
+  }
+}

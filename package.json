@@ -15,9 +15,12 @@
     "test:components": "echo '⚠️ Component tests require Vitest or tsx loader (Node 22 strip-types does not support JSX). See docs/universal-city-page.md for migration plan.'"
   },
   "dependencies": {
+    "@sentry/react": "^10.70.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "serve": "^14.2.6"
+    "serve": "^14.2.6",
+    "web-vitals": "^6.1.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
