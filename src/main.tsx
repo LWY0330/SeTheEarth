@@ -7,12 +7,11 @@ import App from './App';
 import { initSentry } from './lib/analytics/sentry-client';
 import './styles/globals.css';
 
-// v1.1 · E-P0-10 Phase 1 · Sentry 客户端初始化（最小修改 · 1 行）
-// - DSN 缺失时 no-op
+// v1.1 · E-P0-10 Phase 1 · Sentry 客户端初始化（最小修改）
+// - DSN 缺失时 initSentry 内部 no-op 并打 console 日志
 // - production 环境 V1 暂不启用（V1.1 启用）
-if (import.meta.env.VITE_SENTRY_DSN) {
-  initSentry();
-}
+// - 总是调用,避免 Vite dead-code-elimination 把整个 Sentry 块消除
+initSentry();
 
 const container = document.getElementById('root');
 if (!container) {
