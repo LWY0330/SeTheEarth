@@ -44,3 +44,29 @@ outputs/
 
 # 备份文件
 *.bak
+
+# ────────────────────────────────────────────────
+# Phase 2 cleanup · 2026-08-25 · 防止 transient artifacts 污染
+# (细粒度规则作为 outputs/ 的补充 · 便于未来选择性恢复)
+# ────────────────────────────────────────────────
+
+# 早期 transient mockups (v1.5 d4-a2 等历史 LOCKED 设计迭代)
+outputs/v1.5-mockups/d4-a2/
+outputs/v1.5-mockups/d4-a2-khartoum-city-detail/
+outputs/v1.5-mockups/d4-a2-khartoum-final-qa/
+outputs/v1.5-mockups/d4-a2-khartoum-final/
+outputs/v1.5-mockups/d4-a2-khartoum-real-photo/
+outputs/v1.5-mockups/d4-a2-khartoum-round2/
+outputs/v1.5-mockups/d4-a2-khartoum-round3/
+outputs/v1.5-mockups/d4-a2-kyoto-city-detail/
+outputs/v1.5-mockups/d4-a2-kyoto-polish-pass/
+outputs/v1.5-mockups/d4-a2-kyoto-refinement/
+outputs/v1.5-mockups/d4-a2-v2/
+outputs/v1.5-mockups/d4-a2-v2-phase15/
+outputs/v1.5-mockups/d5-lisbon-yellow-layer/
+outputs/v1.5-mockups/d8-universal-city-page/
+outputs/v1.5-mockups/d11-component-library/
+outputs/v1.5-mockups/d12-phase4-dark-mode/
+outputs/v1.5-mockups/mockups/
+outputs/v1.5-mockups/timeline-after-fix-v1.5-cream.png
+outputs/v1.5-mockups/d10-unknown-coordinate/unknown-coordinate.html
