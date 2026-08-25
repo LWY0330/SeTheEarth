@@ -72,6 +72,9 @@ This was the root cause of the Sentry incident on 2026-08-25 (`VITE_SENTRY_DSN` 
 `sethearth-2` but the build was actually deploying to `sethearth`).
 Reference: `06-PM Agent 交接/2026-08-25-pm-takeover-postmortem.md` Iron Rule 2.
 
+**📋 Complete step-by-step Vercel configuration guide** (with cross-verification checklist,
+排错清单, 7 铁律遵守):`release-v1/alpha-environment/alpha-api-vercel-env-setup-v1.md`
+
 ## Local development
 
 ```bash
