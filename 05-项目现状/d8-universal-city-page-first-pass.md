@@ -1,15 +1,20 @@
 ---
 title: PROMPT 40 v1 · Universal CityPage first pass(并行推进) — Designer 交付报告
 type: design-proposal
-tags: [universal-citypage, first-pass, 5-states, v2-mapping, prompt-40, see-earth-redesign]
+tags: [universal-citypage, first-pass, 5-states, v2-mapping, prompt-40, see-earth-redesign, PM-APPROVED]
 date: 2026-08-22
-status: 草案 · 待 PM + 外部设计师评审
-sender: 内部 Designer Agent
+last_updated: 2026-08-25
+status: ✅ PM-APPROVED 2026-08-25 · 待外部设计师评审 + mockup PNG 生成
+sender: 内部 Designer Agent (2026-08-22)
+pm_reviewer: 2026-08-25 接管 PM Agent (Phase 2)
 related_docs:
-  - /Users/lwy/Documents/ChatGPT/看见地球/07-设计师设计参考/SEE_EARTH_DESIGN_SYSTEM_v1.3_Complete_Spec.md (v1.3 spec LOCKED)
+  - /Users/lwy/Documents/ChatGPT/看见地球/07-设计师设计参考/SEE_EARTH_DESIGN_SYSTEM_v1.3_Complete_Spec.md (v1.3 spec LOCKED 8/25 · PROMPT 37)
   - /Users/lwy/Documents/ChatGPT/看见地球/05-项目现状/d7-5-city-states-visual-design.md (5 States LOCKED)
   - /Users/lwy/Documents/ChatGPT/看见地球/05-项目现状/d6-phase1-4-screen-to-v2-mapping.md (Mapping LOCKED)
-  - /Users/lwy/Documents/ChatGPT/看见地球/outputs/v1.5-mock-ups/d8-universal-city-page/universal-city-page.html (Template)
+  - /Users/lwy/Documents/ChatGPT/看见地球/outputs/v1.5-mockups/d8-universal-city-page/universal-city-page.html (HTML Template · 285 行 · 路径修正:mockups 不是 mock-ups)
+  - /Users/lwy/Documents/ChatGPT/看见地球/05-项目现状/d14-prompt-40-pm-review.md (PROMPT 40 v1 PM 评审报告 · ACCEPTED)
+  - /Users/lwy/Documents/ChatGPT/看见地球/docs/universal-city-page.md (PROMPT 41 v1 工程 scaffold · v1.6.2 · LOCKED 8/22)
+  - /Users/lwy/Documents/ChatGPT/看见地球/05-项目现状/d13-v1.3-design-system-pm-review.md (PROMPT 37 v1.3 PM 评审报告 · LOCKED 8/25)
 ---
 
 # Universal CityPage first pass(并行推进) — Designer 交付报告
@@ -160,3 +165,19 @@ PM 可手动截图(15 PNG)— 模板已就绪
 ---
 
 **字数统计**:约 1500 字 · 模板 + 5 State 切换 + 兼容性矩阵 + 引用 + 启动条件
+
+---
+
+## ✅ PM-APPROVED · 2026-08-25 · PROMPT 40 v1 PM 评审
+
+**状态**:✅ **PM-APPROVED** · 2026-08-25
+**评审报告**:`05-项目现状/d14-prompt-40-pm-review.md` (接管 PM Agent · Phase 2)
+**评审结论**:7 维度 4.9/5 (34/35) · v1.3 spec 全对齐 · 5 States 切换逻辑正确 · 3 兼容性城市 State A 应保持 0 差异
+**后续路径**:转外部设计师评审 → 外部设计师生成 15 PNG mockup + 3 兼容性截图 → Universal CityPage LOCKED → Phase 2 工程集成
+
+### PM 关注点 (4 项, 不阻塞 LOCK)
+
+1. **Echo 状态数 (5 vs 6)**:PROMPT 40 v1 列 5 状态, v1.3 spec §3.2 写 6 状态(增加 disabled)。Phase 2 实施时补 disabled 状态。
+2. **HTML mockup 路径错误**:原写 `outputs/v1.5-mock-ups/`, 实际为 `outputs/v1.5-mockups/` (无 hyphen)。frontmatter 已修正。
+3. **15 PNG mockup 待生成**:HTML 模板就位 (285 行), 5 States × 3 breakpoints 需 PM 或外部设计师手动截图。
+4. **3 兼容性截图待生成**:Kyoto/Lisbon/Khartoum × Universal State A × 1440, 用于验证 Universal 模板与现有 LOCKED mockup 0 差异。
