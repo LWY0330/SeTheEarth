@@ -77,9 +77,6 @@ outputs/collectui/
 outputs/github_research/
 outputs/obsidian-vault/
 
-# Phase 2 · api/ 目录是孤儿代码,alpha-api 初始化时再 untrack
-api/
-
 # macOS 系统文件(应始终忽略)
 .DS_Store
 
