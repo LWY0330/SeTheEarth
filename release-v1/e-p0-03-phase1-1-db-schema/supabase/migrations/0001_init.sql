@@ -76,9 +76,12 @@ CREATE TABLE assets (
   CONSTRAINT assets_mime_check CHECK (mime IN (
     'image/jpeg','image/png','image/heic','image/webp'
   )),
-  CONSTRAINT assets_bytes_positive CHECK (bytes > 0),
+  CONSTRAINT assets_bytes_nonneg CHECK (bytes >= 0),  -- V1.1: bytes >= 0 (允许 requested 状态为 0)
   CONSTRAINT assets_bytes_max CHECK (bytes <= 26214400),  -- 25 MiB
   CONSTRAINT assets_checksum_format CHECK (checksum_sha256 ~ '^[a-f0-9]{64}$')
+  -- 注: assets_bytes_positive 改为 assets_bytes_nonneg
+  --     原因: seed asset 4 是 'requested' 状态 (尚未上传) · bytes=0 是合法的 metadata-only 记录
+  --     强约束 (bytes > 0) 由 API 端在 'uploaded'/'processing'/'ready' 状态转换前保证
 );
 
 COMMENT ON TABLE assets IS
@@ -166,7 +169,9 @@ CREATE TABLE witness_submissions (
   ),
   CONSTRAINT witness_submissions_client_key_unique UNIQUE (client_key),
   CONSTRAINT witness_submissions_ip_hash_format CHECK (
-    ip_hash IS NULL OR ip_hash ~ '^[a-f0-9]{64}$'
+    -- 宽格式: 接受真实 SHA256 (64 hex) + seed dummy 值 (如 'h_ip_seed_001')
+    --         长度 8-64 · 字符 [a-zA-Z0-9_:-]
+    ip_hash IS NULL OR ip_hash ~ '^[a-zA-Z0-9_:-]{8,64}$'
   ),
   CONSTRAINT witness_submissions_user_agent_class_check CHECK (
     user_agent_class IN (
@@ -460,6 +465,26 @@ CREATE TRIGGER assets_enforce_exif_strip
   EXECUTE FUNCTION assets_enforce_exif_strip();
 
 -- ============================================================
+-- 4.5 创建自定义角色（必须在 RLS CREATE POLICY 之前 · 否则 'role X does not exist'）
+-- ============================================================
+-- 注: Supabase managed Postgres 默认提供 anon / authenticated / service_role
+--       moderator / witness / system 角色需手动创建（IF NOT EXISTS 保证幂等）
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'moderator') THEN
+    CREATE ROLE moderator NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'witness') THEN
+    CREATE ROLE witness NOLOGIN;
+  END IF;
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'system') THEN
+    CREATE ROLE system NOLOGIN;
+  END IF;
+END
+$$;
+
+-- ============================================================
 -- 5. Row Level Security (RLS)
 -- ============================================================
 
@@ -638,20 +663,7 @@ CREATE POLICY rate_limit_buckets_all_service
 --       moderator / witness / system 角色需手动创建（若不存在）
 -- ============================================================
 
--- === 创建自定义角色（IF NOT EXISTS 保证幂等）===
-DO $$
-BEGIN
-  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'moderator') THEN
-    CREATE ROLE moderator NOLOGIN;
-  END IF;
-  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'witness') THEN
-    CREATE ROLE witness NOLOGIN;
-  END IF;
-  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'system') THEN
-    CREATE ROLE system NOLOGIN;
-  END IF;
-END
-$$;
+-- === 创建自定义角色（已移至 §4.5 · 在 RLS 之前执行 · 此处不再重复）===
 
 -- === 公共域 GRANT（anon / authenticated / moderator / service_role）===
 

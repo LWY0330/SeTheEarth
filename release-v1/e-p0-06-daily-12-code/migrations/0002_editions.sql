@@ -96,7 +96,8 @@ CREATE TABLE IF NOT EXISTS edition_slots (
   position            INT  NOT NULL CHECK (position BETWEEN 1 AND 12),
 
   -- Nullable: fallback slots have moment_id NULL.
-  moment_id           UUID,
+  -- 注: TEXT 而非 UUID (per 0000_init_core.sql · moments.id 是 TEXT slug 'kyoto' 等)
+  moment_id           TEXT,
   city_id             TEXT,
 
   -- 3-value enum: witness · seed · editorial

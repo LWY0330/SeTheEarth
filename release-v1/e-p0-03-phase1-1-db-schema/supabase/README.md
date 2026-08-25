@@ -13,9 +13,15 @@
 supabase/
 ├── README.md                      # 本文件
 ├── migrations/
-│   └── 0001_init.sql              # 单文件 DDL（含 extensions/tables/indexes/triggers/RLS/GRANT/cron）
-└── seed-test.sql                  # Alpha 测试数据（12 cities + 6 moments + 12 live + 5 assets + 3 submissions + 2 priv_locs + 3 mod_logs + 3 buckets）
+│   ├── 0000_init_core.sql         # (NEW · 2026-08-25 接管 PM) cities + moments 基表 DDL
+│   └── 0001_init.sql              # witness backend 5 表 DDL（含 indexes/triggers/RLS/GRANT/cron）
+└── seed-test.sql                  # Alpha 测试数据（12 cities + 18 moments + 5 assets + 3 submissions + 2 priv_locs + 3 mod_logs + 3 buckets）
 ```
+
+> **2026-08-25 更新（接管 PM Agent）**：
+> 1. 新增 `0000_init_core.sql`（182 行）。原因：原 README §限制 3 说"本 migrations 不创建 cities / moments 表（DDL 由 E-P0-02 锁定）"，但 E-P0-02 的 DDL（`release-v1/vertical-slice-phase1/db-schema-v1.md §2.6`）只存在于文档未落地为 SQL 文件。接管 PM 按 `seed-test.sql` 实际写入字段反推创建 cities + moments 简化版 DDL，作为 Phase 1 source of truth。
+> 2. **执行顺序更新为 4 段**：`0000_init_core.sql` → `0001_init.sql` → `0002_editions.sql`（在 `release-v1/e-p0-06-daily-12-code/migrations/`）→ `seed-test.sql`。详见 `release-v1/PHASE1-DEPLOY-RUNBOOK.md`。
+> 3. vertical-slice 双轨制已登记为 Phase 2 技术债，不阻塞 Phase 1。
 
 ---
 
