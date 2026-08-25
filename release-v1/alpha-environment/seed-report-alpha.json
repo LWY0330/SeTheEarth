@@ -1,0 +1,304 @@
+{
+  "generated_at": "2026-08-22T09:02:58.959Z",
+  "environment": "alpha",
+  "version": "1.6.4",
+  "cities_count": 12,
+  "moments_count": 6,
+  "live_events_count": 12,
+  "photo_assets_count": 5,
+  "cities": [
+    {
+      "id": "kyoto",
+      "slug": "kyoto",
+      "nameZh": "京都",
+      "nameEn": "Kyoto",
+      "countryZh": "日本",
+      "countryEn": "Japan",
+      "timezone": "Asia/Tokyo",
+      "isFeatured": true,
+      "lon": 135.7681,
+      "lat": 35.0116
+    },
+    {
+      "id": "lisbon",
+      "slug": "lisbon",
+      "nameZh": "里斯本",
+      "nameEn": "Lisbon",
+      "countryZh": "葡萄牙",
+      "countryEn": "Portugal",
+      "timezone": "Europe/Lisbon",
+      "isFeatured": true,
+      "lon": -9.1393,
+      "lat": 38.7223
+    },
+    {
+      "id": "shanghai",
+      "slug": "shanghai",
+      "nameZh": "上海",
+      "nameEn": "Shanghai",
+      "countryZh": "中国",
+      "countryEn": "China",
+      "timezone": "Asia/Shanghai",
+      "isFeatured": true,
+      "lon": 121.4737,
+      "lat": 31.2304
+    },
+    {
+      "id": "mexico-city",
+      "slug": "mexico-city",
+      "nameZh": "墨西哥城",
+      "nameEn": "Mexico City",
+      "countryZh": "墨西哥",
+      "countryEn": "Mexico",
+      "timezone": "America/Mexico_City",
+      "isFeatured": true,
+      "lon": -99.1332,
+      "lat": 19.4326
+    },
+    {
+      "id": "tokyo",
+      "slug": "tokyo",
+      "nameZh": "东京",
+      "nameEn": "Tokyo",
+      "countryZh": "日本",
+      "countryEn": "Japan",
+      "timezone": "Asia/Tokyo",
+      "isFeatured": false,
+      "lon": 139.6917,
+      "lat": 35.6895
+    },
+    {
+      "id": "rio",
+      "slug": "rio",
+      "nameZh": "里约",
+      "nameEn": "Rio de Janeiro",
+      "countryZh": "巴西",
+      "countryEn": "Brazil",
+      "timezone": "America/Sao_Paulo",
+      "isFeatured": false,
+      "lon": -43.1729,
+      "lat": -22.9068
+    },
+    {
+      "id": "reykjavik",
+      "slug": "reykjavik",
+      "nameZh": "雷克雅未克",
+      "nameEn": "Reykjavík",
+      "countryZh": "冰岛",
+      "countryEn": "Iceland",
+      "timezone": "Atlantic/Reykjavik",
+      "isFeatured": false,
+      "lon": -21.9426,
+      "lat": 64.1466
+    },
+    {
+      "id": "cape-town",
+      "slug": "cape-town",
+      "nameZh": "开普敦",
+      "nameEn": "Cape Town",
+      "countryZh": "南非",
+      "countryEn": "South Africa",
+      "timezone": "Africa/Johannesburg",
+      "isFeatured": true,
+      "lon": 18.4241,
+      "lat": -33.9249
+    },
+    {
+      "id": "london",
+      "slug": "london",
+      "nameZh": "伦敦",
+      "nameEn": "London",
+      "countryZh": "英国",
+      "countryEn": "United Kingdom",
+      "timezone": "Europe/London",
+      "isFeatured": true,
+      "lon": -0.1276,
+      "lat": 51.5074
+    },
+    {
+      "id": "berlin",
+      "slug": "berlin",
+      "nameZh": "柏林",
+      "nameEn": "Berlin",
+      "countryZh": "德国",
+      "countryEn": "Germany",
+      "timezone": "Europe/Berlin",
+      "isFeatured": false,
+      "lon": 13.405,
+      "lat": 52.52
+    },
+    {
+      "id": "rome",
+      "slug": "rome",
+      "nameZh": "罗马",
+      "nameEn": "Rome",
+      "countryZh": "意大利",
+      "countryEn": "Italy",
+      "timezone": "Europe/Rome",
+      "isFeatured": false,
+      "lon": 12.4964,
+      "lat": 41.9028
+    },
+    {
+      "id": "sydney",
+      "slug": "sydney",
+      "nameZh": "悉尼",
+      "nameEn": "Sydney",
+      "countryZh": "澳大利亚",
+      "countryEn": "Australia",
+      "timezone": "Australia/Sydney",
+      "isFeatured": false,
+      "lon": 151.2093,
+      "lat": -33.8688
+    }
+  ],
+  "moments": [
+    {
+      "id": "nyc",
+      "cityZh": "纽约",
+      "cityEn": "New York",
+      "category": "finance",
+      "captured_at": "2026-08-22T09:02:58.959Z"
+    },
+    {
+      "id": "gaza",
+      "cityZh": "加沙",
+      "cityEn": "Gaza",
+      "category": "war",
+      "captured_at": "2026-08-22T09:02:58.959Z"
+    },
+    {
+      "id": "paris",
+      "cityZh": "巴黎",
+      "cityEn": "Paris",
+      "category": "art",
+      "captured_at": "2026-08-22T09:02:58.959Z"
+    },
+    {
+      "id": "tokyo",
+      "cityZh": "东京",
+      "cityEn": "Tokyo",
+      "category": "urban",
+      "captured_at": "2026-08-22T09:02:58.959Z"
+    },
+    {
+      "id": "cape-town",
+      "cityZh": "开普敦",
+      "cityEn": "Cape Town",
+      "category": "nature",
+      "captured_at": "2026-08-22T09:02:58.959Z"
+    },
+    {
+      "id": "reykjavik",
+      "cityZh": "雷克雅未克",
+      "cityEn": "Reykjavík",
+      "category": "romance",
+      "captured_at": "2026-08-22T09:02:58.959Z"
+    }
+  ],
+  "live_events": [
+    {
+      "id": "tokyo-01",
+      "cityId": "tokyo",
+      "cityNameZh": "东京",
+      "title": "末班地铁刚走，第一班即将出发",
+      "observedAt": "2026-08-07T01:40:00+09:00",
+      "sourceType": "editorial"
+    },
+    {
+      "id": "sydney-02",
+      "cityId": "sydney",
+      "cityNameZh": "悉尼",
+      "title": "海风把夜晚留在港口",
+      "observedAt": "2026-08-07T02:40:00+10:00",
+      "sourceType": "local-media"
+    },
+    {
+      "id": "newyork-03",
+      "cityId": "newyork",
+      "cityNameZh": "纽约",
+      "title": "华尔街刚刚敲响开盘钟",
+      "observedAt": "2026-08-06T12:40:00-04:00",
+      "sourceType": "official"
+    },
+    {
+      "id": "rio-04",
+      "cityId": "rio",
+      "cityNameZh": "里约",
+      "title": "海滩上的午后正变得热闹",
+      "observedAt": "2026-08-06T13:40:00-03:00",
+      "sourceType": "editorial"
+    },
+    {
+      "id": "london-05",
+      "cityId": "london",
+      "cityNameZh": "伦敦",
+      "title": "下班的人流穿过金融城",
+      "observedAt": "2026-08-06T17:40:00+01:00",
+      "sourceType": "local-media"
+    },
+    {
+      "id": "capetown-06",
+      "cityId": "capetown",
+      "cityNameZh": "开普敦",
+      "title": "桌山被最后一束夕阳照亮",
+      "observedAt": "2026-08-06T18:40:00+02:00",
+      "sourceType": "weather-data"
+    },
+    {
+      "id": "nairobi-07",
+      "cityId": "nairobi",
+      "cityNameZh": "内罗毕",
+      "title": "当地咖啡馆开始营业",
+      "observedAt": "2026-08-06T19:40:00+03:00",
+      "sourceType": "community"
+    },
+    {
+      "id": "kathmandu-08",
+      "cityId": "kathmandu",
+      "cityNameZh": "加德满都",
+      "title": "街边小贩开始摆摊",
+      "observedAt": "2026-08-07T08:40:00+05:45",
+      "sourceType": "local-media"
+    },
+    {
+      "id": "shanghai-09",
+      "cityId": "shanghai",
+      "cityNameZh": "上海",
+      "title": "外滩的灯一盏一盏亮起来",
+      "observedAt": "2026-08-07T00:40:00+08:00",
+      "sourceType": "editorial"
+    },
+    {
+      "id": "berlin-10",
+      "cityId": "berlin",
+      "cityNameZh": "柏林",
+      "title": "博物馆岛刚开馆",
+      "observedAt": "2026-08-06T18:40:00+02:00",
+      "sourceType": "local-media"
+    },
+    {
+      "id": "mexico-11",
+      "cityId": "mexico-city",
+      "cityNameZh": "墨西哥城",
+      "title": "Coyoacán 街头艺人开始表演",
+      "observedAt": "2026-08-06T10:40:00-06:00",
+      "sourceType": "editorial"
+    },
+    {
+      "id": "rome-12",
+      "cityId": "rome",
+      "cityNameZh": "罗马",
+      "title": "特莱维喷泉前有人许愿",
+      "observedAt": "2026-08-06T11:40:00+02:00",
+      "sourceType": "local-media"
+    }
+  ],
+  "photo_asset_ids": [
+    "unknown-stage-1-001",
+    "unknown-stage-2-001",
+    "unknown-stage-3-001",
+    "unknown-stage-4-001",
+    "unknown-stage-5-mexico-city"
+  ]
+}

@@ -1,0 +1,1468 @@
+openapi: 3.1.0
+info:
+  title: SEE EARTH V1 Shared API Contract
+  version: 1.0.0
+  summary: Web ↔ iOS shared business contract for SEE EARTH V1 (Internal Alpha → Closed Beta)
+  description: |
+    # SEE EARTH V1 · Web / iOS Shared API Contract · v1.0.0
+
+    > **Status:** LOCKED · 2026-08-22 · E-P0-09 first pass.
+    > **Scope:** 6 resources (City / Moment / Edition / Witness Submission / Asset Upload / Echo).
+    > **Invariant:** Only presentation differs between Web and iOS; the business contract is identical.
+
+    ## Reading guide
+
+    - All persisted timestamps are RFC 3339 UTC with offset.
+    - All public endpoints MUST strip precise location fields.
+    - Admin endpoints (`/v1/admin/*`) require moderator or admin role and audit log access.
+    - The `error_code` field is stable snake_case; full dictionary in `error-code-dict-v1.md`.
+    - Versioning: contract version is `1.0.0`. Breaking changes require a new major version
+      (see `schema-changelog-v1.md`).
+
+    ## Cross-document links
+
+    - Zod sources: `zod-schemas/*.ts`
+    - Change log: `schema-changelog-v1.md`
+    - Field mapping: `web-ios-mapping-v1.md`
+    - Error dictionary: `error-code-dict-v1.md`
+    - Decisions: `contract-decisions-v1.md`
+  contact:
+    name: SEE EARTH Engineering · E-P0-09 Contract Owner
+    url: https://see-earth.example/contract
+  license:
+    name: SEE EARTH Internal
+    identifier: see-earth-internal-1.0.0
+  x-see-earth:
+    contract_version: 1.0.0
+    released_at: 2026-08-22
+    status: LOCKED
+    brief_anchor: "Release Strategy Brief §5 E-P0-09 + §5 E-P0-05"
+    blocks_tasks:
+      - E-P0-02
+      - E-P0-03
+      - E-P0-07
+      - D-P1-01
+    aligned_to:
+      - src/types/city.ts (LOCKED 2026-08-19)
+      - src/types/moment.ts (LOCKED 2026-08-19)
+      - src/types/cityState.ts (LOCKED 2026-08-19)
+      - src/lib/locationPrivacy.ts
+      - src/components/ui/EchoInput.tsx (V1.6.4)
+      - D-P0-05 event-map-v1.md §5
+      - D-P0-01 design-freeze-log-v1.md §11.4
+servers:
+  - url: https://api.see-earth.example/v1
+    description: Production (V1)
+  - url: https://alpha-api.see-earth.example/v1
+    description: Internal Alpha environment (Gate A)
+  - url: https://beta-api.see-earth.example/v1
+    description: Closed Beta environment (Gate B)
+  - url: http://localhost:8787/v1
+    description: Local dev (E-P0-02)
+tags:
+  - name: City
+    description: City-level public resource (no precise location).
+  - name: Moment
+    description: Daily 12 / Moment Detail / CityPage media records.
+  - name: Edition
+    description: Daily 12 / Edition composition + lifecycle.
+  - name: Witness
+    description: Minimal Witness Submission + asset upload pipeline.
+  - name: Asset
+    description: Short-lived upload grants + processed asset metadata.
+  - name: Echo
+    description: Anonymous Echo submissions (P1 backend).
+  - name: Admin
+    description: Moderator / admin scope (raw coords, audit trails).
+  - name: System
+    description: Health / version / error schema.
+security:
+  - {}
+  - bearerAuth: []
+  - witnessSessionAuth: []
+  - moderatorSessionAuth: []
+paths:
+  # ---------------------------------------------------------------- City
+  /cities:
+    get:
+      tags: [City]
+      operationId: listCities
+      summary: List cities (public)
+      parameters:
+        - $ref: '#/components/parameters/Layer'
+        - $ref: '#/components/parameters/PageState'
+        - $ref: '#/components/parameters/CountryCode'
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Public list of cities.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CityListEnvelope' }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /cities/{cityIdOrSlug}:
+    get:
+      tags: [City]
+      operationId: getCity
+      summary: Fetch a city by ID or slug
+      parameters:
+        - name: cityIdOrSlug
+          in: path
+          required: true
+          schema: { type: string, minLength: 1, maxLength: 96 }
+        - name: include_visual
+          in: query
+          required: false
+          schema: { type: boolean, default: true }
+      responses:
+        '200':
+          description: Public city.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CityEnvelope' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # --------------------------------------------------------------- Moment
+  /cities/{cityIdOrSlug}/moments:
+    get:
+      tags: [Moment]
+      operationId: listMomentsForCity
+      summary: List Moments for a city
+      parameters:
+        - name: cityIdOrSlug
+          in: path
+          required: true
+          schema: { type: string }
+        - name: moderation_status
+          in: query
+          schema:
+            type: string
+            enum: [pending, approved, rejected, flagged]
+            default: approved
+        - name: time_bucket
+          in: query
+          schema:
+            type: string
+            enum: [NOW, TODAY, PAST, ALL]
+            default: ALL
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Moment list.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MomentListEnvelope' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /moments/{momentId}:
+    get:
+      tags: [Moment]
+      operationId: getMoment
+      summary: Fetch a single Moment
+      parameters:
+        - name: momentId
+          in: path
+          required: true
+          schema: { type: string }
+        - name: include_credit
+          in: query
+          schema: { type: boolean, default: true }
+      responses:
+        '200':
+          description: Public Moment.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MomentEnvelope' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # -------------------------------------------------------------- Edition
+  /editions/today:
+    get:
+      tags: [Edition]
+      operationId: getTodayEdition
+      summary: Today's Daily 12 (with fallback)
+      parameters:
+        - name: date
+          in: query
+          schema: { type: string, pattern: '^\d{4}-\d{2}-\d{2}$' }
+        - name: include_fallback
+          in: query
+          schema: { type: boolean, default: true }
+      responses:
+        '200':
+          description: Public Edition (today, or fallback if requested and available).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EditionEnvelope' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /editions/{editionId}:
+    get:
+      tags: [Edition]
+      operationId: getEditionById
+      summary: Fetch a specific Edition by id
+      parameters:
+        - name: editionId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Public Edition.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EditionEnvelope' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /editions:
+    get:
+      tags: [Edition]
+      operationId: listEditions
+      summary: List historical editions
+      parameters:
+        - name: from
+          in: query
+          schema: { type: string, pattern: '^\d{4}-\d{2}-\d{2}$' }
+        - name: to
+          in: query
+          schema: { type: string, pattern: '^\d{4}-\d{2}-\d{2}$' }
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+      responses:
+        '200':
+          description: Edition list.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EditionListEnvelope' }
+
+  # -------------------------------------------------------- Witness Submit
+  /witness/submissions:
+    post:
+      tags: [Witness]
+      operationId: createWitnessSubmission
+      summary: Create or upsert a Witness Submission (idempotent on client_key)
+      security:
+        - witnessSessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateWitnessSubmissionRequest' }
+      responses:
+        '201':
+          description: Submission created or resumed.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WitnessSubmissionEnvelope' }
+        '200':
+          description: Existing submission returned (idempotent replay).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WitnessSubmissionEnvelope' }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: client_key reused with conflicting payload.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    get:
+      tags: [Witness]
+      operationId: listWitnessSubmissions
+      summary: List the witness's own submissions (paginated).
+      security:
+        - witnessSessionAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+        - name: status
+          in: query
+          schema: { $ref: '#/components/schemas/WitnessSubmissionStatus' }
+      responses:
+        '200':
+          description: Witness's own submissions.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WitnessSubmissionListEnvelope' }
+  /witness/submissions/{submissionId}:
+    get:
+      tags: [Witness]
+      operationId: getWitnessSubmission
+      summary: Fetch a submission the witness owns
+      security:
+        - witnessSessionAuth: []
+      parameters:
+        - name: submissionId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Public submission (no precise location).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WitnessSubmissionEnvelope' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags: [Witness]
+      operationId: updateWitnessSubmission
+      summary: Withdraw a submission (only allowed transition for witnesses)
+      security:
+        - witnessSessionAuth: []
+      parameters:
+        - name: submissionId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateWitnessSubmissionRequest' }
+      responses:
+        '200':
+          description: Updated submission.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/WitnessSubmissionEnvelope' }
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # -------------------------------------------------------------- Asset
+  /assets/upload-url:
+    post:
+      tags: [Asset]
+      operationId: requestAssetUploadUrl
+      summary: Request a short-lived upload grant
+      security:
+        - witnessSessionAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AssetUploadRequest' }
+      responses:
+        '201':
+          description: Upload grant.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AssetUploadEnvelope' }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '413':
+          description: Payload too large.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+  /assets/{assetId}:
+    get:
+      tags: [Asset]
+      operationId: getAsset
+      summary: Fetch processed asset metadata (public-safe).
+      parameters:
+        - name: assetId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Public asset (EXIF-stripped variant URLs).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AssetEnvelope' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /assets/{assetId}/complete:
+    post:
+      tags: [Asset]
+      operationId: completeAssetUpload
+      summary: Confirm upload (server verifies checksum + size).
+      security:
+        - witnessSessionAuth: []
+      parameters:
+        - name: assetId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/AssetCompleteRequest' }
+      responses:
+        '200':
+          description: Asset transitioned to processing.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AssetEnvelope' }
+        '409':
+          description: Checksum mismatch.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+
+  # --------------------------------------------------------------- Echo
+  /echoes:
+    post:
+      tags: [Echo]
+      operationId: createEcho
+      summary: Submit an Echo (privacy-sensitive body text; returns status only)
+      security:
+        - bearerAuth: []
+        - {}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateEchoRequest' }
+      responses:
+        '201':
+          description: Echo accepted for moderation.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EchoEnvelope' }
+        '202':
+          description: Echo queued for review.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EchoEnvelope' }
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          description: Echo backend unavailable (UI must hide submit affordance).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+  /echoes/{echoId}:
+    get:
+      tags: [Echo]
+      operationId: getEcho
+      summary: Fetch status of an Echo (submitter-only)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: echoId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Echo status (body text never returned).
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/EchoEnvelope' }
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # --------------------------------------------------------------- Admin
+  /admin/cities/{cityIdOrSlug}:
+    get:
+      tags: [Admin]
+      operationId: adminGetCity
+      summary: Moderator-only: include raw coordinates, state_level, moment_stats.
+      security:
+        - moderatorSessionAuth: []
+      parameters:
+        - name: cityIdOrSlug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: AdminCity.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdminCityEnvelope' }
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /admin/moments/{momentId}:
+    get:
+      tags: [Admin]
+      operationId: adminGetMoment
+      summary: Moderator-only: include raw_location, sources, EXIF-stripping audit trail.
+      security:
+        - moderatorSessionAuth: []
+      parameters:
+        - name: momentId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: AdminMoment.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdminMomentEnvelope' }
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /admin/witness/submissions/{submissionId}:
+    get:
+      tags: [Admin]
+      operationId: adminGetWitnessSubmission
+      summary: Moderator-only: full submission incl. precise location claim.
+      security:
+        - moderatorSessionAuth: []
+      parameters:
+        - name: submissionId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: AdminWitnessSubmission.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AdminWitnessSubmissionEnvelope' }
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  # -------------------------------------------------------------- System
+  /healthz:
+    get:
+      tags: [System]
+      operationId: getHealth
+      summary: Service health (no PII)
+      security: []
+      responses:
+        '200':
+          description: Healthy.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, contract_version]
+                properties:
+                  status: { type: string, enum: [ok, degraded, unavailable] }
+                  contract_version: { type: string, example: 1.0.0 }
+                  server_time: { type: string, format: date-time }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    witnessSessionAuth:
+      type: apiKey
+      in: cookie
+      name: see_earth_witness_session
+      description: |
+        Anonymous-but-stable witness session cookie issued by E-P0-03 backend.
+        No email / phone / persistent identifier. TTL ≤ 90 days.
+    moderatorSessionAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Moderator / admin JWT with role claim.
+
+  parameters:
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema: { type: string, minLength: 1, maxLength: 256 }
+    Layer:
+      name: layer
+      in: query
+      required: false
+      schema: { $ref: '#/components/schemas/Layer' }
+    PageState:
+      name: page_state
+      in: query
+      required: false
+      schema: { $ref: '#/components/schemas/CityPageState' }
+    CountryCode:
+      name: country_code
+      in: query
+      required: false
+      schema: { type: string, minLength: 2, maxLength: 2 }
+
+  responses:
+    BadRequest:
+      description: Validation failure.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    NotFound:
+      description: Resource missing.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    Forbidden:
+      description: Authenticated but insufficient role.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    RateLimited:
+      description: Too many requests.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    ServerError:
+      description: Unexpected server error.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+
+  schemas:
+    # ---------- common ----------
+    ErrorEnvelope:
+      type: object
+      additionalProperties: false
+      required: [error_code, message, retryable, request_id]
+      properties:
+        error_code:
+          type: string
+          pattern: '^[a-z][a-z0-9_]*$'
+          description: Stable snake_case code. See error-code-dict-v1.md.
+        message:
+          type: string
+          minLength: 1
+          maxLength: 512
+          description: Human-readable, localisable. Safe to surface to end users.
+        details:
+          type: object
+          additionalProperties:
+            type: string
+          description: Machine-readable context. Never contains PII / tokens / raw coords.
+        retryable:
+          type: boolean
+        request_id:
+          type: string
+          minLength: 1
+          maxLength: 128
+      example:
+        error_code: validation_failed
+        message: captured_at_confidence "untrusted" is not allowed in publish path.
+        retryable: false
+        request_id: req_a3f9b2c1
+    UtcTimestamp:
+      type: string
+      format: date-time
+      description: RFC 3339 timestamp with explicit offset (UTC base + original offset preserved).
+      example: 2026-08-22T08:30:00+09:00
+    IanaTimezone:
+      type: string
+      pattern: '^[A-Za-z_]+/[A-Za-z_]+(/[A-Za-z_]+)*$'
+      example: Asia/Tokyo
+    Locale:
+      type: string
+      enum: [zh, en]
+    AppSurface:
+      type: string
+      enum:
+        - web_homepage
+        - web_today_refresh
+        - web_moment_detail
+        - web_city_detail
+        - web_unknown
+        - web_echo
+        - web_witness
+        - ios_today
+        - ios_moment_detail
+        - ios_city_detail
+        - ios_unknown
+        - ios_echo
+        - ios_witness
+    Layer:
+      type: string
+      enum: [blue, yellow, red]
+      description: 'City visual layer (LOCKED 3 values per D-P0-01 §4).'
+    CityPageState:
+      type: string
+      enum: [A_seed_editorial, B_active, C_low_activity, D_past_only, E_empty]
+    CityStateLevel:
+      type: string
+      enum: [L0_mapped, L1_contextualized, L2_witnessed, L3_active, L4_living_archive]
+    CursorPage:
+      type: object
+      additionalProperties: false
+      required: [next_cursor, has_more]
+      properties:
+        next_cursor: { type: string, nullable: true }
+        has_more: { type: boolean }
+
+    ImageVariant:
+      type: object
+      additionalProperties: false
+      required: [variant, url, width, height, mime]
+      properties:
+        variant:
+          type: string
+          enum: [thumb_320, card_640, detail_1280, full_2560]
+        url: { type: string, format: uri }
+        width: { type: integer, minimum: 1 }
+        height: { type: integer, minimum: 1 }
+        mime:
+          type: string
+          enum: [image/webp, image/jpeg, image/png, image/avif]
+        bytes: { type: integer, minimum: 0 }
+
+    Credit:
+      type: object
+      additionalProperties: false
+      required: [credit_line, rights_status]
+      properties:
+        credit_line: { type: string, minLength: 1, maxLength: 256 }
+        source_url: { type: string, format: uri }
+        rights_status: { $ref: '#/components/schemas/RightsStatus' }
+    RightsStatus:
+      type: string
+      enum: [cc_by, cc_by_sa, cc0, all_rights_reserved, unknown]
+    CapturedAtSource:
+      type: string
+      enum: [exif, camera, user_confirmed, admin, fallback_upload_time]
+    CapturedAtConfidence:
+      type: string
+      enum: [high, medium, low, untrusted]
+    ImageProcessing:
+      type: object
+      additionalProperties: false
+      properties:
+        strip_exif_gps: { type: boolean, default: true }
+        strip_exif_all: { type: boolean, default: true }
+        generate_variants:
+          type: array
+          items:
+            type: string
+            enum: [thumb_320, card_640, detail_1280, full_2560]
+          default: [thumb_320, card_640, detail_1280, full_2560]
+        convert_to:
+          type: string
+          enum: [webp, avif, jpeg]
+          default: webp
+
+    WitnessMediaType:
+      type: string
+      enum: [photo_camera, photo_library, live_photo]
+    WitnessLocationMode:
+      type: string
+      enum: [auto_gps_city, manual_city, denied_fallback_manual]
+    WitnessPermissionType:
+      type: string
+      enum: [camera, photo_library, location]
+    WitnessPermissionResult:
+      type: string
+      enum: [granted, denied, restricted, not_determined]
+    WitnessNetworkClass:
+      type: string
+      enum: [wifi, cellular_4g_5g, cellular_3g, slow_2g, offline]
+    WitnessErrorCategory:
+      type: string
+      enum:
+        - validation
+        - upload_network
+        - upload_timeout
+        - server_5xx
+        - permission_blocked
+        - captured_at_invalid
+        - exif_untrusted
+        - rate_limited
+        - duplicate_submission
+        - unknown
+
+    # ---------- City ----------
+    CityNames:
+      type: object
+      additionalProperties: false
+      required: [canonical_name, name_zh, name_en, country_zh, country_en]
+      properties:
+        canonical_name: { type: string, minLength: 1, maxLength: 128 }
+        name_zh: { type: string, minLength: 1, maxLength: 128 }
+        name_en: { type: string, minLength: 1, maxLength: 128 }
+        alternate_names:
+          type: array
+          items: { type: string, minLength: 1, maxLength: 128 }
+        country_zh: { type: string, minLength: 1, maxLength: 128 }
+        country_en: { type: string, minLength: 1, maxLength: 128 }
+    HeroMedia:
+      type: object
+      additionalProperties: false
+      required: [url, width, height, alt]
+      properties:
+        url: { type: string, format: uri }
+        width: { type: integer, minimum: 1 }
+        height: { type: integer, minimum: 1 }
+        alt: { type: string, minLength: 1, maxLength: 256 }
+        focus: { type: string, maxLength: 32 }
+    CityVisual:
+      type: object
+      additionalProperties: false
+      properties:
+        hero_media: { $ref: '#/components/schemas/HeroMedia' }
+        hero_source: { type: string, maxLength: 512 }
+        hero_creator: { type: string, maxLength: 128 }
+        hero_license: { type: string, maxLength: 64 }
+        hero_credit_requirement: { type: string, maxLength: 256 }
+        editorial_only: { type: boolean, default: false }
+        visual_status:
+          type: string
+          enum: [seed, placeholder, none]
+          default: none
+    PublicCity:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - slug
+        - names
+        - timezone
+        - layer
+        - public_location_only
+        - page_state
+      properties:
+        id: { type: string, minLength: 1, maxLength: 64 }
+        slug:
+          type: string
+          pattern: '^[a-z0-9]+(-[a-z0-9]+)*$'
+          maxLength: 96
+        names: { $ref: '#/components/schemas/CityNames' }
+        timezone: { $ref: '#/components/schemas/IanaTimezone' }
+        layer: { $ref: '#/components/schemas/Layer' }
+        public_location_only:
+          type: boolean
+          const: true
+          description: Always true on public endpoints; assert at boundary.
+        page_state: { $ref: '#/components/schemas/CityPageState' }
+        visual: { $ref: '#/components/schemas/CityVisual' }
+    AdminCity:
+      allOf:
+        - $ref: '#/components/schemas/PublicCity'
+        - type: object
+          additionalProperties: false
+          required: [raw_coordinates, country_code, state_level]
+          properties:
+            raw_coordinates:
+              type: object
+              additionalProperties: false
+              required: [latitude, longitude]
+              properties:
+                latitude: { type: number, minimum: -90, maximum: 90 }
+                longitude: { type: number, minimum: -180, maximum: 180 }
+            country_code: { type: string, minLength: 2, maxLength: 2 }
+            admin1_code: { type: string, maxLength: 32 }
+            admin1_name: { type: string, maxLength: 128 }
+            place_type:
+              type: string
+              enum: [city, town, natural_place, historic_site, coordinates]
+              default: city
+            state_level: { $ref: '#/components/schemas/CityStateLevel' }
+            moment_stats: { $ref: '#/components/schemas/MomentStats' }
+    MomentStats:
+      type: object
+      additionalProperties: false
+      required: [moments_total, moments_last_24h, moments_last_7d, moments_last_30d]
+      properties:
+        moments_total: { type: integer, minimum: 0 }
+        moments_last_24h: { type: integer, minimum: 0 }
+        moments_last_7d: { type: integer, minimum: 0 }
+        moments_last_30d: { type: integer, minimum: 0 }
+        last_moment_at: { $ref: '#/components/schemas/UtcTimestamp' }
+        first_moment_at: { $ref: '#/components/schemas/UtcTimestamp' }
+        unique_witnesses_total: { type: integer, minimum: 0 }
+        unique_witnesses_last_30d: { type: integer, minimum: 0 }
+        witnessed_days_last_30d: { type: integer, minimum: 0, maximum: 30 }
+    CityEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, request_id]
+      properties:
+        data: { $ref: '#/components/schemas/PublicCity' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+    CityListEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, page, request_id]
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/PublicCity' }
+        page: { $ref: '#/components/schemas/CursorPage' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+    AdminCityEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, request_id]
+      properties:
+        data: { $ref: '#/components/schemas/AdminCity' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+
+    # ---------- Moment ----------
+    DomainSourceType:
+      type: string
+      enum: [witness, seed, editorial]
+      description: Domain-level source_type. Maps to MomentProvenanceStatus for backend storage.
+    MomentSourceType:
+      type: string
+      enum: [reuters, ap, adobe, shutterstock, wikimedia, unsplash, manual]
+    MomentMediaType:
+      type: string
+      enum: [image, video, audio, text]
+    MomentProvenanceStatus:
+      type: string
+      enum: [self_reported, trusted_source, editorial, unknown]
+    MomentModerationStatus:
+      type: string
+      enum: [pending, approved, rejected, flagged]
+    MomentEditorialCategory:
+      type: string
+      enum: [landmark, nature, street, culture, people, weather, other]
+    MomentCaptions:
+      type: object
+      additionalProperties: false
+      properties:
+        zh: { type: string, maxLength: 512 }
+        en: { type: string, maxLength: 512 }
+    MomentSource:
+      type: object
+      additionalProperties: false
+      required: [name, type]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 128 }
+        url: { type: string, format: uri }
+        type: { $ref: '#/components/schemas/MomentSourceType' }
+    MomentEditorial:
+      type: object
+      additionalProperties: false
+      required: [category]
+      properties:
+        category: { $ref: '#/components/schemas/MomentEditorialCategory' }
+        note: { type: string, maxLength: 512 }
+    PublicMoment:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - city_id
+        - public_city_name
+        - captured_at
+        - captured_at_tz
+        - captured_at_source
+        - captured_at_confidence
+        - uploaded_at
+        - image_variants
+        - source_type
+        - rights
+        - credit
+        - provenance_status
+        - moderation_status
+      properties:
+        id: { type: string, minLength: 1, maxLength: 64 }
+        city_id: { type: string, minLength: 1, maxLength: 64 }
+        public_city_name: { type: string, minLength: 1, maxLength: 128 }
+        captured_at: { $ref: '#/components/schemas/UtcTimestamp' }
+        captured_at_tz: { $ref: '#/components/schemas/IanaTimezone' }
+        captured_at_source: { $ref: '#/components/schemas/CapturedAtSource' }
+        captured_at_confidence: { $ref: '#/components/schemas/CapturedAtConfidence' }
+        uploaded_at: { $ref: '#/components/schemas/UtcTimestamp' }
+        published_at: { $ref: '#/components/schemas/UtcTimestamp' }
+        image_variants:
+          type: array
+          minItems: 1
+          maxItems: 8
+          items: { $ref: '#/components/schemas/ImageVariant' }
+        source_type: { $ref: '#/components/schemas/DomainSourceType' }
+        rights: { $ref: '#/components/schemas/RightsStatus' }
+        credit: { $ref: '#/components/schemas/Credit' }
+        captions: { $ref: '#/components/schemas/MomentCaptions' }
+        provenance_status: { $ref: '#/components/schemas/MomentProvenanceStatus' }
+        moderation_status: { $ref: '#/components/schemas/MomentModerationStatus' }
+        witness_id: { type: string, minLength: 1, maxLength: 64 }
+        editorial: { $ref: '#/components/schemas/MomentEditorial' }
+    AdminMoment:
+      allOf:
+        - $ref: '#/components/schemas/PublicMoment'
+        - type: object
+          additionalProperties: false
+          required: [created_at, updated_at]
+          properties:
+            raw_location:
+              type: object
+              additionalProperties: false
+              required: [latitude, longitude]
+              properties:
+                latitude: { type: number, minimum: -90, maximum: 90 }
+                longitude: { type: number, minimum: -180, maximum: 180 }
+                accuracy_m: { type: number, minimum: 0 }
+                altitude_m: { type: number }
+            location_verification:
+              type: object
+              additionalProperties: false
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [verified, approximate, unverified]
+                verified_at: { $ref: '#/components/schemas/UtcTimestamp' }
+                method:
+                  type: string
+                  enum: [gps, manual, inferred]
+            sources:
+              type: array
+              maxItems: 8
+              items: { $ref: '#/components/schemas/MomentSource' }
+            created_at: { $ref: '#/components/schemas/UtcTimestamp' }
+            updated_at: { $ref: '#/components/schemas/UtcTimestamp' }
+    MomentEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, request_id]
+      properties:
+        data: { $ref: '#/components/schemas/PublicMoment' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+    MomentListEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, page, request_id]
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/PublicMoment' }
+        page: { $ref: '#/components/schemas/CursorPage' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+    AdminMomentEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, request_id]
+      properties:
+        data: { $ref: '#/components/schemas/AdminMoment' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+
+    # ---------- Edition ----------
+    SlotFallbackReason:
+      type: string
+      enum:
+        - no_candidate_for_city
+        - withdrawn_by_author
+        - moderation_rejected
+        - missing_rights
+        - duplicate_in_edition
+        - time_bucket_invalid
+        - fallback_curated
+    EditionSlot:
+      type: object
+      additionalProperties: false
+      required: [position, moment_id, city_id, fallback_reason, is_editorial_fill]
+      properties:
+        position: { type: integer, minimum: 1, maximum: 12 }
+        moment_id: { type: string, nullable: true, minLength: 1, maxLength: 64 }
+        city_id: { type: string, nullable: true, minLength: 1, maxLength: 64 }
+        fallback_reason: { $ref: '#/components/schemas/SlotFallbackReason' }
+        is_editorial_fill: { type: boolean, default: false }
+      description: |
+        - moment_id null ⇔ fallback_reason present.
+        - moment_id present ⇔ city_id present (and vice versa).
+    EditionStatus:
+      type: string
+      enum: [draft, preview, scheduled, published, replaced, retracted]
+    PublicEdition:
+      type: object
+      additionalProperties: false
+      required: [id, date, slots, version, is_fallback]
+      properties:
+        id: { type: string, minLength: 1, maxLength: 64 }
+        date:
+          type: string
+          pattern: '^\d{4}-\d{2}-\d{2}$'
+          description: Edition calendar date (Edition-date).
+        slots:
+          type: array
+          minItems: 12
+          maxItems: 12
+          items: { $ref: '#/components/schemas/EditionSlot' }
+        version: { type: integer, minimum: 1 }
+        published_at: { $ref: '#/components/schemas/UtcTimestamp' }
+        is_fallback: { type: boolean, default: false }
+        replaces_edition_id: { type: string, minLength: 1, maxLength: 64 }
+    AdminEdition:
+      allOf:
+        - $ref: '#/components/schemas/PublicEdition'
+        - type: object
+          additionalProperties: false
+          required: [status, created_at, updated_at]
+          properties:
+            status: { $ref: '#/components/schemas/EditionStatus' }
+            created_at: { $ref: '#/components/schemas/UtcTimestamp' }
+            updated_at: { $ref: '#/components/schemas/UtcTimestamp' }
+    EditionEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, request_id]
+      properties:
+        data: { $ref: '#/components/schemas/PublicEdition' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+    EditionListEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, page, request_id]
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/PublicEdition' }
+        page: { $ref: '#/components/schemas/CursorPage' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+
+    # ---------- Witness Submission ----------
+    WitnessSubmissionStatus:
+      type: string
+      enum:
+        - draft
+        - uploading
+        - submitted
+        - under_review
+        - published
+        - rejected
+        - withdrawn
+        - failed
+    WitnessLocationClaim:
+      type: object
+      additionalProperties: false
+      required: [mode, public_city_id, captured_at_tz]
+      properties:
+        mode: { $ref: '#/components/schemas/WitnessLocationMode' }
+        public_city_id: { type: string, minLength: 1, maxLength: 64 }
+        captured_at_tz: { $ref: '#/components/schemas/IanaTimezone' }
+        precise:
+          type: object
+          additionalProperties: false
+          required: [latitude, longitude]
+          properties:
+            latitude: { type: number, minimum: -90, maximum: 90 }
+            longitude: { type: number, minimum: -180, maximum: 180 }
+            accuracy_m: { type: number, minimum: 0 }
+          description: ADMIN ONLY. Never returned by public responses.
+        confirmed_at: { $ref: '#/components/schemas/UtcTimestamp' }
+    WitnessCapturedAtClaim:
+      type: object
+      additionalProperties: false
+      required: [captured_at, captured_at_tz, captured_at_source, captured_at_confidence]
+      properties:
+        captured_at: { $ref: '#/components/schemas/UtcTimestamp' }
+        captured_at_tz: { $ref: '#/components/schemas/IanaTimezone' }
+        captured_at_source: { $ref: '#/components/schemas/CapturedAtSource' }
+        captured_at_confidence: { $ref: '#/components/schemas/CapturedAtConfidence' }
+        exif_payload:
+          type: object
+          additionalProperties: true
+          description: |
+            Raw EXIF map. Server extracts DateTimeOriginal, parses against tz, then
+            strips ALL EXIF (including GPS) from public variants. Never persisted.
+    WitnessDescription:
+      type: object
+      additionalProperties: false
+      required: [text, locale]
+      properties:
+        text: { type: string, minLength: 0, maxLength: 200 }
+        locale: { $ref: '#/components/schemas/Locale' }
+    PublicWitnessSubmission:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - client_key
+        - status
+        - media_type
+        - asset_id
+        - location_mode
+        - public_city_id
+        - captured_at
+        - captured_at_tz
+        - captured_at_source
+        - captured_at_confidence
+        - description_redacted
+      properties:
+        id: { type: string, minLength: 1, maxLength: 64 }
+        client_key: { type: string, minLength: 8, maxLength: 128 }
+        status: { $ref: '#/components/schemas/WitnessSubmissionStatus' }
+        media_type: { $ref: '#/components/schemas/WitnessMediaType' }
+        asset_id: { type: string, nullable: true, minLength: 1, maxLength: 64 }
+        location_mode: { $ref: '#/components/schemas/WitnessLocationMode' }
+        public_city_id: { type: string, minLength: 1, maxLength: 64 }
+        captured_at: { $ref: '#/components/schemas/UtcTimestamp' }
+        captured_at_tz: { $ref: '#/components/schemas/IanaTimezone' }
+        captured_at_source: { $ref: '#/components/schemas/CapturedAtSource' }
+        captured_at_confidence: { $ref: '#/components/schemas/CapturedAtConfidence' }
+        description_redacted:
+          type: string
+          enum: [present, absent, under_review]
+        submitted_at: { $ref: '#/components/schemas/UtcTimestamp' }
+        moderation_result:
+          type: object
+          additionalProperties: false
+          required: [decision, decided_at]
+          properties:
+            decision:
+              type: string
+              enum: [accepted, rejected, needs_more_info]
+            decided_at: { $ref: '#/components/schemas/UtcTimestamp' }
+            public_reason: { type: string, maxLength: 256 }
+        error_category: { $ref: '#/components/schemas/WitnessErrorCategory' }
+    CreateWitnessSubmissionRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - client_key
+        - media_type
+        - location
+        - captured_at_claim
+      properties:
+        client_key: { type: string, minLength: 8, maxLength: 128 }
+        media_type: { $ref: '#/components/schemas/WitnessMediaType' }
+        location: { $ref: '#/components/schemas/WitnessLocationClaim' }
+        captured_at_claim: { $ref: '#/components/schemas/WitnessCapturedAtClaim' }
+        description: { $ref: '#/components/schemas/WitnessDescription' }
+    UpdateWitnessSubmissionRequest:
+      type: object
+      additionalProperties: false
+      required: [client_key, status]
+      properties:
+        client_key: { type: string, minLength: 8, maxLength: 128 }
+        status:
+          type: string
+          enum: [withdrawn]
+          description: Witnesses may only withdraw their own submission.
+    AdminWitnessSubmission:
+      allOf:
+        - $ref: '#/components/schemas/PublicWitnessSubmission'
+        - type: object
+          additionalProperties: false
+          required: [location, captured_at_claim, description, created_at, updated_at]
+          properties:
+            location: { $ref: '#/components/schemas/WitnessLocationClaim' }
+            captured_at_claim: { $ref: '#/components/schemas/WitnessCapturedAtClaim' }
+            description: { $ref: '#/components/schemas/WitnessDescription' }
+            transitions:
+              type: array
+              items:
+                type: object
+                additionalProperties: false
+                required: [from, to, at]
+                properties:
+                  from: { $ref: '#/components/schemas/WitnessSubmissionStatus' }
+                  to: { $ref: '#/components/schemas/WitnessSubmissionStatus' }
+                  at: { $ref: '#/components/schemas/UtcTimestamp' }
+                  reason: { type: string, maxLength: 256 }
+            witness_id: { type: string, minLength: 1, maxLength: 64 }
+            ip_hash:
+              type: string
+              minLength: 64
+              maxLength: 64
+              description: HMAC-SHA256 of submitter IP; raw IP never stored.
+            user_agent_hash: { type: string, minLength: 64, maxLength: 64 }
+            created_at: { $ref: '#/components/schemas/UtcTimestamp' }
+            updated_at: { $ref: '#/components/schemas/UtcTimestamp' }
+    WitnessSubmissionEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, request_id]
+      properties:
+        data: { $ref: '#/components/schemas/PublicWitnessSubmission' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+    WitnessSubmissionListEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, page, request_id]
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/PublicWitnessSubmission' }
+        page: { $ref: '#/components/schemas/CursorPage' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+    AdminWitnessSubmissionEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, request_id]
+      properties:
+        data: { $ref: '#/components/schemas/AdminWitnessSubmission' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+
+    # ---------- Asset Upload ----------
+    AssetStatus:
+      type: string
+      enum: [requested, pending_upload, uploaded, processing, ready, failed, purged]
+    AssetUploadRequest:
+      type: object
+      additionalProperties: false
+      required: [media_type, size_bytes, checksum_sha256, mime]
+      properties:
+        submission_id: { type: string, minLength: 1, maxLength: 64 }
+        media_type: { $ref: '#/components/schemas/WitnessMediaType' }
+        size_bytes: { type: integer, minimum: 1, maximum: 26214400 }
+        checksum_sha256:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+          description: SHA-256 of the original binary (lowercase hex).
+        mime:
+          type: string
+          enum: [image/jpeg, image/png, image/heic, image/webp]
+        width: { type: integer, minimum: 1 }
+        height: { type: integer, minimum: 1 }
+        processing: { $ref: '#/components/schemas/ImageProcessing' }
+    AssetUploadGrant:
+      type: object
+      additionalProperties: false
+      required:
+        - asset_id
+        - upload_url
+        - expires_at
+        - max_size
+        - mime_whitelist
+        - processing
+      properties:
+        asset_id: { type: string, minLength: 1, maxLength: 64 }
+        upload_url: { type: string, format: uri }
+        expires_at: { $ref: '#/components/schemas/UtcTimestamp' }
+        max_size: { type: integer, minimum: 1 }
+        mime_whitelist:
+          type: array
+          minItems: 1
+          items: { type: string }
+        required_headers:
+          type: object
+          additionalProperties:
+            type: string
+          default: {}
+        processing: { $ref: '#/components/schemas/ImageProcessing' }
+    AssetCompleteRequest:
+      type: object
+      additionalProperties: false
+      required: [checksum_sha256, size_bytes]
+      properties:
+        checksum_sha256: { type: string, pattern: '^[a-f0-9]{64}$' }
+        size_bytes: { type: integer, minimum: 1 }
+    PublicAsset:
+      type: object
+      additionalProperties: false
+      required: [id, media_type, status, mime, bytes, variants, exif_stripped, created_at, updated_at]
+      properties:
+        id: { type: string, minLength: 1, maxLength: 64 }
+        media_type: { $ref: '#/components/schemas/WitnessMediaType' }
+        status: { $ref: '#/components/schemas/AssetStatus' }
+        mime: { type: string, minLength: 1, maxLength: 64 }
+        width: { type: integer, minimum: 1 }
+        height: { type: integer, minimum: 1 }
+        bytes: { type: integer, minimum: 0 }
+        variants:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required: [variant, url, width, height, mime]
+            properties:
+              variant:
+                type: string
+                enum: [thumb_320, card_640, detail_1280, full_2560]
+              url: { type: string, format: uri }
+              width: { type: integer, minimum: 1 }
+              height: { type: integer, minimum: 1 }
+              mime: { type: string, minLength: 1, maxLength: 64 }
+        exif_stripped: { type: boolean, default: true }
+        created_at: { $ref: '#/components/schemas/UtcTimestamp' }
+        updated_at: { $ref: '#/components/schemas/UtcTimestamp' }
+    AdminAsset:
+      allOf:
+        - $ref: '#/components/schemas/PublicAsset'
+        - type: object
+          additionalProperties: false
+          properties:
+            submission_id: { type: string, minLength: 1, maxLength: 64 }
+            raw_checksum_sha256: { type: string, pattern: '^[a-f0-9]{64}$' }
+            uploaded_ip_hash: { type: string, minLength: 64, maxLength: 64 }
+            retention_until: { $ref: '#/components/schemas/UtcTimestamp' }
+    AssetUploadEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, request_id]
+      properties:
+        data: { $ref: '#/components/schemas/AssetUploadGrant' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+    AssetEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, request_id]
+      properties:
+        data: { $ref: '#/components/schemas/PublicAsset' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+
+    # ---------- Echo ----------
+    EchoStatus:
+      type: string
+      enum: [queued_for_review, accepted, rejected, rate_limited, unavailable]
+    EchoModerationDecision:
+      type: string
+      enum: [accepted, rejected, escalated]
+    PublicEchoStatusOnly:
+      type: object
+      additionalProperties: false
+      required: [id, city_id, status]
+      properties:
+        id: { type: string, minLength: 1, maxLength: 64 }
+        city_id: { type: string, minLength: 1, maxLength: 64 }
+        status: { $ref: '#/components/schemas/EchoStatus' }
+        submitted_at: { $ref: '#/components/schemas/UtcTimestamp' }
+        moderation_result:
+          type: object
+          additionalProperties: false
+          required: [decision, decided_at]
+          properties:
+            decision: { $ref: '#/components/schemas/EchoModerationDecision' }
+            decided_at: { $ref: '#/components/schemas/UtcTimestamp' }
+            public_reason: { type: string, maxLength: 256 }
+    SubmitterEcho:
+      allOf:
+        - $ref: '#/components/schemas/PublicEchoStatusOnly'
+        - type: object
+          additionalProperties: false
+          required: [content_redacted, locale]
+          properties:
+            content_redacted:
+              type: string
+              enum: [present, under_review, purged]
+            locale: { $ref: '#/components/schemas/Locale' }
+    CreateEchoRequest:
+      type: object
+      additionalProperties: false
+      required: [city_id, content]
+      properties:
+        city_id: { type: string, minLength: 1, maxLength: 64 }
+        content: { type: string, minLength: 1, maxLength: 200 }
+        locale:
+          allOf:
+            - $ref: '#/components/schemas/Locale'
+          default: zh
+        client_key:
+          type: string
+          minLength: 8
+          maxLength: 128
+    EchoEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, request_id]
+      properties:
+        data: { $ref: '#/components/schemas/SubmitterEcho' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
+    EchoListEnvelope:
+      type: object
+      additionalProperties: false
+      required: [data, page, request_id]
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/PublicEchoStatusOnly' }
+        page: { $ref: '#/components/schemas/CursorPage' }
+        request_id: { type: string, minLength: 1, maxLength: 128 }
