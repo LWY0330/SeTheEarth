@@ -11,6 +11,21 @@ import './styles/globals.css';
 // - DSN 缺失时 initSentry 内部 no-op 并打 console 日志
 // - production 环境 V1 暂不启用（V1.1 启用）
 // - 总是调用,避免 Vite dead-code-elimination 把整个 Sentry 块消除
+
+// TEMP DEBUG (round-5 PM handover) · 验证 Vite build 是否正确注入 VITE_SENTRY_DSN
+// 完成后删除
+const viteKeys = Object.keys(import.meta.env).filter((k) => k.startsWith('VITE_'));
+const dsnValue = import.meta.env.VITE_SENTRY_DSN;
+console.log(
+  '[debug-env]',
+  JSON.stringify({
+    viteKeys,
+    dsnPresent: typeof dsnValue === 'string' && dsnValue.length > 0,
+    dsnPreview: typeof dsnValue === 'string' ? dsnValue.slice(0, 25) + '...' : dsnValue,
+    envName: import.meta.env.VITE_ENV,
+  }),
+);
+
 initSentry();
 
 const container = document.getElementById('root');
