@@ -1,0 +1,32 @@
+{
+  "name": "see-earth-api",
+  "version": "0.1.0-alpha",
+  "private": true,
+  "description": "SEE EARTH V1 · Phase 2 alpha-api backend (Next.js App Router) — Zod + OpenAPI contract from release-v1/api-contract",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "lint": "next lint",
+    "test": "node --test --experimental-strip-types 'app/**/*.test.ts' '_lib/**/*.test.ts'"
+  },
+  "dependencies": {
+    "@sentry/node": "^10.70.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "next": "^14.2.18",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.5.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
