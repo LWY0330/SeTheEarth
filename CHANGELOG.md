@@ -12,6 +12,14 @@
 - 启动条件:4 项设计 Gate 拍板(Lisbon Yellow Layer / 4-screen → V2 Mapping / Context source policy / Khartoum mockup LOCKED)
 - 详见 `05-项目现状/d6-phase-1-prep-transition.md`
 
+### Design System · v1.3 Layer Complete LOCKED · 2026-08-25
+- ✅ Design System v1.3 Layer Complete Spec 正式 LOCKED(PROMPT 37 PM 评审 ACCEPTED · 7 维度全 5/5)
+- 范围:§2.1.9 Layer Palette 完整化 + §2.4.6 City Detail Grid + §3 Page Patterns + §4 Layer System + §8 Validation Summary
+- 3 城 LOCKED 证据闭环:Kyoto 8.9 (8/17) + Khartoum 9.4 (8/19) + Lisbon 9.0 (8/19)
+- 评审报告:`05-项目现状/d13-v1.3-design-system-pm-review.md`
+- Spec 文件:`07-设计师设计参考/SEE_EARTH_DESIGN_SYSTEM_v1.3_Complete_Spec.md`
+- 后续:PROMPT 38 (Universal CityPage first pass) + PROMPT 39 (Unknown Coordinate 设计)
+
 ---
 
 ## [1.6.4] · 2026-08-22 · Component Library 14 组件 + CSS Modules（PROMPT 46 v1）
