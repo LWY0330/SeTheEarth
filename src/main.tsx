@@ -12,17 +12,24 @@ import './styles/globals.css';
 // - production 环境 V1 暂不启用（V1.1 启用）
 // - 总是调用,避免 Vite dead-code-elimination 把整个 Sentry 块消除
 
-// TEMP DEBUG (round-5 PM handover) · 验证 Vite build 是否正确注入 VITE_SENTRY_DSN
+// TEMP DEBUG (round-5 PM handover) · 挂到 window 让 Console 100% 访问
 // 完成后删除
-const viteKeys = Object.keys(import.meta.env).filter((k) => k.startsWith('VITE_'));
-const dsnValue = import.meta.env.VITE_SENTRY_DSN;
+const _viteDebug = {
+  allViteKeys: Object.keys(import.meta.env).filter((k) => k.startsWith('VITE_')),
+  VITE_SENTRY_DSN: import.meta.env.VITE_SENTRY_DSN,
+  VITE_ENV: import.meta.env.VITE_ENV,
+  VITE_VERCEL_ENV: import.meta.env.VITE_VERCEL_ENV,
+  VITE_VERCEL_TARGET_ENV: import.meta.env.VITE_VERCEL_TARGET_ENV,
+};
+// @ts-expect-error - debug window attach
+window.__VITE_DEBUG__ = _viteDebug;
 console.log(
-  '[debug-env]',
+  '[debug-env] 在 Console 输入 __VITE_DEBUG__ 查看完整 env 状态。关键字段：',
   JSON.stringify({
-    viteKeys,
-    dsnPresent: typeof dsnValue === 'string' && dsnValue.length > 0,
-    dsnPreview: typeof dsnValue === 'string' ? dsnValue.slice(0, 25) + '...' : dsnValue,
-    envName: import.meta.env.VITE_ENV,
+    dsn: _viteDebug.VITE_SENTRY_DSN,
+    env: _viteDebug.VITE_ENV,
+    vercelEnv: _viteDebug.VITE_VERCEL_ENV,
+    vercelTarget: _viteDebug.VITE_VERCEL_TARGET_ENV,
   }),
 );
 
