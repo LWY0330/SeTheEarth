@@ -225,10 +225,12 @@ export function initServerSentry(options: InitServerSentryOptions = {}): boolean
           if (event.extra) event.extra = redactPayload(event.extra) as Record<string, unknown>;
           if (event.tags) event.tags = redactPayload(event.tags) as Record<string, string>;
           if (event.breadcrumbs && Array.isArray(event.breadcrumbs)) {
-            event.breadcrumbs = event.breadcrumbs.map((b: Record<string, unknown>) => ({
-              ...b,
-              data: b.data ? redactPayload(b.data) : undefined,
-            })) as unknown as Sentry.Breadcrumb[];
+            event.breadcrumbs = event.breadcrumbs.map((breadcrumb) => ({
+              ...breadcrumb,
+              data: breadcrumb.data
+                ? (redactPayload(breadcrumb.data) as Sentry.Breadcrumb['data'])
+                : undefined,
+            }));
           }
           if (event.request?.url) {
             try {
@@ -241,7 +243,11 @@ export function initServerSentry(options: InitServerSentryOptions = {}): boolean
           if (event.request?.headers) {
             event.request.headers = redactPayload(event.request.headers) as Record<string, string>;
           }
-          if (event.request?.cookies) event.request.cookies = REDACTED;
+          if (event.request?.cookies) {
+            event.request.cookies = Object.fromEntries(
+              Object.keys(event.request.cookies).map((cookieName) => [cookieName, REDACTED]),
+            );
+          }
           event.user = undefined;
           return event;
         } catch {
