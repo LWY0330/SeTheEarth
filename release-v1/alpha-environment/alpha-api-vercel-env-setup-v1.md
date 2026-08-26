@@ -1,5 +1,5 @@
 ---
-title: SEE EARTH V1 · alpha-api · Vercel Env 变量配置 · Phase 2 P0-3
+title: SEE EARTH V1 · alpha-api · Vercel Env 变量配置 · Phase 2 P0-3 (CORRECTED 2026-08-25 · 单项目部署)
 type: deployment-runbook
 tags: [release-v1, e-p0-08, alpha-env, alpha-api, phase-2, vercel-env, p0-3, see-earth]
 task_id: E-P0-08-C · Phase 2 续
@@ -24,7 +24,7 @@ related_docs:
   - ../e-p0-10-monitoring-phase1/vercel-env-setup.md (Phase 1 web env 配置 · 6 vars 旧参考)
 ---
 
-# SEE EARTH V1 · alpha-api · Vercel Env 变量配置 · Phase 2 P0-3
+# SEE EARTH V1 · alpha-api · Vercel Env 变量配置 · Phase 2 P0-3 (CORRECTED 2026-08-25 · 单项目部署)
 
 > **作者**:2026-08-25 接管 PM Agent(Phase 2)
 > **目的**:让用户在 Vercel Dashboard 一键配置 alpha-api 后端所需的 5 个环境变量
@@ -35,7 +35,7 @@ related_docs:
 
 ## 🎯 一句话总结
 
-**alpha-api 后端(Phase 2 P0-3)需在 Vercel `sethearth-2` 项目配置 5 个 env vars:SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY / DIRECT_URL / SENTRY_DSN(不带 VITE_)/ NODE_ENV。生产分支建议用 `phase2-alpha-api-init`(已 push 至 origin,含 api/ scaffold),待 PR merge 到 `alpha-api` 后可切换。**
+**🔴 CORRECTED 2026-08-25:sethearth-2 项目**不存在**(用户验证)。**只有 1 个 Vercel 项目 `sethearth`**,web 前端(alpha 分支)和 api 后端(phase2-alpha-api-init 分支)**共享同一组 env vars**。Phase 2 P0-3 需要在 `sethearth` 项目**新增 3 个 env vars**(SUPABASE_SERVICE_ROLE_KEY / DIRECT_URL / SENTRY_DSN / NODE_ENV),**Sentry incident 复盘中的"sethearth-2 项目"是历史事实**(8/25 当时存在,后被删,但当前不存在)。**
 
 ---
 
@@ -48,11 +48,16 @@ related_docs:
 | 项目名 | URL | 用途 |
 |---|---|---|
 | **`setheearth`** | https://vercel.com/seethearth/sethearth | **Phase 1 web 前端** (Vite + React) · 6 env vars 已配 ✅ |
-| **`sethearth-2`** | https://vercel.com/seethearth/setheearth-2 | **Phase 2 alpha-api 后端** (Next.js) · 0 env vars 待配 🟡 |
+| `sethearth-2` | ~~https://vercel.com/seethearth/setheearth-2~~ | ❌ **不存在** · 2026-08-25 用户验证 Vercel 团队总览确认只有 1 个项目 |
 
-**→ 你要打开的是 `setheearth-2`**(URL: https://vercel.com/seethearth/sethearth-2/settings/environment-variables)
+**→ 你要打开的是 `sethearth`**(URL: https://vercel.com/seethearth/sethearth/settings/environment-variables)
 
-⚠️ **不要在 sethearth 项目配 alpha-api 的 env vars** — 这是 Sentry 事故的根因(8/25 配置在 sethearth-2 但 build 跑在 sethearth)。
+**🔴 关键修正**:web 前端和 api 后端 **共享同一项目 + 共享 env vars**,通过分支区分。Vercel 同一项目下:web 部署用 `alpha` 分支,api 部署用 `phase2-alpha-api-init` 分支,各自产生 Preview URL。
+
+**VITE_ 前缀机制**(Vite 构建时安全):
+- Web 读 `VITE_SENTRY_DSN`(Vite 客户端代码)
+- API 读 `SENTRY_DSN`(Next.js runtime,`process.env.SENTRY_DSN`)
+- 两者**同名不同前缀**,**都配在 sethearth 项目,不冲突**
 
 ### Q2. 是哪个 Git 分支?
 
@@ -60,7 +65,7 @@ related_docs:
 |---|---|---|
 | `alpha` | Web 前端(Vite/React) | sethearth 项目 |
 | `alpha-api` | 后端 API(Next.js)— 但 **未同步 api/ scaffold** | (历史) |
-| **`phase2-alpha-api-init`** | api/ scaffold + cleanup + docs + v1.3 LOCKED + PROMPT 40 PM-APPROVED | **sethearth-2 推荐** ✅ |
+| **`phase2-alpha-api-init`** | api/ scaffold + cleanup + docs + v1.3 LOCKED + PROMPT 40 PM-APPROVED | **sethearth 项目** ✅ |
 
 **→ 推荐分支 `phase2-alpha-api-init`**(本 PM 已创建并 push 至 origin,4 commits ahead of alpha-api)
 **→ 备选分支 `alpha-api`**(需先 merge phase2-alpha-api-init 后再切)
@@ -69,7 +74,7 @@ related_docs:
 
 | 环境 | 是否需要 | 备注 |
 |---|---|---|
-| **Production** | ✅ 必须 | `sethearth-2.vercel.app` (或 alias) |
+| **Production** | ✅ 必须 | `sethearth.vercel.app` (或 alpha Preview URL) |
 | **Preview** | 🟡 推荐 | 每次 push 自动 redeploy 时用 |
 | **Development** | ❌ 不需要 | 本地 dev 用 `api/.env.local` |
 
@@ -168,13 +173,13 @@ related_docs:
 
 ## 🔧 操作步骤(用户)
 
-### Step 1 · 打开 sethearth-2 项目环境变量页面
+### Step 1 · 打开 sethearth 项目环境变量页面(已修正)
 
 ```
-https://vercel.com/seethearth/sethearth-2/settings/environment-variables
+https://vercel.com/seethearth/sethearth/settings/environment-variables
 ```
 
-⚠️ **确认 URL 是 sethearth-2**(不是 sethearth)— 这是 Sentry 事故的根因
+✅ URL 是 `sethearth`(sethearth-2 不存在,web 和 api 共享项目)
 
 ### Step 2 · 逐个添加 5 个 env vars
 
@@ -203,7 +208,7 @@ https://vercel.com/seethearth/sethearth-2/settings/environment-variables
 ### Step 4 · 触发部署
 
 ```
-1. Vercel Dashboard → sethearth-2 → Deployments
+1. Vercel Dashboard → sethearth → Deployments
 2. 找到 branch 设置(Project Settings → Git → Production Branch)
 3. 改为 "phase2-alpha-api-init"(或先 merge 到 alpha-api 后用 alpha-api)
 4. 等待 Vercel 自动 redeploy(每个 commit 触发)
@@ -266,11 +271,11 @@ curl https://<url>/api/health
 
 **排错**:
 ```
-1. 确认 VITE_SENTRY_DSN **没有**配在 sethearth-2 上(那是 web 端的)
-2. 确认 SENTRY_DSN(不带 VITE_) **正确**配在 sethearth-2 上
-3. 检查 deployment 的实际 target project(可能是别的项目):
-   - Vercel Dashboard → Deployments → 点击 commit → 看 "Source" 字段
-   - 应该显示 "sethearth-2"(不是 sethearth)
+1. 确认 `VITE_SENTRY_DSN` 和 `SENTRY_DSN` 都配在 `sethearth` 项目(同名不同前缀)
+2. 确认 `SUPABASE_SERVICE_ROLE_KEY` 和 `SUPABASE_URL` 都有(web 端用 ANON,api 端用 SERVICE_ROLE)
+3. 检查 deployment 实际 target branch:
+   - Vercel Dashboard → Deployments → 点击 commit → 看 "Branch" 字段
+   - 应该显示 `phase2-alpha-api-init`(不是 alpha)
 ```
 
 ### 症状 3 · `pnpm install` 失败(本地)
@@ -291,7 +296,7 @@ pnpm install  # 或 npm install
 | # | 铁律 | 本配置应用 |
 |---|---|---|
 | 1 | 永远先查官方 metadata | ✅ Q1-Q3 前置确认(项目/分支/环境)|
-| 2 | 多项目/多环境交叉验证 | ✅ sethearth vs sethearth-2 明确区分 |
+| 2 | 多项目/多环境交叉验证 | ✅ sethearth 单项目 + web/api 不同分支 |
 | 3 | 不信任 UI 状态,实测验证 | ✅ Step 5 curl /api/health 实测 |
 | 4 | "高概率方案" ≠ "正确方案" | ✅ 不依赖"Vercel 应该会工作",要实测 |
 | 5 | 3 轮调试没进展 = 主动降级 | N/A(本次是配置,非调试)|

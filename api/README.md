@@ -6,7 +6,7 @@
 
 ## Status
 
-🟡 **Phase 2 alpha** · Deployment target: Vercel `sethearth-2` project · Branch: `alpha-api`
+🟡 **Phase 2 alpha** · Deployment target: Vercel `sethearth` project (CORRECTED 2026-08-25 · was previously `sethearth-2` which doesn't exist) · Branch: `phase2-alpha-api-init`
 
 ## Current scope (P0 · Day 3)
 
@@ -50,12 +50,17 @@ api/
 
 ## Vercel deployment notes
 
-**Project**: `sethearth-2` (separate from web frontend `sethearth`)
-**Branch**: `alpha-api` (deploys on push; mirror of `alpha` for web)
+> ⚠️ **CORRECTED 2026-08-25**: `sethearth-2` project **does not exist** (user-verified via Vercel team overview).
+> Both web frontend and API backend deploy on the same `sethearth` project, distinguished by branch.
+
+**Project**: `sethearth` (single project · web + api share env vars)
+**Branches**:
+- `alpha` → Web frontend (Vite + React) — Phase 1
+- `phase2-alpha-api-init` → API backend (Next.js) — Phase 2 (this scaffold)
 **Build command**: `next build` (default)
 **Output**: `.next` (default)
 
-### Required env vars (configure on `sethearth-2` project)
+### Required env vars (configure on `sethearth` project — CORRECTED 2026-08-25, was `sethearth-2`)
 
 | Name | Required | Example | Notes |
 |---|---|---|---|
@@ -69,7 +74,9 @@ api/
 
 ⚠️ **DO NOT** reuse the env vars from the `sethearth` (web) project — they're scoped to that project only.
 This was the root cause of the Sentry incident on 2026-08-25 (`VITE_SENTRY_DSN` was set on
-`sethearth-2` but the build was actually deploying to `sethearth`).
+a different Vercel project, but the build was actually deploying to `sethearth`). **CORRECTED 2026-08-25**: 
+That "different project" (`sethearth-2`) **no longer exists** — there's only one `sethearth` project 
+where both web and api branches deploy. Env vars are scoped to `sethearth` (single project).
 Reference: `06-PM Agent 交接/2026-08-25-pm-takeover-postmortem.md` Iron Rule 2.
 
 **📋 Complete step-by-step Vercel configuration guide** (with cross-verification checklist,
@@ -88,7 +95,7 @@ pnpm dev
 
 ## Next steps (Day 3 → Week 1)
 
-1. **User action**: Configure 5 env vars on Vercel `sethearth-2` project (table above)
+1. **User action**: Configure 5 env vars on Vercel `sethearth` project (CORRECTED 2026-08-25 · table above)
 2. **Push to `alpha-api` branch**: This directory should be deployed via `alpha-api` branch
    (currently on `alpha` for development). See Day 3 plan in `06-PM Agent 交接/2026-08-25-phase1-to-phase2-handoff.md`.
 3. **Verify**: `curl https://<alpha-api-url>/api/health` → expect 200 with `status: "ok"`
