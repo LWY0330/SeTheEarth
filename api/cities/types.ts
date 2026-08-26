@@ -1,4 +1,4 @@
-import type { PublicCity } from '../../release-v1/api-contract/zod-schemas/city';
+import type { PublicCity } from './city-schema.ts';
 
 export interface CityListQuery {
   layer?: PublicCity['layer'];

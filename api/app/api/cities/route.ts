@@ -1,5 +1,3 @@
-import { CityListEnvelopeSchema } from '@contracts/zod-schemas/city';
-
 import { createSupabaseServerClient } from '@/_lib/supabase-server';
 import {
   createCityListHandler,
@@ -24,7 +22,6 @@ const cityRepository: CityRepository = {
 
 export const GET = createCityListHandler({
   cityRepository,
-  validateEnvelope: (envelope) => CityListEnvelopeSchema.parse(envelope),
   reportError(error, requestId) {
     logServerError({
       category: ErrorCategorySchema.SERVER_DB_ERROR,

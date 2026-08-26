@@ -1,18 +1,12 @@
 import { z } from 'zod';
 
 import { parseCityListQuery } from './city-contract.ts';
+import { CityListEnvelopeSchema } from './city-schema.ts';
 import { listCities } from './list-cities.ts';
 import type { CityRepository } from './types.ts';
 
-interface CityListEnvelope {
-  data: Awaited<ReturnType<typeof listCities>>['cities'];
-  page: Awaited<ReturnType<typeof listCities>>['page'];
-  request_id: string;
-}
-
 interface CityListHandlerOptions {
   cityRepository: CityRepository;
-  validateEnvelope: (envelope: CityListEnvelope) => unknown;
   reportError: (error: unknown, requestId: string) => void;
 }
 
@@ -58,7 +52,7 @@ export function createCityListHandler(options: CityListHandlerOptions) {
 
     try {
       const result = await listCities({ query, cityRepository: options.cityRepository });
-      const envelope = options.validateEnvelope({
+      const envelope = CityListEnvelopeSchema.parse({
         data: result.cities,
         page: result.page,
         request_id: requestId,

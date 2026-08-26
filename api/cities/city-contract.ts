@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
+import type { PublicCity } from './city-schema.ts';
 import type { CityListQuery, CityRow } from './types.ts';
-import type { PublicCity } from '../../release-v1/api-contract/zod-schemas/city';
 
 const DEFAULT_CITY_LIMIT = 20;
 const MAX_CITY_LIMIT = 50;

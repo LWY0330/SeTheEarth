@@ -20,8 +20,7 @@
       "@/cities": ["./cities/index.ts"],
       "@/cities/*": ["./cities/*"],
       "@/lib/*": ["./lib/*"],
-      "@/app/*": ["./app/*"],
-      "@contracts/*": ["../release-v1/api-contract/*"]
+      "@/app/*": ["./app/*"]
     }
   },
   "include": [

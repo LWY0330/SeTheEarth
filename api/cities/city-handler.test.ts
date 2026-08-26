@@ -29,7 +29,6 @@ test('returns a validated public city envelope', async () => {
   };
   const handler = createCityListHandler({
     cityRepository,
-    validateEnvelope: (envelope) => envelope,
     reportError: () => undefined,
   });
 
@@ -52,7 +51,6 @@ test('returns the universal validation envelope for an invalid limit', async () 
   };
   const handler = createCityListHandler({
     cityRepository,
-    validateEnvelope: (envelope) => envelope,
     reportError: () => undefined,
   });
 
@@ -75,7 +73,6 @@ test('returns a retryable server envelope when the repository fails', async () =
   };
   const handler = createCityListHandler({
     cityRepository,
-    validateEnvelope: (envelope) => envelope,
     reportError: () => undefined,
   });
 
