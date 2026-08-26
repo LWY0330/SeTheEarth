@@ -10,7 +10,7 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "lint": "next lint",
-    "test": "node --test --experimental-strip-types 'app/**/*.test.ts' '_lib/**/*.test.ts'"
+    "test": "node --test --experimental-strip-types 'app/**/*.test.ts' '_lib/**/*.test.ts' 'cities/**/*.test.ts'"
   },
   "dependencies": {
     "@sentry/node": "^10.70.0",

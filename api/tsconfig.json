@@ -6,6 +6,7 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
@@ -16,8 +17,11 @@
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/_lib/*": ["./_lib/*"],
+      "@/cities": ["./cities/index.ts"],
+      "@/cities/*": ["./cities/*"],
       "@/lib/*": ["./lib/*"],
-      "@/app/*": ["./app/*"]
+      "@/app/*": ["./app/*"],
+      "@contracts/*": ["../release-v1/api-contract/*"]
     }
   },
   "include": [

@@ -14,8 +14,8 @@
 - [x] Sentry server init wired via `instrumentation.ts` (no-op without SENTRY_DSN)
 - [x] `GET /api/health` — liveness check
 - [ ] Vercel env vars: `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` / `DIRECT_URL` / `SENTRY_DSN` / `NODE_ENV`
-- [ ] Supabase service-role client wrapper
-- [ ] First API resource (e.g. `GET /api/cities` — public list)
+- [x] Supabase service-role client wrapper
+- [x] `GET /api/cities` — public city list with filters and cursor pagination
 
 ## Stack
 
@@ -99,8 +99,8 @@ pnpm dev
 2. **Push to `alpha-api` branch**: This directory should be deployed via `alpha-api` branch
    (currently on `alpha` for development). See Day 3 plan in `06-PM Agent 交接/2026-08-25-phase1-to-phase2-handoff.md`.
 3. **Verify**: `curl https://<alpha-api-url>/api/health` → expect 200 with `status: "ok"`
-4. **Phase 2 Week 1**: Add Supabase client (`lib/supabase.ts`) + first API resource
-   (`GET /api/cities` returning PublicCity[] from contract).
+4. **Phase 2 Week 1**: Add `GET /api/cities/{cityIdOrSlug}` and connect the web client
+   to the deployed city endpoints.
 
 ## References
 
