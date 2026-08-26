@@ -65,6 +65,10 @@ Vercel 团队下有 2 个项目:
 
 GitHub deployment metadata 显示实际部署目标是 `seethearth/sethearth`,所以 build 拿不到用户在 `sethearth-2` 配的 env vars。
 
+> 📝 **历史校正注 · 2026-08-25 后续观察**:上述两个 Vercel 项目的状态描述反映的是 **2026-08-25 当天的实际情况**。**当日 8/25 17:00 用户接管后,`sethearth-2` 项目已被删除或合并**(2026-08-25 用户截图 Vercel 团队总览确认:只有 1 个 `sethearth` 项目,`sethearth-2` 不存在)。
+>
+> **本 postmortem 的教训仍然有效**:多项目/多环境场景必须做"交叉验证"(铁律 2),不能信任 UI 状态(铁律 3)。即使现在只有 1 个 Vercel 项目,**多分支部署 + 共享 env vars 仍需警惕**(web 端用 `VITE_*`,api 端用 non-VITE)。
+
 ### 外部 PM 的诊断方法 (3 步 · 30 分钟)
 
 1. **查 Vercel deployment metadata** ← 关键步骤! 我没做

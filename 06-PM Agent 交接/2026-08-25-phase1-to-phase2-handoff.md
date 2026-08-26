@@ -105,9 +105,9 @@ UI 显示"Vercel Preview 勾选" 不等于 runtime 拿到 env var (我 Sentry �
 
 | # | 任务 | 状态 | 负责 |
 |---|---|---|---|
-| 1 | **清理工作区 untracked 文件** | 50+ untracked (mockups / docs / scripts / outputs) · 用 `.gitignore` 规则屏蔽 | Phase 2 PM |
-| 2 | **alpha-api 分支独立部署** | 0/9 · `api/` 目录是孤儿代码 (无 package.json / next.config.js) · Phase 2 必须补 Next.js 项目结构 | Phase 2 PM |
-| 3 | **alpha-api 独立配 env vars** | 0/5 · SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY / DIRECT_URL / SENTRY_DSN (不带 VITE_) / NODE_ENV | Phase 2 PM |
+| 1 | **清理工作区 untracked 文件** | ✅ DONE 8/25 · 130 个文档 commit (`d3c2720`) + 1 gitignore commit (`0ee4436`) | Phase 2 PM |
+| 2 | **alpha-api 分支独立部署** | ✅ DONE 8/25 · Next.js scaffold commit (`0420ea9`) · 11 files (package.json/next.config.js/tsconfig.json/instrumentation/api/health route) | Phase 2 PM |
+| 3 | **alpha-api 独立配 env vars** | 🟡 进行中 · SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY / DIRECT_URL / SENTRY_DSN (不带 VITE_) / NODE_ENV · **CORRECTED 2026-08-25: 配在 `sethearth` 项目**(不是 sethearth-2,后者不存在) · 用户行动 | Phase 2 PM |
 
 ### P1 · 重要 (下周)
 
@@ -246,7 +246,7 @@ UI 显示"Vercel Preview 勾选" 不等于 runtime 拿到 env var (我 Sentry �
 
 - [ ] **api/ 目录是孤儿代码** (无 package.json / next.config.js) — Phase 2 alpha-api 部署会立即报错
 - [ ] **vertical-slice schema vs 0000/0001/0002 双轨制** — 已在 incident report 登记 · Phase 2 数据模型升级时处理
-- [ ] **Vercel sethearth-2 错项目 env 教训** — 永远在 sethearth 项目配 alpha 部署 env
+- [x] **Vercel sethearth-2 错项目 env 教训** ✅ CORRECTED 2026-08-25: `sethearth-2` 项目**不存在**(用户验证 Vercel 团队总览)。只有 1 个 `sethearth` 项目,web 前端 (alpha 分支) 和 api 后端 (phase2-alpha-api-init 分支) 共享同一项目 + 共享 env vars。Sentry 8/25 事故的"sethearth-2 项目"是历史事实 — 当时存在,后被删,但 Sentry 8/25 教训(永远先查官方 metadata)依然有效。
 
 ### P1 · Phase 2 中处理
 
@@ -268,7 +268,7 @@ UI 显示"Vercel Preview 勾选" 不等于 runtime 拿到 env var (我 Sentry �
 
 - **sethearth 项目 Dashboard**: https://vercel.com/seethearth/sethearth
 - **sethearth Env Vars**: https://vercel.com/seethearth/sethearth/settings/environment-variables
-- **sethearth-2 项目 Dashboard**: https://vercel.com/seethearth/sethearth-2 (注意: 此项目 env vars 不适用于 sethearth)
+- ~~**sethearth-2 项目 Dashboard**~~: ❌ 不存在 (2026-08-25 用户验证 Vercel 团队总览 · 只有 1 个 `sethearth` 项目 · web/api 共享)
 - **Preview URL**: `setheearth-git-alpha-seetheearth.vercel.app`
 
 ### Supabase
@@ -297,7 +297,7 @@ UI 显示"Vercel Preview 勾选" 不等于 runtime 拿到 env var (我 Sentry �
 
 - LWY0330 GitHub 账号
 - sethearth 团队 (LWY0330's Org)
-- sethearth / sethearth-2 两个 Vercel 项目
+- 1 个 Vercel 项目 `sethearth` (web 前端 alpha 分支 + api 后端 phase2-alpha-api-init 分支 · CORRECTED 2026-08-25)
 
 ### 工具凭据位置
 
